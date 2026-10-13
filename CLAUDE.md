@@ -34,8 +34,9 @@ pnpm test:e2e         # Playwright
 # Supabase: tanpa Docker, CLI di-link ke proyek DEV (ARCHITECTURE §9)
 pnpm exec supabase db push --linked     # terapkan migrasi baru ke dev
 pnpm exec supabase db reset --linked    # reset dev + seed — JANGAN ke produksi
-pnpm exec supabase gen types typescript --linked > types/database.ts
-# Uji pgTAP berjalan di GitHub Actions (butuh Docker)
+pnpm db:types         # regenerasi types/database.ts dari dev
+pnpm test:db          # uji pgTAP ke dev (selalu di-rollback); juga jalan di CI
+pnpm akun:buat --nama "…" --hp 08… --pin 123456 --peran admin [--kelompok "…"]
 ```
 
 ## Konvensi Kode
@@ -63,7 +64,7 @@ pnpm exec supabase gen types typescript --linked > types/database.ts
 
 ## Definisi Selesai
 
-1. `pnpm lint`, `pnpm typecheck`, `pnpm test` lulus; uji pgTAP di GitHub Actions lulus bila ada perubahan SQL.
+1. `pnpm lint`, `pnpm typecheck`, `pnpm test` lulus; `pnpm test:db` lulus bila ada perubahan SQL (dan job pgTAP di CI).
 2. Alur utama dicoba di browser (lebar mobile) — bukan hanya lewat tes.
 3. Dokumen terkait (PRD/ARCHITECTURE/DESIGN, status tahap di PRD §8) diperbarui bila berubah.
 

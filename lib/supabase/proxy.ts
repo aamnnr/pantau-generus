@@ -35,12 +35,20 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
-  if (!data?.claims && !isPublic) {
+  const loggedIn = !!data?.claims;
+  if (loggedIn === isPublic) {
     const url = request.nextUrl.clone();
-    url.pathname = "/masuk";
+    url.pathname = loggedIn ? "/" : "/masuk";
     url.search = "";
-    return NextResponse.redirect(url);
+    return redirectWithCookies(url, response);
   }
 
   return response;
+}
+
+// Cookie sesi yang baru disegarkan harus ikut terbawa saat mengalihkan.
+function redirectWithCookies(url: URL, from: NextResponse) {
+  const redirect = NextResponse.redirect(url);
+  for (const cookie of from.cookies.getAll()) redirect.cookies.set(cookie);
+  return redirect;
 }

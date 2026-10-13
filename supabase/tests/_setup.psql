@@ -1,0 +1,62 @@
+-- Data uji bersama, di-include via `\ir _setup.psql` (psql/pg_prove & scripts/test-db.mjs).
+-- Dijalankan sebagai superuser, sebelum berganti peran. Semua di-rollback di akhir tiap file.
+--
+-- Kelompok A: admin, guru1 (kelas K1), guru2 (kelas K2), pengurus, wali (anak1 di K1).
+-- Kelompok B: adminB, anakB — untuk menguji isolasi antar-kelompok.
+
+create extension if not exists pgtap with schema extensions;
+
+insert into public.kelompok (id, nama) values
+  ('a0000000-0000-0000-0000-000000000000', 'Kelompok A'),
+  ('b0000000-0000-0000-0000-000000000000', 'Kelompok B');
+
+insert into auth.users (id, email, aud, role) values
+  ('a0000000-0000-0000-0000-0000000000a1', '6281100000001@uji.local', 'authenticated', 'authenticated'),
+  ('a0000000-0000-0000-0000-0000000000a2', '6281100000002@uji.local', 'authenticated', 'authenticated'),
+  ('a0000000-0000-0000-0000-0000000000a3', '6281100000003@uji.local', 'authenticated', 'authenticated'),
+  ('a0000000-0000-0000-0000-0000000000a4', '6281100000004@uji.local', 'authenticated', 'authenticated'),
+  ('a0000000-0000-0000-0000-0000000000a5', '6281100000005@uji.local', 'authenticated', 'authenticated'),
+  ('b0000000-0000-0000-0000-0000000000b1', '6281100000009@uji.local', 'authenticated', 'authenticated');
+
+insert into public.profil (id, kelompok_id, nama, no_hp) values
+  ('a0000000-0000-0000-0000-0000000000a1', 'a0000000-0000-0000-0000-000000000000', 'Admin A', '6281100000001'),
+  ('a0000000-0000-0000-0000-0000000000a2', 'a0000000-0000-0000-0000-000000000000', 'Guru Satu', '6281100000002'),
+  ('a0000000-0000-0000-0000-0000000000a3', 'a0000000-0000-0000-0000-000000000000', 'Pengurus A', '6281100000003'),
+  ('a0000000-0000-0000-0000-0000000000a4', 'a0000000-0000-0000-0000-000000000000', 'Wali A', '6281100000004'),
+  ('a0000000-0000-0000-0000-0000000000a5', 'a0000000-0000-0000-0000-000000000000', 'Guru Dua', '6281100000005'),
+  ('b0000000-0000-0000-0000-0000000000b1', 'b0000000-0000-0000-0000-000000000000', 'Admin B', '6281100000009');
+
+insert into public.profil_peran (kelompok_id, profil_id, peran) values
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000a1', 'admin'),
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000a2', 'guru'),
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000a3', 'pengurus'),
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000a4', 'wali'),
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000a5', 'guru'),
+  ('b0000000-0000-0000-0000-000000000000', 'b0000000-0000-0000-0000-0000000000b1', 'admin');
+
+insert into public.kelas (id, kelompok_id, jenjang, nama, urutan) values
+  ('a0000000-0000-0000-0000-0000000000c1', 'a0000000-0000-0000-0000-000000000000', 'remaja', 'Pelajar', 1),
+  ('a0000000-0000-0000-0000-0000000000c2', 'a0000000-0000-0000-0000-000000000000', 'remaja', 'Pra-nikah', 2),
+  ('b0000000-0000-0000-0000-0000000000c1', 'b0000000-0000-0000-0000-000000000000', 'remaja', 'Pelajar', 1);
+
+insert into public.guru (id, kelompok_id, nama, profil_id) values
+  ('a0000000-0000-0000-0000-0000000000d1', 'a0000000-0000-0000-0000-000000000000', 'Guru Satu', 'a0000000-0000-0000-0000-0000000000a2'),
+  ('a0000000-0000-0000-0000-0000000000d2', 'a0000000-0000-0000-0000-000000000000', 'Guru Dua', 'a0000000-0000-0000-0000-0000000000a5');
+
+insert into public.guru_kelas (kelompok_id, guru_id, kelas_id) values
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000d1', 'a0000000-0000-0000-0000-0000000000c1'),
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000d2', 'a0000000-0000-0000-0000-0000000000c2');
+
+insert into public.generus (id, kelompok_id, nama, jenis_kelamin, kelas_id) values
+  ('a0000000-0000-0000-0000-0000000000e1', 'a0000000-0000-0000-0000-000000000000', 'Anak Satu', 'laki_laki', 'a0000000-0000-0000-0000-0000000000c1'),
+  ('a0000000-0000-0000-0000-0000000000e2', 'a0000000-0000-0000-0000-000000000000', 'Anak Dua', 'perempuan', 'a0000000-0000-0000-0000-0000000000c2'),
+  ('b0000000-0000-0000-0000-0000000000e1', 'b0000000-0000-0000-0000-000000000000', 'Anak B', 'laki_laki', 'b0000000-0000-0000-0000-0000000000c1');
+
+insert into public.generus_wali (kelompok_id, generus_id, profil_id, hubungan) values
+  ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000e1', 'a0000000-0000-0000-0000-0000000000a4', 'Ayah');
+
+insert into public.kitab (id, kelompok_id, nama, jenis, satuan, total_satuan) values
+  ('a0000000-0000-0000-0000-0000000000f1', 'a0000000-0000-0000-0000-000000000000', 'Hadist Uji', 'hadist', 'halaman', 100);
+
+-- Pindah peran: `set local role authenticated;` lalu
+-- `set local request.jwt.claims to '{"sub":"<uuid>","role":"authenticated"}';`

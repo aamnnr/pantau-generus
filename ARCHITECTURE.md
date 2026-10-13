@@ -208,7 +208,8 @@ Pola kebijakan:
 | `penilaian`, `capaian_tilawati` | admin, pengurus; guru (kelasnya); wali (anaknya) | admin; guru (kelasnya) |
 | `target_*` | semua pengguna masuk | admin |
 | `catatan_raport` | admin, pengurus; guru (kelasnya); wali (anaknya) | admin, pengurus, guru (kelasnya) |
-| `profil`, `profil_peran` | diri sendiri; admin semua | admin (via service_role) |
+| `profil`, `profil_peran` | diri sendiri; admin & pengurus semua (PRD §4: pengurus melihat data wali & akun) | admin (via service_role) |
+| `pengaturan` | semua pengguna masuk | admin, pengurus (ambang kehadiran) |
 
 **Setiap tabel baru wajib** `enable row level security` + kebijakan + uji pgTAP.
 
@@ -274,7 +275,9 @@ Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
 | `pantau-generus` | Produksi; hanya menerima migrasi lewat `db push`, **tidak pernah** di-reset |
 
 - Supabase CLI dipasang sebagai devDependency (`pnpm exec supabase`), di-`link` ke proyek **dev**.
-- Uji pgTAP dijalankan di **GitHub Actions** (`supabase start` + `supabase test db`; runner GitHub sudah punya Docker), karena `pg_prove` butuh kontainer.
+- Uji pgTAP: **lokal** lewat `pnpm test:db` (`scripts/test-db.mjs`) — tiap file dijalankan ke proyek dev dalam satu transaksi yang selalu di-rollback, hasil TAP dikembalikan lewat exception; **CI** lewat GitHub Actions (`supabase db start` + `supabase test db`, runner sudah punya Docker).
+- Konvensi file uji: assertion `select …;` di kolom 0, data bersama di `supabase/tests/_setup.psql` (di-include dengan `\ir`).
+- Akun pertama dibuat dengan `pnpm akun:buat` (secret key); akun berikutnya dari aplikasi.
 
 ## 10. Operasional (Gratis)
 
