@@ -25,8 +25,6 @@ Selalu gunakan **versi stabil terbaru** dan API terkininya (mis. Next.js 16: `pr
 
 ## Perintah
 
-> Diisi setelah proyek di-scaffold (Tahap 1).
-
 ```bash
 pnpm dev              # jalankan Next.js
 pnpm lint             # ESLint

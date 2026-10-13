@@ -26,7 +26,7 @@ Selalu memakai **versi stabil terbaru** saat instalasi; versi persis dikunci ole
 |---|---|
 | Node.js | 26.x |
 | pnpm | 12.x |
-| TypeScript | 7.x |
+| TypeScript | 6.x (TS 7 belum didukung typescript-eslint; naikkan bila sudah) |
 | next | 16.4 |
 | react / react-dom | 19.3 |
 | tailwindcss | 4.3 |
@@ -262,8 +262,8 @@ Pola kebijakan:
 | Variabel | Lokasi | Keterangan |
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | client+server | |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | client+server | |
-| `SUPABASE_SERVICE_ROLE_KEY` | **server saja** | Manajemen akun |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | client+server | Kunci `sb_publishable_…` (pengganti anon key) |
+| `SUPABASE_SECRET_KEY` | **server saja** | Kunci `sb_secret_…` (pengganti service_role); manajemen akun |
 | `AUTH_EMAIL_DOMAIN` | server | Domain email sintetis |
 
 Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
