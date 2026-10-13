@@ -13,7 +13,7 @@
 | Akses DB | `@supabase/ssr` + tipe hasil `supabase gen types` | Tanpa ORM; query tipe-aman |
 | PWA | **Serwist** (`@serwist/turbopack`) | Manifest + service worker; kompatibel Turbopack; siap untuk mode offline nanti |
 | Tanggal | **date-fns 4** + `@date-fns/tz`, locale `id` | Format Indonesia, zona Asia/Jakarta |
-| Uji | **Vitest** (logika), **pgTAP** via `supabase test db` (RLS & fungsi SQL), **Playwright** (alur utama) | |
+| Uji | **Vitest** (logika), **pgTAP** via `supabase test db` di CI (RLS & fungsi SQL), **Playwright** (alur utama) | |
 | Package manager | **pnpm** | |
 | Hosting | **Vercel** Hobby + **Supabase** Free | 100% gratis |
 | CI/Backup | **GitHub Actions** | Lint/test, backup `pg_dump` mingguan, ping keep-alive |
@@ -266,7 +266,15 @@ Pola kebijakan:
 | `SUPABASE_SERVICE_ROLE_KEY` | **server saja** | Manajemen akun |
 | `AUTH_EMAIL_DOMAIN` | server | Domain email sintetis |
 
-Pengembangan lokal memakai **Supabase CLI** (`supabase start`, Docker).
+Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
+
+| Proyek | Kegunaan |
+|---|---|
+| `pantau-generus-dev` | Pengembangan & data contoh (`seed.sql`); boleh di-reset kapan saja |
+| `pantau-generus` | Produksi; hanya menerima migrasi lewat `db push`, **tidak pernah** di-reset |
+
+- Supabase CLI dipasang sebagai devDependency (`pnpm exec supabase`), di-`link` ke proyek **dev**.
+- Uji pgTAP dijalankan di **GitHub Actions** (`supabase start` + `supabase test db`; runner GitHub sudah punya Docker), karena `pg_prove` butuh kontainer.
 
 ## 10. Operasional (Gratis)
 
@@ -291,3 +299,4 @@ Pengembangan lokal memakai **Supabase CLI** (`supabase start`, Docker).
 | 8 | Relasi kegiatan↔kelas many-to-many (`kegiatan_kelas`) | Satu `kelas_id` per kegiatan | Mendukung kegiatan gabungan; progres tiap kelas tetap terhitung |
 | 9 | Tilawati sebagai log append-only (+N / koreksi / naik jilid) | Satu kolom posisi yang ditimpa | Riwayat lengkap untuk raport; input +N cepat; koreksi tetap bisa |
 | 10 | Al-Qur'an diukur per **ayat global** (1–6236), Al-Hadist per halaman, keduanya sebagai rentang integer | Halaman mushaf; kolom terpisah surat/ayat | Halaman mushaf berbeda antar cetakan; integer membuat logika progres seragam & lintas surat mudah |
+| 11 | Dev memakai proyek Supabase cloud terpisah; pgTAP di CI | Supabase lokal (Docker) | Laptop pengembang tanpa Docker; tetap gratis; produksi terpisah dari data uji |

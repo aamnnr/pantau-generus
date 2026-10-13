@@ -33,10 +33,11 @@ pnpm lint             # ESLint
 pnpm typecheck        # tsc --noEmit
 pnpm test             # Vitest
 pnpm test:e2e         # Playwright
-supabase start        # Supabase lokal (Docker)
-supabase db reset     # terapkan ulang migrasi + seed
-supabase test db      # uji pgTAP (RLS & fungsi SQL)
-supabase gen types typescript --local > types/database.ts
+# Supabase: tanpa Docker, CLI di-link ke proyek DEV (ARCHITECTURE §9)
+pnpm exec supabase db push --linked     # terapkan migrasi baru ke dev
+pnpm exec supabase db reset --linked    # reset dev + seed — JANGAN ke produksi
+pnpm exec supabase gen types typescript --linked > types/database.ts
+# Uji pgTAP berjalan di GitHub Actions (butuh Docker)
 ```
 
 ## Konvensi Kode
@@ -64,7 +65,7 @@ supabase gen types typescript --local > types/database.ts
 
 ## Definisi Selesai
 
-1. `pnpm lint`, `pnpm typecheck`, `pnpm test` lulus; `supabase test db` lulus bila ada perubahan SQL.
+1. `pnpm lint`, `pnpm typecheck`, `pnpm test` lulus; uji pgTAP di GitHub Actions lulus bila ada perubahan SQL.
 2. Alur utama dicoba di browser (lebar mobile) — bukan hanya lewat tes.
 3. Dokumen terkait (PRD/ARCHITECTURE/DESIGN, status tahap di PRD §8) diperbarui bila berubah.
 
