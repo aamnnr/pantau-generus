@@ -30,7 +30,7 @@ export async function masuk(_prev: MasukState, formData: FormData): Promise<Masu
     return { error: pesan, noHp };
   }
 
-  redirect("/");
+  redirect("/beranda");
 }
 
 export async function keluar() {

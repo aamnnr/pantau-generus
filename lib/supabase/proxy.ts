@@ -38,7 +38,7 @@ export async function updateSession(request: NextRequest) {
   const loggedIn = !!data?.claims;
   if (loggedIn === isPublic) {
     const url = request.nextUrl.clone();
-    url.pathname = loggedIn ? "/" : "/masuk";
+    url.pathname = loggedIn ? "/beranda" : "/masuk";
     url.search = "";
     return redirectWithCookies(url, response);
   }

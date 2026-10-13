@@ -1,9 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import type { Database } from "@/types/database";
 
 /** Klien dengan JWT pengguna (RLS berlaku) untuk Server Components & Server Actions. */
 export async function createClient() {
+  // Data per pengguna tidak boleh masuk static shell; auth-js juga memanggil Date.now() saat inisialisasi.
+  await connection();
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
