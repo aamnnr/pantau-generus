@@ -174,7 +174,7 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 | Tahap | Isi | Status |
 |---|---|---|
 | 0 | Dokumen fondasi (PRD, Arsitektur, Desain) | ✅ |
-| 1 | Setup proyek, skema DB + RLS, auth No. HP + PIN | ⏳ |
+| 1 | Setup proyek, skema DB + RLS, auth No. HP + PIN | ✅ |
 | 2 | Master data (kelas, generus, guru, wali, kitab, materi item) | – |
 | 3 | Jadwal rutin, kegiatan, presensi cepat | – |
 | 4 | Target bulanan | – |
