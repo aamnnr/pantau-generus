@@ -150,7 +150,7 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 
 **Rekap kelas/jenjang:**
 - Rata-rata kehadiran & capaian target
-- Daftar **anak yang perlu perhatian** (kehadiran < ambang, atau materi terlewat banyak). Ambang dapat diatur, default kehadiran < 70%.
+- Daftar **anak yang perlu perhatian**: kehadiran < ambang pada periode yang dilihat (bulan/semester). Ambang dapat diatur pengurus, default **60%**.
 - Tidak ada peringkat.
 
 ### F8. PWA
@@ -173,8 +173,8 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 
 | Tahap | Isi | Status |
 |---|---|---|
-| 0 | Dokumen fondasi (PRD, Arsitektur, Desain) | ⏳ |
-| 1 | Setup proyek, skema DB + RLS, auth No. HP + PIN | – |
+| 0 | Dokumen fondasi (PRD, Arsitektur, Desain) | ✅ |
+| 1 | Setup proyek, skema DB + RLS, auth No. HP + PIN | ⏳ |
 | 2 | Master data (kelas, generus, guru, wali, kitab, materi item) | – |
 | 3 | Jadwal rutin, kegiatan, presensi cepat | – |
 | 4 | Target bulanan | – |
@@ -185,9 +185,9 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 
 ## 9. Pertanyaan Terbuka
 
-1. Rincian kelas Caberawit (A/B/C) — rentang usia/kriteria tiap kelas?
+1. ~~Rincian kelas Caberawit~~ → kelas adalah data master yang dikelola admin lewat aplikasi (Tahap 2); rinciannya diisi menyusul.
 2. ~~Tilawati~~ → diputuskan: per anak, input +N halaman (lihat F6).
 3. Apakah raport perlu format/kop khusus dari lembaga atas?
-4. Ambang "perlu perhatian" selain kehadiran < 70%?
+4. ~~Ambang "perlu perhatian"~~ → diputuskan: hanya kehadiran < 60% (dapat diatur); kriteria "materi terlewat" tidak dipakai, cukup lewat daftar susulan.
 5. ~~Satuan makna Al-Qur'an~~ → diputuskan: per surat & ayat.
 6. ~~Nilai angka~~ → diputuskan: hafalan/praktik cukup status `belum/proses/lancar` untuk sementara.

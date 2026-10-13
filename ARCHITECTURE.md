@@ -139,7 +139,7 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 | `target_materi` | `target_bulanan_id`, `materi_item_id` | Hafalan & praktik |
 | `target_tilawati` | `target_bulanan_id`, `jilid`, `halaman` | |
 | `catatan_raport` | `generus_id`, `bulan`, `catatan`, `ditulis_oleh` | |
-| `pengaturan` | `kelompok_id`, `ambang_kehadiran` (default 70) | |
+| `pengaturan` | `kelompok_id`, `ambang_kehadiran` (default 60) | |
 
 ### 4.6 Satuan Makna: Halaman vs Ayat Global
 
