@@ -150,7 +150,7 @@ Aturan adaptasi komponen:
 
 ### 7.3 Detail Kegiatan
 Tiga langkah berurutan dengan indikator ✓:
-1. **Materi** — Al-Hadist (kitab + halaman) atau Al-Qur'an (surat:ayat), bisa tambah baris; rundown opsional (dilipat).
+1. **Materi** — Al-Hadist (kitab + halaman) atau Al-Qur'an (surat:ayat), bisa tambah baris; **materi lain yang disampaikan** (kartu centang; butir target periode di atas, sisanya lewat daftar yang bisa dicari); rundown opsional (dilipat). Form "Tambah Kegiatan" memberi petunjuk bahwa materi diisi di langkah ini.
 2. **Kehadiran** — presensi cepat. Kegiatan gabungan: nama dikelompokkan per kelas.
 3. **Tilawati** *(hanya bila ada kelas Caberawit)* — lihat §7.4a.
 4. **Selesai** — ringkasan + tombol "Tandai Selesai".

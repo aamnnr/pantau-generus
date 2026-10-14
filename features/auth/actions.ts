@@ -38,7 +38,9 @@ export async function masuk(_prev: MasukState, formData: FormData): Promise<Masu
 
 export async function keluar() {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  // "local": hanya perangkat ini yang keluar. Bawaan Supabase ("global") ikut mengeluarkan
+  // semua perangkat lain milik akun yang sama.
+  await supabase.auth.signOut({ scope: "local" });
   (await cookies()).delete(COOKIE_MODE);
   redirect("/masuk");
 }

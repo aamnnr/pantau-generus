@@ -105,6 +105,7 @@ Remaja      → Pelajar (SLTA), Pra-nikah
   - Makna Al-Hadist: `kitab + halaman mulai–selesai`
   - Makna Al-Qur'an: `surat:ayat mulai – surat:ayat selesai` (boleh lintas surat, mis. Al-Baqarah 280 – Ali 'Imran 10)
   - **Bacaan Al-Qur'an** (mis. Remaja Juz 3): rentang `surat:ayat` yang dibaca; hanya untuk Al-Qur'an
+- **Materi item yang disampaikan** (hafalan, faqih, akhlaq, mandiri): guru mencentang butir yang dibahas di kegiatan; butir dari target periode kelas tampil paling atas. Anak yang hadir/terlambat tercatat sudah menerima butir tersebut (khusus putra/putri hanya untuk yang sesuai).
 - Kegiatan bisa: ditambah manual (kegiatan khusus), dibatalkan/diliburkan, ditandai selesai.
 - Tercatat **pengajar** dan **penginput** (bisa berbeda).
 - **Kegiatan gabungan**: peserta presensi = seluruh generus aktif dari semua kelas yang dipilih. Materi yang disampaikan dihitung ke progres setiap kelas peserta. Guru dapat mengelola kegiatan gabungan bila mengajar minimal salah satu kelasnya.
@@ -141,7 +142,7 @@ Aturan perhitungan **makna (Al-Qur'an & Al-Hadist)**:
 
 Aturan **bacaan Al-Qur'an**: sama persis dengan makna (dari kegiatan yang dihadiri + susulan), dihitung terpisah dari makna.
 
-Aturan **materi item** (semua aspek): tidak dihitung dari kehadiran. Dinilai per anak per materi item dengan tiga tingkat (tanpa nilai angka untuk versi pertama). Labelnya menyesuaikan aspek:
+Aturan **materi item** (semua aspek): ada dua catatan terpisah — (1) **sudah menerima**: dari kegiatan yang dihadiri anak dan mencantumkan butir tersebut (dasar "materi item terlewat" di raport); (2) **penguasaan**: dinilai per anak per materi item dengan tiga tingkat (tanpa nilai angka untuk versi pertama). Labelnya menyesuaikan aspek:
 
 | Aspek | Label |
 |---|---|

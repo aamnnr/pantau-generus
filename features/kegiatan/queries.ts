@@ -16,6 +16,7 @@ export type KegiatanRingkas = {
   pengajar: string[];
   jumlah_presensi: number;
   jumlah_materi: number;
+  jumlah_materi_item: number;
 };
 
 /** Kolom view bertipe nullable (keterbatasan gen types untuk view) — rapikan di satu tempat. */
@@ -26,10 +27,11 @@ function ringkas(r: Record<keyof KegiatanRingkas, unknown>): KegiatanRingkas {
     pengajar: (r.pengajar ?? []) as string[],
     jumlah_presensi: Number(r.jumlah_presensi ?? 0),
     jumlah_materi: Number(r.jumlah_materi ?? 0),
+    jumlah_materi_item: Number(r.jumlah_materi_item ?? 0),
   };
 }
 
-const KOLOM_RINGKAS = "id, tanggal, jam_mulai, jam_selesai, judul, jenis, status, kelas, pengajar, jumlah_presensi, jumlah_materi";
+const KOLOM_RINGKAS = "id, tanggal, jam_mulai, jam_selesai, judul, jenis, status, kelas, pengajar, jumlah_presensi, jumlah_materi, jumlah_materi_item";
 
 /**
  * Kegiatan pada satu tanggal. Kegiatan rutin disiapkan dulu dari jadwal (idempoten, tanpa cron —
@@ -66,7 +68,7 @@ export async function riwayatKegiatan(hari = 60) {
 
 export async function ambilKegiatan(id: string) {
   const supabase = await createClient();
-  const [{ data: k, error }, { data: r }, { data: materi }, { data: rundown }, { data: bolehKelola }] = await Promise.all([
+  const [{ data: k, error }, { data: r }, { data: materi }, { data: rundown }, { data: bolehKelola }, { data: items }] = await Promise.all([
     supabase
       .from("kegiatan")
       .select("id, tanggal, jam_mulai, jam_selesai, judul, jenis, status, catatan, jadwal_rutin_id, kegiatan_kelas (kelas_id), kegiatan_pengajar (guru_id)")
@@ -80,10 +82,15 @@ export async function ambilKegiatan(id: string) {
       .order("urutan"),
     supabase.from("kegiatan_rundown").select("urutan, waktu, aktivitas").eq("kegiatan_id", id).order("urutan"),
     supabase.rpc("boleh_kelola_kegiatan", { p_kegiatan_id: id }),
+    supabase
+      .from("kegiatan_materi_item")
+      .select("materi_item:materi_item_id (id, nama, aspek, mapel)")
+      .eq("kegiatan_id", id),
   ]);
   if (error) throw error;
   if (!k || !r) return null;
-  return { ...k, ringkas: ringkas(r), materi: materi ?? [], rundown: rundown ?? [], bolehKelola: !!bolehKelola };
+  const materiItem = (items ?? []).map((x) => x.materi_item).filter((m): m is NonNullable<typeof m> => !!m);
+  return { ...k, ringkas: ringkas(r), materi: materi ?? [], rundown: rundown ?? [], materiItem, bolehKelola: !!bolehKelola };
 }
 
 export type Peserta = {
@@ -155,4 +162,38 @@ export async function kelasUntukKegiatan(userId: string, admin: boolean) {
   return data
     .filter((k) => admin || k.guru_kelas.some((gk) => gk.guru?.profil_id === userId))
     .map((k) => ({ id: k.id, nama: k.nama, jenjang: k.jenjang, urutan: k.urutan, aktif: k.aktif }));
+}
+
+export type OpsiMateriItem = {
+  id: string;
+  nama: string;
+  aspek: "alim" | "faqih" | "akhlaqul_karimah" | "mandiri";
+  mapel: string;
+  jenis_kelamin: "laki_laki" | "perempuan" | null;
+  target: boolean;
+};
+
+/**
+ * Pilihan materi item untuk sebuah kegiatan: butir aktif yang berlaku untuk jenjang kelas kegiatan.
+ * Butir dari target periode yang sedang berjalan ditandai `target` agar tampil paling atas.
+ */
+export async function opsiMateriItem(kegiatanId: string, jenjang: Jenjang[]): Promise<OpsiMateriItem[]> {
+  const supabase = await createClient();
+  const [{ data, error }, { data: target, error: errT }] = await Promise.all([
+    supabase
+      .from("materi_item")
+      .select("id, nama, aspek, mapel, jenjang, jenis_kelamin")
+      .eq("aktif", true)
+      .order("aspek")
+      .order("mapel")
+      .order("urutan")
+      .order("nama"),
+    supabase.rpc("materi_item_target_kegiatan", { p_kegiatan_id: kegiatanId }),
+  ]);
+  if (error) throw error;
+  if (errT) throw errT;
+  const idTarget = new Set((target ?? []) as string[]);
+  return data
+    .filter((m) => idTarget.has(m.id) || !m.jenjang || jenjang.includes(m.jenjang))
+    .map((m) => ({ id: m.id, nama: m.nama, aspek: m.aspek, mapel: m.mapel, jenis_kelamin: m.jenis_kelamin, target: idTarget.has(m.id) }));
 }

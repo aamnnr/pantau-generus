@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { pesanTersimpan, setFlash } from "@/lib/flash";
 import { dariZod, nilaiForm, pesanGalatDb, type FormState } from "@/lib/form";
 import { LABEL_PRESENSI, URUTAN_PRESENSI } from "@/lib/format";
@@ -82,7 +83,10 @@ export async function ubahKegiatan(id: string, _prev: FormState, formData: FormD
   redirect(`/kegiatan/${id}`);
 }
 
-/** Materi + rundown dikirim sebagai JSON dari editor; konversi & validasi rentang di SQL. */
+/**
+ * Materi kitab + rundown + materi item dikirim sebagai JSON dari editor;
+ * konversi & validasi rentang di SQL.
+ */
 export async function simpanMateri(id: string, _prev: SimpanState, formData: FormData): Promise<SimpanState> {
   const materi = barisMateriSchema.safeParse(JSON.parse(String(formData.get("materi") ?? "[]")));
   const rundown = barisRundownSchema.safeParse(JSON.parse(String(formData.get("rundown") ?? "[]")));
@@ -94,6 +98,11 @@ export async function simpanMateri(id: string, _prev: SimpanState, formData: For
   if (error) return { error: pesanGalatDb(error) };
   const { error: errRundown } = await supabase.rpc("simpan_rundown", { p_kegiatan_id: id, p_baris: rundown.data });
   if (errRundown) return { error: pesanGalatDb(errRundown) };
+
+  const items = z.array(z.uuid()).safeParse(JSON.parse(String(formData.get("materi_item") ?? "[]")));
+  if (!items.success) return { error: "Pilihan materi tidak valid. Silakan muat ulang halaman." };
+  const { error: errItem } = await supabase.rpc("simpan_materi_item_kegiatan", { p_kegiatan_id: id, p_materi_item_ids: items.data });
+  if (errItem) return { error: pesanGalatDb(errItem) };
 
   segarkan(id);
   return { ok: pesanTersimpan("Materi tersimpan ✓") };

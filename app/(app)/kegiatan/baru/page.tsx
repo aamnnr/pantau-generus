@@ -38,6 +38,12 @@ async function Form({ searchParams }: { searchParams: SP }) {
       kelas={kelas}
       guru={aktif}
       labelSimpan="Buat Kegiatan"
+      petunjuk={
+        <>
+          Isi info kegiatan di sini. Setelah menekan <strong>Buat Kegiatan</strong>, Anda langsung diarahkan ke langkah{" "}
+          <strong>Materi</strong> (materi yang dikaji) lalu <strong>Kehadiran</strong>.
+        </>
+      }
     />
   );
 }

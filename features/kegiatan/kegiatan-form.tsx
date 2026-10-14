@@ -17,13 +17,15 @@ type Awal = {
   catatan: string;
 };
 
-export function KegiatanForm({ action, awal, kelas, guru, labelSimpan, hapus }: {
+export function KegiatanForm({ action, awal, kelas, guru, labelSimpan, hapus, petunjuk }: {
   action: (prev: FormState, data: FormData) => Promise<FormState>;
   awal: Awal;
   kelas: { id: string; nama: string; jenjang: Jenjang }[];
   guru: { id: string; nama: string }[];
   labelSimpan: string;
   hapus?: React.ReactNode;
+  /** Penjelas alur di atas formulir, mis. bahwa materi diisi di langkah berikutnya. */
+  petunjuk?: React.ReactNode;
 }) {
   const [state, formAction] = useActionState(action, {});
   const v = pilihNilai(state, awal);
@@ -31,6 +33,7 @@ export function KegiatanForm({ action, awal, kelas, guru, labelSimpan, hapus }: 
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
+      {petunjuk && <p className="rounded-2xl bg-mint px-4 py-3 text-mint-foreground">{petunjuk}</p>}
       <Field label="Tanggal" htmlFor="tanggal" error={e.tanggal}>
         <Input id="tanggal" name="tanggal" type="date" defaultValue={v.str("tanggal")} className="max-w-60" />
       </Field>

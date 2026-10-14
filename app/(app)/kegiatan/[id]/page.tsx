@@ -12,9 +12,9 @@ import { statusKegiatan } from "@/features/kegiatan/kartu-kegiatan";
 import { LangkahKegiatan } from "@/features/kegiatan/langkah-kegiatan";
 import { MateriEditor } from "@/features/kegiatan/materi-editor";
 import { PresensiCepat } from "@/features/kegiatan/presensi-cepat";
-import { ambilKegiatan, daftarSurat, kitabAktif, pesertaKegiatan } from "@/features/kegiatan/queries";
+import { ambilKegiatan, daftarSurat, kitabAktif, opsiMateriItem, pesertaKegiatan } from "@/features/kegiatan/queries";
 import { requirePeran } from "@/lib/auth/session";
-import { formatJam, formatRentangJam, formatTanggal, LABEL_PRESENSI, labelKelasKegiatan, URUTAN_PRESENSI } from "@/lib/format";
+import { formatJam, formatRentangJam, formatTanggal, LABEL_ASPEK, LABEL_PRESENSI, labelKelasKegiatan, URUTAN_PRESENSI } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Kegiatan · Pantau Generus" };
 
@@ -25,7 +25,13 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
   if (!k) notFound();
 
   const kelasIds = k.kegiatan_kelas.map((x) => x.kelas_id);
-  const [peserta, kitab, surat] = await Promise.all([pesertaKegiatan(k.id, kelasIds), kitabAktif(), daftarSurat()]);
+  const jenjang = [...new Set(k.ringkas.kelas.map((x) => x.jenjang))];
+  const [peserta, kitab, surat, opsiItem] = await Promise.all([
+    pesertaKegiatan(k.id, kelasIds),
+    kitabAktif(),
+    daftarSurat(),
+    k.bolehKelola ? opsiMateriItem(k.id, jenjang) : Promise.resolve([]),
+  ]);
   const r = k.ringkas;
   const status = statusKegiatan(r);
   const bisa = k.bolehKelola && k.status !== "batal";
@@ -47,11 +53,13 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
         selesai_ayat: m.selesai_ayat,
       }))}
       rundownAwal={k.rundown}
+      opsiItem={opsiItem}
+      itemAwal={k.materiItem.map((m) => m.id)}
       action={simpanMateri.bind(null, k.id)}
     />
   ) : (
     <Kartu className="flex flex-col gap-3">
-      {k.materi.length === 0 ? (
+      {k.materi.length === 0 && k.materiItem.length === 0 ? (
         <p className="text-muted-foreground">Belum ada materi yang dicatat.</p>
       ) : (
         <ul className="flex flex-col gap-2">
@@ -61,6 +69,18 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
                 {m.kitab_nama} · {m.jenis === "bacaan" ? "Bacaan" : "Makna"}
               </span>
               {m.teks}
+            </li>
+          ))}
+        </ul>
+      )}
+      {k.materiItem.length > 0 && (
+        <ul className="flex flex-col gap-1.5">
+          {k.materiItem.map((m) => (
+            <li key={m.id} className="rounded-xl bg-muted px-4 py-2.5">
+              <span className="block font-semibold">{m.nama}</span>
+              <span className="text-muted-foreground">
+                {LABEL_ASPEK[m.aspek]} · {m.mapel}
+              </span>
             </li>
           ))}
         </ul>
@@ -87,7 +107,9 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
         <div>
           <dt className="font-semibold">Materi</dt>
           <dd className="text-muted-foreground">
-            {k.materi.length ? k.materi.map((m) => `${m.kitab_nama}: ${m.teks}`).join(" · ") : "Belum diisi"}
+            {k.materi.length || k.materiItem.length
+              ? [...k.materi.map((m) => `${m.kitab_nama}: ${m.teks}`), ...k.materiItem.map((m) => m.nama)].join(" · ")
+              : "Belum diisi"}
           </dd>
         </div>
         <div>
@@ -172,7 +194,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
         materi={materi}
         kehadiran={kehadiran}
         selesai={selesai}
-        sudah={{ materi: k.materi.length > 0, kehadiran: sudahPresensi, selesai: k.status === "selesai" }}
+        sudah={{ materi: k.materi.length > 0 || k.materiItem.length > 0, kehadiran: sudahPresensi, selesai: k.status === "selesai" }}
       />
     </>
   );

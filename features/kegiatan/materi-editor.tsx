@@ -9,6 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { SimpanState } from "./actions";
+import { PilihMateriItem } from "./pilih-materi-item";
+import type { OpsiMateriItem } from "./queries";
 
 type Kitab = { id: string; nama: string; jenis: "quran" | "hadist"; total_satuan: number };
 type Surat = { nomor: number; nama_latin: string; jumlah_ayat: number };
@@ -51,11 +53,13 @@ const baru = (kitab_id = ""): Baris => ({
 
 const angka = (s: string) => (s.trim() === "" ? null : Number(s));
 
-export function MateriEditor({ kitab, surat, awal, rundownAwal, action }: {
+export function MateriEditor({ kitab, surat, awal, rundownAwal, opsiItem, itemAwal, action }: {
   kitab: Kitab[];
   surat: Surat[];
   awal: MateriAwal[];
   rundownAwal: RundownAwal[];
+  opsiItem: OpsiMateriItem[];
+  itemAwal: string[];
   action: (prev: SimpanState, fd: FormData) => Promise<SimpanState>;
 }) {
   const [baris, setBaris] = useState<Baris[]>(() =>
@@ -76,6 +80,7 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, action }: {
   const [rundown, setRundown] = useState(() =>
     rundownAwal.map((r) => ({ key: ++kunci, waktu: r.waktu?.slice(0, 5) ?? "", aktivitas: r.aktivitas })),
   );
+  const [items, setItems] = useState<string[]>(itemAwal);
   const [state, formAction] = useActionState(action, {});
 
   useEffect(() => {
@@ -85,9 +90,12 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, action }: {
   const ubah = (key: number, patch: Partial<Baris>) => setBaris((s) => s.map((b) => (b.key === key ? { ...b, ...patch } : b)));
   const kitabById = useMemo(() => new Map(kitab.map((k) => [k.id, k])), [kitab]);
 
+  // Baris tanpa rentang sama sekali diabaikan, agar kegiatan yang hanya membahas
+  // materi item (mis. Faqih/Akhlaq) tetap bisa disimpan. Baris setengah terisi tetap divalidasi SQL.
+  const kosong = (b: Baris) => !b.mulai && !b.selesai && !b.mulai_ayat && !b.selesai_ayat;
   const json = JSON.stringify(
     baris
-      .filter((b) => b.kitab_id)
+      .filter((b) => b.kitab_id && !kosong(b))
       .map((b) =>
         kitabById.get(b.kitab_id)?.jenis === "quran"
           ? {
@@ -105,6 +113,7 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, action }: {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="materi" value={json} />
+      <input type="hidden" name="materi_item" value={JSON.stringify(items)} />
       <input type="hidden" name="rundown" value={JSON.stringify(rundown.map(({ waktu, aktivitas }) => ({ waktu, aktivitas })))} />
 
       {baris.map((b, i) => (
@@ -123,6 +132,8 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, action }: {
         <Plus aria-hidden />
         Tambah baris materi
       </Button>
+
+      <PilihMateriItem opsi={opsiItem} dipilih={items} onChange={setItems} />
 
       <details className="group rounded-2xl border-[1.5px] border-input bg-card" open={rundown.length > 0 || undefined}>
         <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between px-4 text-lg font-semibold">

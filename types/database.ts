@@ -679,6 +679,62 @@ export type Database = {
           },
         ]
       }
+      kegiatan_materi_item: {
+        Row: {
+          created_at: string
+          id: string
+          kegiatan_id: string
+          kelompok_id: string
+          materi_item_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kegiatan_id: string
+          kelompok_id?: string
+          materi_item_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kegiatan_id?: string
+          kelompok_id?: string
+          materi_item_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kegiatan_materi_item_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "kegiatan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_item_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_item_kelompok_id_fkey"
+            columns: ["kelompok_id"]
+            isOneToOne: false
+            referencedRelation: "kelompok"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_item_materi_item_id_fkey"
+            columns: ["materi_item_id"]
+            isOneToOne: false
+            referencedRelation: "materi_item"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kegiatan_pengajar: {
         Row: {
           created_at: string
@@ -1655,6 +1711,7 @@ export type Database = {
           jenis: Database["public"]["Enums"]["jenis_kegiatan"] | null
           judul: string | null
           jumlah_materi: number | null
+          jumlah_materi_item: number | null
           jumlah_presensi: number | null
           kelas: Json | null
           kelompok_id: string | null
@@ -1670,6 +1727,7 @@ export type Database = {
           jenis?: Database["public"]["Enums"]["jenis_kegiatan"] | null
           judul?: string | null
           jumlah_materi?: never
+          jumlah_materi_item?: never
           jumlah_presensi?: never
           kelas?: never
           kelompok_id?: string | null
@@ -1685,6 +1743,7 @@ export type Database = {
           jenis?: Database["public"]["Enums"]["jenis_kegiatan"] | null
           judul?: string | null
           jumlah_materi?: never
+          jumlah_materi_item?: never
           jumlah_presensi?: never
           kelas?: never
           kelompok_id?: string | null
@@ -1749,11 +1808,19 @@ export type Database = {
       guru_mengajar_target: { Args: { p_target_id: string }; Returns: boolean }
       hari_ini: { Args: never; Returns: string }
       kelompok_saya: { Args: never; Returns: string }
+      materi_item_target_kegiatan: {
+        Args: { p_kegiatan_id: string }
+        Returns: string[]
+      }
       punya_peran: {
         Args: { p: Database["public"]["Enums"]["peran"] }
         Returns: boolean
       }
       siapkan_kegiatan: { Args: { p_tanggal: string }; Returns: number }
+      simpan_materi_item_kegiatan: {
+        Args: { p_kegiatan_id: string; p_materi_item_ids: string[] }
+        Returns: undefined
+      }
       simpan_materi_kegiatan: {
         Args: { p_baris: Json; p_kegiatan_id: string }
         Returns: undefined

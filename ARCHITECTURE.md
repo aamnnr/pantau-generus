@@ -122,6 +122,7 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 | `kegiatan_pengajar` | `kegiatan_id`, `guru_id` | ≥1 pengajar |
 | `kegiatan_rundown` | `kegiatan_id`, `urutan`, `waktu`, `aktivitas` | |
 | `kegiatan_materi` | `kegiatan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `urutan` | Satuan mengikuti `kitab.satuan` (lihat §4.6). `bacaan` hanya untuk Al-Qur'an. `CHECK (mulai <= selesai)` |
+| `kegiatan_materi_item` | `kegiatan_id`, `materi_item_id` | Butir materi item yang disampaikan ke seluruh peserta; anak hadir/terlambat = sudah menerima. Disimpan via `simpan_materi_item_kegiatan`; `materi_item_target_kegiatan()` memberi butir target periode yang berlaku |
 | `presensi` | `kegiatan_id`, `generus_id`, `status` (`hadir`\|`terlambat`\|`izin`\|`sakit`\|`alpa`), `keterangan`, `diubah_oleh` | Unik (`kegiatan_id`, `generus_id`) |
 | `susulan` | `generus_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `tanggal`, `guru_id` | Menambah progres anak |
 
@@ -314,3 +315,4 @@ Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
 | 10 | Al-Qur'an diukur per **ayat global** (1–6236), Al-Hadist per halaman, keduanya sebagai rentang integer | Halaman mushaf; kolom terpisah surat/ayat | Halaman mushaf berbeda antar cetakan; integer membuat logika progres seragam & lintas surat mudah |
 | 11 | Dev memakai proyek Supabase cloud terpisah; pgTAP di CI | Supabase lokal (Docker) | Laptop pengembang tanpa Docker; tetap gratis; produksi terpisah dari data uji |
 | 12 | Struktur materi mengikuti kurikulum PPG: `aspek` + `mapel` teks; target berperiode untuk ≥1 kelas; rentang kitab `makna`/`bacaan` | Hafalan/praktik saja; target per kelas per bulan kalender | Dokumen target lembaga atas memakai Aspek→Mapel, periode lintas bulan (5 Okt–7 Nov), dan satu dokumen per jenjang |
+| 13 | Materi item yang disampaikan dicatat per kegiatan (`kegiatan_materi_item`), terpisah dari penilaian | Materi item hanya lewat penilaian per anak | Kegiatan kelas sering membahas butir Faqih/Akhlaq untuk semua; raport bisa menunjukkan butir yang terlewat tanpa guru menilai satu per satu |
