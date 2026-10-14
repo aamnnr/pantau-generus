@@ -120,7 +120,7 @@ Aturan adaptasi komponen:
 | Rentang Al-Hadist | Pilih kitab, lalu dua input angka besar (`inputmode="numeric"`) "Dari hal." – "Sampai hal." |
 | Rentang Al-Qur'an | "Dari": pilih **surat** (daftar dengan pencarian nama/nomor, mis. "2 · Al-Baqarah") + input **ayat**. "Sampai": default surat yang sama, bisa diganti. Tampilkan jumlah ayat surat ("dari 286 ayat") dan validasi langsung |
 | Simpan | Tombol utama menempel di bawah layar (sticky) |
-| Umpan balik | Toast di bawah ("Kehadiran tersimpan ✓") + opsi Urungkan bila relevan |
+| Umpan balik | Toast di bawah ("Alhamdulillah Jaza Kumullahu Khoiro. Kehadiran tersimpan ✓") + opsi Urungkan bila relevan |
 | Loading | Skeleton, bukan spinner kosong; tombol menampilkan "Menyimpan…" |
 | Kosong | Ilustrasi sederhana + kalimat + tombol aksi ("Belum ada kegiatan hari ini. Tambah kegiatan") |
 | Error | Kalimat yang jelas + apa yang harus dilakukan; jangan tampilkan kode error mentah |
@@ -188,6 +188,8 @@ Tiga langkah berurutan dengan indikator ✓:
 | Wali / Orang tua | User wali |
 
 - Kalimat pendek, sapaan sopan netral ("Silakan", bukan "Anda harus").
+- **Salam:** "Assalamu'alaikum" (layar Masuk, sapaan di beranda: "Assalamu'alaikum, {nama}").
+- **Terima kasih:** "Alhamdulillah Jaza Kumullahu Khoiro" — dipakai pada konfirmasi setelah menyimpan, bukan "Terima kasih"/"Berhasil".
 - Tanggal: `Senin, 13 Okt 2026`; jam: `19.30` (format Indonesia).
 - Angka: pemisah ribuan titik, persen tanpa desimal kecuali < 1%.
 

@@ -7,7 +7,8 @@ export default function MasukPage() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-10 md:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Pantau Generus</h1>
+        <p className="font-semibold text-primary">Pantau Generus</p>
+        <h1 className="mt-1 text-2xl font-bold">Assalamu&apos;alaikum</h1>
         <p className="mt-1 text-muted-foreground">Silakan masuk dengan No. HP dan PIN.</p>
       </div>
       <MasukForm />
