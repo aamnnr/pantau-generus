@@ -1307,6 +1307,7 @@ export type Database = {
         Row: {
           catatan: string | null
           created_at: string
+          dibuat_oleh: string | null
           id: string
           judul: string
           kelompok_id: string
@@ -1318,6 +1319,7 @@ export type Database = {
         Insert: {
           catatan?: string | null
           created_at?: string
+          dibuat_oleh?: string | null
           id?: string
           judul: string
           kelompok_id?: string
@@ -1329,6 +1331,7 @@ export type Database = {
         Update: {
           catatan?: string | null
           created_at?: string
+          dibuat_oleh?: string | null
           id?: string
           judul?: string
           kelompok_id?: string
@@ -1338,6 +1341,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "target_bulanan_dibuat_oleh_fkey"
+            columns: ["dibuat_oleh"]
+            isOneToOne: false
+            referencedRelation: "profil"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "target_bulanan_kelompok_id_fkey"
             columns: ["kelompok_id"]
@@ -1557,6 +1567,7 @@ export type Database = {
         Args: { p_kegiatan_id: string }
         Returns: boolean
       }
+      boleh_kelola_target: { Args: { p_target_id: string }; Returns: boolean }
       boleh_lihat_generus: { Args: { p_generus_id: string }; Returns: boolean }
       boleh_lihat_kegiatan: {
         Args: { p_kegiatan_id: string }
@@ -1587,6 +1598,7 @@ export type Database = {
         Returns: boolean
       }
       guru_mengajar_kelas: { Args: { p_kelas_id: string }; Returns: boolean }
+      guru_mengajar_target: { Args: { p_target_id: string }; Returns: boolean }
       hari_ini: { Args: never; Returns: string }
       kelompok_saya: { Args: never; Returns: string }
       punya_peran: {

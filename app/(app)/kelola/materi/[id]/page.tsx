@@ -11,7 +11,7 @@ import { requirePeran } from "@/lib/auth/session";
 export const metadata: Metadata = { title: "Ubah Materi · Pantau Generus" };
 
 async function Form({ params }: { params: Promise<{ id: string }> }) {
-  await requirePeran("admin");
+  await requirePeran("admin", "guru");
   const { id } = await params;
   const [m, mapelTerpakai] = await Promise.all([ambilMateri(id), daftarMapel()]);
   if (!m) notFound();

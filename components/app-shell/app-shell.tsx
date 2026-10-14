@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import { getSession } from "@/lib/auth/session";
 import { BottomNav, Sidebar } from "./app-nav";
-import { NAV_KELOLA, NAV_TAMBAHAN_DESKTOP, NAV_UTAMA, PERAN_KELOLA } from "./nav-config";
+import { NAV_KELOLA, NAV_TAMBAHAN_DESKTOP, NAV_UTAMA } from "./nav-config";
 
 async function Navigasi() {
   const session = await getSession();
   const utama = NAV_UTAMA[session.mode];
-  const kelola = PERAN_KELOLA.includes(session.mode) ? NAV_KELOLA : [];
+  const kelola = NAV_KELOLA[session.mode];
   const desktop = [...utama, ...(NAV_TAMBAHAN_DESKTOP[session.mode] ?? [])];
   return (
     <>

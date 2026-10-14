@@ -48,17 +48,25 @@ export const NAV_UTAMA: Record<Peran, NavItem[]> = {
   ],
 };
 
-/** Menu kelola master data. Admin mengubah; pengurus hanya melihat (PRD §4). */
-export const NAV_KELOLA: NavItem[] = [
-  { href: "/kelola/kelas", label: "Kelas", icon: "kelas" },
-  { href: "/kelola/guru", label: "Guru", icon: "guru" },
-  { href: "/kelola/akun", label: "Akun & Wali", icon: "akun" },
-  { href: "/kelola/kitab", label: "Kitab", icon: "kitab" },
-  { href: "/kelola/materi", label: "Materi", icon: "materi" },
-  { href: "/kelola/tilawati", label: "Jilid Tilawati", icon: "tilawati" },
-];
+const KELOLA = {
+  kelas: { href: "/kelola/kelas", label: "Kelas", icon: "kelas" },
+  guru: { href: "/kelola/guru", label: "Guru", icon: "guru" },
+  akun: { href: "/kelola/akun", label: "Akun & Wali", icon: "akun" },
+  kitab: { href: "/kelola/kitab", label: "Kitab", icon: "kitab" },
+  materi: { href: "/kelola/materi", label: "Materi", icon: "materi" },
+  tilawati: { href: "/kelola/tilawati", label: "Jilid Tilawati", icon: "tilawati" },
+} satisfies Record<string, NavItem>;
 
-export const PERAN_KELOLA: Peran[] = ["admin", "pengurus"];
+/**
+ * Menu kelola per peran (PRD §4): admin mengubah semua, pengurus hanya melihat,
+ * guru ikut mengelola materi item (target dikelola di halaman Target).
+ */
+export const NAV_KELOLA: Record<Peran, NavItem[]> = {
+  admin: Object.values(KELOLA),
+  pengurus: Object.values(KELOLA),
+  guru: [KELOLA.materi],
+  wali: [],
+};
 
 /** Pengurus melihat rekap dari sidebar desktop (di HP lewat Beranda). */
 export const NAV_TAMBAHAN_DESKTOP: Partial<Record<Peran, NavItem[]>> = {

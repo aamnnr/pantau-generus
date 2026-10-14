@@ -2,7 +2,7 @@ import { ChevronRight, LogOut, Repeat } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { NAV_KELOLA, PERAN_KELOLA } from "@/components/app-shell/nav-config";
+import { NAV_KELOLA } from "@/components/app-shell/nav-config";
 import { Halaman, JudulKelompok, Kartu, Konten, PageHeader, SkeletonDaftar } from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { gantiMode, keluar } from "@/features/auth/actions";
@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "Lainnya · Pantau Generus" };
 
 async function Isi() {
   const s = await getSession();
-  const bisaKelola = PERAN_KELOLA.includes(s.mode);
+  const menuKelola = NAV_KELOLA[s.mode];
 
   return (
     <Konten>
@@ -29,11 +29,11 @@ async function Isi() {
         </div>
       </Kartu>
 
-      {bisaKelola && (
+      {menuKelola.length > 0 && (
         <>
           <JudulKelompok>Kelola data</JudulKelompok>
           <nav aria-label="Kelola data" className="flex flex-col gap-2">
-            {NAV_KELOLA.map((item) => (
+            {menuKelola.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

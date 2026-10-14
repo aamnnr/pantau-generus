@@ -49,12 +49,13 @@ Pengguna utama berusia **30–50 tahun**, sebagian besar memakai HP Android kela
 | Fitur | Admin | Guru | Pengurus | Wali |
 |---|:-:|:-:|:-:|:-:|
 | Kelola jenjang/kelas, generus, guru, wali, akun | ✅ | – | lihat | – |
-| Kelola kitab & daftar materi hafalan/praktik | ✅ | – | lihat | – |
+| Kelola kitab | ✅ | – | lihat | – |
+| Kelola materi item (semua aspek) | ✅ | ✅ | lihat | – |
 | Kelola jadwal rutin | ✅ | – | lihat | – |
 | Buat/ubah kegiatan, rundown, materi | ✅ semua kelas | ✅ kelasnya | lihat | – |
 | Isi presensi | ✅ semua kelas | ✅ kelasnya | lihat | – |
 | Penilaian hafalan/praktik/tilawati | ✅ | ✅ kelasnya | lihat | – |
-| Input target bulanan | ✅ | – | lihat | – |
+| Input target bulanan | ✅ semua kelas | ✅ kelasnya | lihat | – |
 | Lihat progres | semua | kelasnya | semua | anaknya |
 | Raport bulanan per anak | lihat | lihat kelasnya | ✅ buat/cetak | lihat anaknya |
 | Rekap kelas/jenjang | lihat | – | ✅ | – |
@@ -116,7 +117,7 @@ Remaja      → Pelajar (SLTA), Pra-nikah
 
 ### F5. Target Bulanan
 Mengikuti dokumen "Target Materi Pembelajaran" dari tim kurikulum PPG (per jenjang, per periode).
-- Admin menginput target per **periode**: judul (mis. "Periode Bulan Oktober"), semester, **tanggal mulai–selesai** (tidak harus bulan kalender, mis. 5 Okt – 7 Nov 2026), catatan (strategi pembelajaran).
+- Admin atau guru (untuk kelas yang diajarnya) menginput target per **periode**: judul (mis. "Periode Bulan Oktober"), semester, **tanggal mulai–selesai** (tidak harus bulan kalender, mis. 5 Okt – 7 Nov 2026), catatan (strategi pembelajaran).
 - Satu target berlaku untuk **satu atau beberapa kelas** (mis. Pelajar + Pra-nikah). Periode target satu kelas tidak boleh bertumpukan.
 - Isi target:
   - Bacaan Al-Qur'an: `rentang surat:ayat`

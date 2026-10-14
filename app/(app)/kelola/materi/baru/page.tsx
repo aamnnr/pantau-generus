@@ -10,7 +10,7 @@ import { URUTAN_ASPEK, type Aspek } from "@/lib/format";
 export const metadata: Metadata = { title: "Tambah Materi · Pantau Generus" };
 
 async function Form({ searchParams }: { searchParams: Promise<{ aspek?: string }> }) {
-  await requirePeran("admin");
+  await requirePeran("admin", "guru");
   const { aspek } = await searchParams;
   return (
     <MateriForm

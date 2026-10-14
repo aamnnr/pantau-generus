@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "Materi · Pantau Generus" };
 
 async function Daftar({ searchParams }: { searchParams: Promise<{ aspek?: string }> }) {
-  const { peran } = await requirePeran("admin", "pengurus");
-  const admin = peran.includes("admin");
+  const { peran } = await requirePeran("admin", "pengurus", "guru");
+  const bisaUbah = peran.includes("admin") || peran.includes("guru"); // guru ikut mengelola materi (PRD §4)
   const { aspek: q } = await searchParams;
   const aspek: Aspek = URUTAN_ASPEK.includes(q as Aspek) ? (q as Aspek) : "alim";
   const semua = await daftarMateri();
@@ -47,7 +47,7 @@ async function Daftar({ searchParams }: { searchParams: Promise<{ aspek?: string
           judul={`Belum ada materi ${LABEL_ASPEK[aspek]}`}
           keterangan="Isi butir materi sesuai dokumen target dari tim kurikulum PPG."
           aksi={
-            admin && (
+            bisaUbah && (
               <Button asChild size="lg">
                 <Link href={`/kelola/materi/baru?aspek=${aspek}`}>Tambah Materi</Link>
               </Button>
@@ -81,13 +81,13 @@ async function Daftar({ searchParams }: { searchParams: Promise<{ aspek?: string
                           )}
                         </span>
                       </span>
-                      {admin && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
+                      {bisaUbah && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
                     </>
                   );
                   const kartu = "flex min-h-16 items-center gap-3 rounded-2xl bg-card px-4 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)]";
                   return (
                     <li key={m.id}>
-                      {admin ? (
+                      {bisaUbah ? (
                         <Link href={`/kelola/materi/${m.id}`} className={cn(kartu, "hover:bg-mint/60")}>
                           {isi}
                         </Link>
@@ -106,8 +106,8 @@ async function Daftar({ searchParams }: { searchParams: Promise<{ aspek?: string
 }
 
 async function TombolTambah({ searchParams }: { searchParams: Promise<{ aspek?: string }> }) {
-  const { peran } = await requirePeran("admin", "pengurus");
-  if (!peran.includes("admin")) return null;
+  const { peran } = await requirePeran("admin", "pengurus", "guru");
+  if (!peran.includes("admin") && !peran.includes("guru")) return null;
   const { aspek } = await searchParams;
   return (
     <Button asChild size="lg" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85">

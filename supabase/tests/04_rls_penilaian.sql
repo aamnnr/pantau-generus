@@ -41,9 +41,9 @@ select throws_ok(
      values ('a0000000-0000-0000-0000-0000000000e1', 'tambah', 1, 14) $$,
   '23514', null, 'tilawati: entri "tambah" wajib mengisi jumlah tambahan'
 );
-select throws_ok(
-  $$ insert into public.target_bulanan (judul, mulai, selesai) values ('Periode Oktober', '2026-10-05', '2026-11-07') $$,
-  '42501', null, 'guru: tidak bisa menginput target bulanan'
+select lives_ok(
+  $$ insert into public.target_bulanan (judul, mulai, selesai) values ('Periode Oktober (guru)', '2026-10-05', '2026-11-07') $$,
+  'guru: boleh membuat target (rincian hak guru: 06_guru_kelola.sql)'
 );
 select lives_ok(
   $$ insert into public.catatan_raport (generus_id, bulan, catatan)
@@ -81,7 +81,7 @@ select results_eq(
   $$ values ('a0000000-0000-0000-0000-0000000000e1') $$,
   'wali: hanya melihat penilaian anaknya'
 );
-select is((select count(*)::int from public.target_bulanan), 1, 'wali: boleh melihat target bulanan');
+select is((select count(*)::int from public.target_bulanan), 2, 'wali: boleh melihat target bulanan');
 
 select * from finish();
 rollback;

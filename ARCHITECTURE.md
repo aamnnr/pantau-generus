@@ -134,7 +134,7 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 | `penilaian` | `generus_id`, `materi_item_id`, `status` (`belum`\|`proses`\|`lancar`), `tanggal`, `dinilai_oleh` | Append-only; status terakhir berlaku. Label tampilan per aspek (DESIGN §3) |
 | `jilid_tilawati` | `jilid`, `total_halaman` | Diatur admin |
 | `capaian_tilawati` | `generus_id`, `jenis` (`tambah`\|`koreksi`\|`naik_jilid`), `tambahan` (int, untuk `tambah`), `jilid`, `halaman` (posisi **setelah** entri), `kegiatan_id` (nullable), `tanggal`, `dinilai_oleh` | Append-only; entri terakhir = posisi saat ini. Tombol +N membuat entri `tambah` |
-| `target_bulanan` | `judul` (mis. "Periode Bulan Oktober"), `semester`, `mulai`, `selesai` (date), `catatan` | Periode dari lembaga atas, tidak harus bulan kalender (mis. 5 Okt – 7 Nov) |
+| `target_bulanan` | `judul` (mis. "Periode Bulan Oktober"), `semester`, `mulai`, `selesai` (date), `catatan`, `dibuat_oleh` | Periode dari lembaga atas, tidak harus bulan kalender (mis. 5 Okt – 7 Nov) |
 | `target_bulanan_kelas` | `target_bulanan_id`, `kelas_id` | ≥1 kelas per target. Periode target satu kelas tidak boleh bertumpukan (trigger) |
 | `target_kitab` | `target_bulanan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai` | Makna Al-Qur'an/Al-Hadist dan bacaan Al-Qur'an |
 | `target_materi` | `target_bulanan_id`, `materi_item_id` | Materi item semua aspek (Alim/Faqih/Akhlaqul Karimah/Mandiri) |
@@ -203,11 +203,12 @@ Pola kebijakan:
 
 | Data | SELECT | INSERT/UPDATE/DELETE |
 |---|---|---|
-| Master data (kelas, kitab, materi_item, guru, jadwal) | semua pengguna masuk | admin |
+| Master data (kelas, kitab, guru, jadwal) | semua pengguna masuk | admin |
+| `materi_item` | semua pengguna masuk | admin, guru (berlaku sekelompok) |
 | `generus` | admin, pengurus; guru (kelasnya); wali (anaknya) | admin |
 | `kegiatan*`, `presensi`, `susulan` | admin, pengurus; guru (kelasnya); wali (kegiatan kelas anaknya / yang ada presensi anaknya) | admin; guru (kelasnya) |
 | `penilaian`, `capaian_tilawati` | admin, pengurus; guru (kelasnya); wali (anaknya) | admin; guru (kelasnya) |
-| `target_*` | semua pengguna masuk | admin |
+| `target_*` | semua pengguna masuk | admin; guru bila mengajar ≥1 kelas target atau pembuatnya (`boleh_kelola_target`); guru hanya menautkan kelas yang diajarnya |
 | `catatan_raport` | admin, pengurus; guru (kelasnya); wali (anaknya) | admin, pengurus, guru (kelasnya) |
 | `profil`, `profil_peran` | diri sendiri; admin & pengurus semua (PRD §4: pengurus melihat data wali & akun) | admin (via service_role) |
 | `pengaturan` | semua pengguna masuk | admin, pengurus (ambang kehadiran) |
