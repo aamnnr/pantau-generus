@@ -601,6 +601,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
           kegiatan_id: string
           kelompok_id: string
           kitab_id: string
@@ -611,6 +612,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          jenis?: Database["public"]["Enums"]["jenis_materi_kitab"]
           kegiatan_id: string
           kelompok_id?: string
           kitab_id: string
@@ -621,6 +623,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          jenis?: Database["public"]["Enums"]["jenis_materi_kitab"]
           kegiatan_id?: string
           kelompok_id?: string
           kitab_id?: string
@@ -861,33 +864,42 @@ export type Database = {
       materi_item: {
         Row: {
           aktif: boolean
+          aspek: Database["public"]["Enums"]["aspek"]
           created_at: string
           id: string
-          jenis: Database["public"]["Enums"]["jenis_materi"]
+          jenis_kelamin: Database["public"]["Enums"]["jenis_kelamin"] | null
           jenjang: Database["public"]["Enums"]["jenjang"] | null
           kelompok_id: string
+          keterangan: string | null
+          mapel: string
           nama: string
           updated_at: string
           urutan: number
         }
         Insert: {
           aktif?: boolean
+          aspek: Database["public"]["Enums"]["aspek"]
           created_at?: string
           id?: string
-          jenis: Database["public"]["Enums"]["jenis_materi"]
+          jenis_kelamin?: Database["public"]["Enums"]["jenis_kelamin"] | null
           jenjang?: Database["public"]["Enums"]["jenjang"] | null
           kelompok_id?: string
+          keterangan?: string | null
+          mapel: string
           nama: string
           updated_at?: string
           urutan?: number
         }
         Update: {
           aktif?: boolean
+          aspek?: Database["public"]["Enums"]["aspek"]
           created_at?: string
           id?: string
-          jenis?: Database["public"]["Enums"]["jenis_materi"]
+          jenis_kelamin?: Database["public"]["Enums"]["jenis_kelamin"] | null
           jenjang?: Database["public"]["Enums"]["jenjang"] | null
           kelompok_id?: string
+          keterangan?: string | null
+          mapel?: string
           nama?: string
           updated_at?: string
           urutan?: number
@@ -1226,6 +1238,7 @@ export type Database = {
           generus_id: string
           guru_id: string | null
           id: string
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
           kelompok_id: string
           kitab_id: string
           mulai: number
@@ -1238,6 +1251,7 @@ export type Database = {
           generus_id: string
           guru_id?: string | null
           id?: string
+          jenis?: Database["public"]["Enums"]["jenis_materi_kitab"]
           kelompok_id?: string
           kitab_id: string
           mulai: number
@@ -1250,6 +1264,7 @@ export type Database = {
           generus_id?: string
           guru_id?: string | null
           id?: string
+          jenis?: Database["public"]["Enums"]["jenis_materi_kitab"]
           kelompok_id?: string
           kitab_id?: string
           mulai?: number
@@ -1290,37 +1305,39 @@ export type Database = {
       }
       target_bulanan: {
         Row: {
-          bulan: string
+          catatan: string | null
           created_at: string
           id: string
-          kelas_id: string
+          judul: string
           kelompok_id: string
+          mulai: string
+          selesai: string
+          semester: string | null
           updated_at: string
         }
         Insert: {
-          bulan: string
+          catatan?: string | null
           created_at?: string
           id?: string
-          kelas_id: string
+          judul: string
           kelompok_id?: string
+          mulai: string
+          selesai: string
+          semester?: string | null
           updated_at?: string
         }
         Update: {
-          bulan?: string
+          catatan?: string | null
           created_at?: string
           id?: string
-          kelas_id?: string
+          judul?: string
           kelompok_id?: string
+          mulai?: string
+          selesai?: string
+          semester?: string | null
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "target_bulanan_kelas_id_fkey"
-            columns: ["kelas_id"]
-            isOneToOne: false
-            referencedRelation: "kelas"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "target_bulanan_kelompok_id_fkey"
             columns: ["kelompok_id"]
@@ -1330,10 +1347,60 @@ export type Database = {
           },
         ]
       }
-      target_makna: {
+      target_bulanan_kelas: {
         Row: {
           created_at: string
           id: string
+          kelas_id: string
+          kelompok_id: string
+          target_bulanan_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kelas_id: string
+          kelompok_id?: string
+          target_bulanan_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kelas_id?: string
+          kelompok_id?: string
+          target_bulanan_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "target_bulanan_kelas_kelas_id_fkey"
+            columns: ["kelas_id"]
+            isOneToOne: false
+            referencedRelation: "kelas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_bulanan_kelas_kelompok_id_fkey"
+            columns: ["kelompok_id"]
+            isOneToOne: false
+            referencedRelation: "kelompok"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_bulanan_kelas_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: false
+            referencedRelation: "target_bulanan"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      target_kitab: {
+        Row: {
+          created_at: string
+          id: string
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
           kelompok_id: string
           kitab_id: string
           mulai: number
@@ -1344,6 +1411,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          jenis?: Database["public"]["Enums"]["jenis_materi_kitab"]
           kelompok_id?: string
           kitab_id: string
           mulai: number
@@ -1354,6 +1422,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          jenis?: Database["public"]["Enums"]["jenis_materi_kitab"]
           kelompok_id?: string
           kitab_id?: string
           mulai?: number
@@ -1493,6 +1562,10 @@ export type Database = {
         Args: { p_kegiatan_id: string }
         Returns: boolean
       }
+      cek_target_tumpang_tindih: {
+        Args: { p_target_id: string }
+        Returns: undefined
+      }
       fn_ayat_global: {
         Args: { p_ayat: number; p_surat: number }
         Returns: number
@@ -1524,11 +1597,12 @@ export type Database = {
       wali_dari: { Args: { p_generus_id: string }; Returns: boolean }
     }
     Enums: {
+      aspek: "alim" | "faqih" | "akhlaqul_karimah" | "mandiri"
       jenis_capaian_tilawati: "tambah" | "koreksi" | "naik_jilid"
       jenis_kegiatan: "rutin" | "khusus"
       jenis_kelamin: "laki_laki" | "perempuan"
       jenis_kitab: "quran" | "hadist"
-      jenis_materi: "hafalan" | "praktik"
+      jenis_materi_kitab: "makna" | "bacaan"
       jenjang: "caberawit" | "pra_remaja" | "remaja"
       peran: "admin" | "guru" | "pengurus" | "wali"
       satuan: "halaman" | "ayat"
@@ -1663,11 +1737,12 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      aspek: ["alim", "faqih", "akhlaqul_karimah", "mandiri"],
       jenis_capaian_tilawati: ["tambah", "koreksi", "naik_jilid"],
       jenis_kegiatan: ["rutin", "khusus"],
       jenis_kelamin: ["laki_laki", "perempuan"],
       jenis_kitab: ["quran", "hadist"],
-      jenis_materi: ["hafalan", "praktik"],
+      jenis_materi_kitab: ["makna", "bacaan"],
       jenjang: ["caberawit", "pra_remaja", "remaja"],
       peran: ["admin", "guru", "pengurus", "wali"],
       satuan: ["halaman", "ayat"],

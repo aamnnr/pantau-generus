@@ -54,11 +54,13 @@ Kontras minimum **WCAG AA (4.5:1)** untuk semua teks; target AAA (7:1) untuk tek
 
 ### Warna Status Penilaian
 
-| Status | Label |
-|---|---|
-| Belum | ○ Belum (abu-abu) |
-| Proses | ◐ Proses (kuning) |
-| Lancar | ● Lancar (hijau) |
+Tiga tingkat yang sama di database (`belum`/`proses`/`lancar`); **label mengikuti aspek** materi:
+
+| Status | Alim (Hafalan) | Faqih | Akhlaqul Karimah & Mandiri | Warna |
+|---|---|---|---|---|
+| `belum` | ○ Belum | ○ Belum | ○ Belum | abu-abu |
+| `proses` | ◐ Proses | ◐ Proses | ◐ Proses | kuning |
+| `lancar` | ● Lancar | ● Paham | ● Terbiasa | hijau |
 
 ## 4. Ukuran & Jarak
 
@@ -168,8 +170,8 @@ Tiga langkah berurutan dengan indikator ✓:
 - Tilawati: "Jilid 3 · hal. 24".
 
 ### 7.6 Target Bulanan (Admin)
-- Pilih bulan & kelas → tombol besar **"Salin dari bulan lalu"** bila kosong.
-- Tiga bagian: Makna, Hafalan, Praktik (+ Tilawati untuk Caberawit).
+- Daftar periode target (judul, tanggal mulai–selesai, kelas yang dicakup). Buat baru → tombol besar **"Salin dari periode sebelumnya"**.
+- Bagian mengikuti dokumen PPG: **Alim** (Bacaan, Makna, Hafalan), **Faqih**, **Akhlaqul Karimah**, **Mandiri** (+ Tilawati untuk Caberawit). Kelas dipilih dengan kartu bercentang (boleh lebih dari satu).
 
 ### 7.7 Raport (cetak)
 - Ukuran A4 portrait, `@media print`: sembunyikan navigasi, tombol; font 12pt; hitam-putih tetap terbaca.

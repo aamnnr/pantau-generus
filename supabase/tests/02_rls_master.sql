@@ -53,7 +53,7 @@ set local request.jwt.claims to '{"sub":"a0000000-0000-0000-0000-0000000000a3","
 select is((select count(*)::int from public.generus), 2, 'pengurus: melihat semua generus');
 select is((select count(*)::int from public.profil), 5, 'pengurus: melihat profil (data wali & akun)');
 select throws_ok(
-  $$ insert into public.materi_item (jenis, nama) values ('hafalan', 'Doa Makan') $$,
+  $$ insert into public.materi_item (aspek, mapel, nama) values ('alim', 'Hafalan', 'Doa Makan') $$,
   '42501', null, 'pengurus: tidak bisa menambah materi item'
 );
 select lives_ok(

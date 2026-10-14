@@ -109,7 +109,7 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 |---|---|---|
 | `kitab` | `nama`, `jenis` (`quran`\|`hadist`), `satuan` (`halaman`\|`ayat`), `total_satuan` | Al-Qur'an = 1 baris tetap (`satuan='ayat'`, `total_satuan=6236`) |
 | `quran_surat` | `nomor` (1–114, PK), `nama_latin`, `nama_arab`, `jumlah_ayat`, `ayat_awal` (nomor ayat global pertama) | Data referensi global (tanpa `kelompok_id`), di-seed via migrasi, read-only |
-| `materi_item` | `jenis` (`hafalan`\|`praktik`), `nama`, `jenjang` (nullable) | Doa, surat, praktik sholat, dll. |
+| `materi_item` | `aspek` (`alim`\|`faqih`\|`akhlaqul_karimah`\|`mandiri`), `mapel` (teks: Hafalan, Kefahaman Agama, Praktek Ibadah, Akhlaq, Tata Krama, Kemandirian, …), `nama`, `keterangan`, `jenjang` (nullable), `jenis_kelamin` (nullable = semua) | Mengikuti format kurikulum PPG. Unik (`aspek`, `mapel`, `nama`) |
 
 ### 4.4 Jadwal, Kegiatan & Presensi
 
@@ -121,9 +121,9 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 | `kegiatan_kelas` | `kegiatan_id`, `kelas_id` | ≥1 kelas; >1 = **kegiatan gabungan**. Peserta = generus aktif semua kelas ini |
 | `kegiatan_pengajar` | `kegiatan_id`, `guru_id` | ≥1 pengajar |
 | `kegiatan_rundown` | `kegiatan_id`, `urutan`, `waktu`, `aktivitas` | |
-| `kegiatan_materi` | `kegiatan_id`, `kitab_id`, `mulai`, `selesai` | Satuan mengikuti `kitab.satuan` (lihat §4.6). `CHECK (mulai <= selesai)` |
+| `kegiatan_materi` | `kegiatan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai` | Satuan mengikuti `kitab.satuan` (lihat §4.6). `bacaan` hanya untuk Al-Qur'an. `CHECK (mulai <= selesai)` |
 | `presensi` | `kegiatan_id`, `generus_id`, `status` (`hadir`\|`terlambat`\|`izin`\|`sakit`\|`alpa`), `keterangan`, `diubah_oleh` | Unik (`kegiatan_id`, `generus_id`) |
-| `susulan` | `generus_id`, `kitab_id`, `mulai`, `selesai`, `tanggal`, `guru_id` | Menambah progres anak |
+| `susulan` | `generus_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `tanggal`, `guru_id` | Menambah progres anak |
 
 **Pembuatan kegiatan rutin:** tidak memakai cron. Saat halaman "Pengajian Hari Ini" (atau daftar kegiatan suatu tanggal) dibuka, fungsi SQL `siapkan_kegiatan(tanggal)` melakukan `INSERT … ON CONFLICT DO NOTHING` dari `jadwal_rutin` yang cocok. Idempoten dan gratis.
 
@@ -131,12 +131,13 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 
 | Tabel | Kolom penting | Catatan |
 |---|---|---|
-| `penilaian` | `generus_id`, `materi_item_id`, `status` (`belum`\|`proses`\|`lancar`), `tanggal`, `dinilai_oleh` | Append-only; status terakhir berlaku |
+| `penilaian` | `generus_id`, `materi_item_id`, `status` (`belum`\|`proses`\|`lancar`), `tanggal`, `dinilai_oleh` | Append-only; status terakhir berlaku. Label tampilan per aspek (DESIGN §3) |
 | `jilid_tilawati` | `jilid`, `total_halaman` | Diatur admin |
 | `capaian_tilawati` | `generus_id`, `jenis` (`tambah`\|`koreksi`\|`naik_jilid`), `tambahan` (int, untuk `tambah`), `jilid`, `halaman` (posisi **setelah** entri), `kegiatan_id` (nullable), `tanggal`, `dinilai_oleh` | Append-only; entri terakhir = posisi saat ini. Tombol +N membuat entri `tambah` |
-| `target_bulanan` | `kelas_id`, `bulan` (date, tgl 1) | Unik (`kelas_id`, `bulan`) |
-| `target_makna` | `target_bulanan_id`, `kitab_id`, `mulai`, `selesai` | |
-| `target_materi` | `target_bulanan_id`, `materi_item_id` | Hafalan & praktik |
+| `target_bulanan` | `judul` (mis. "Periode Bulan Oktober"), `semester`, `mulai`, `selesai` (date), `catatan` | Periode dari lembaga atas, tidak harus bulan kalender (mis. 5 Okt – 7 Nov) |
+| `target_bulanan_kelas` | `target_bulanan_id`, `kelas_id` | ≥1 kelas per target. Periode target satu kelas tidak boleh bertumpukan (trigger) |
+| `target_kitab` | `target_bulanan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai` | Makna Al-Qur'an/Al-Hadist dan bacaan Al-Qur'an |
+| `target_materi` | `target_bulanan_id`, `materi_item_id` | Materi item semua aspek (Alim/Faqih/Akhlaqul Karimah/Mandiri) |
 | `target_tilawati` | `target_bulanan_id`, `jilid`, `halaman` | |
 | `catatan_raport` | `generus_id`, `bulan`, `catatan`, `ditulis_oleh` | |
 | `pengaturan` | `kelompok_id`, `ambang_kehadiran` (default 60) | |
@@ -159,7 +160,7 @@ Rentang lintas surat otomatis didukung karena nomor global berurutan.
 
 ## 5. Perhitungan Progres (SQL)
 
-Inti perhitungan: himpunan **satuan unik** (halaman atau ayat global).
+Inti perhitungan: himpunan **satuan unik** (halaman atau ayat global), dihitung **terpisah per `jenis`** (`makna` dan `bacaan`) — bacaan Al-Qur'an Remaja memakai logika yang sama dengan makna, hanya beda jenis.
 
 ```sql
 -- satuan yang diikuti anak (hadir/terlambat + susulan)
@@ -303,3 +304,4 @@ Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
 | 9 | Tilawati sebagai log append-only (+N / koreksi / naik jilid) | Satu kolom posisi yang ditimpa | Riwayat lengkap untuk raport; input +N cepat; koreksi tetap bisa |
 | 10 | Al-Qur'an diukur per **ayat global** (1–6236), Al-Hadist per halaman, keduanya sebagai rentang integer | Halaman mushaf; kolom terpisah surat/ayat | Halaman mushaf berbeda antar cetakan; integer membuat logika progres seragam & lintas surat mudah |
 | 11 | Dev memakai proyek Supabase cloud terpisah; pgTAP di CI | Supabase lokal (Docker) | Laptop pengembang tanpa Docker; tetap gratis; produksi terpisah dari data uji |
+| 12 | Struktur materi mengikuti kurikulum PPG: `aspek` + `mapel` teks; target berperiode untuk ≥1 kelas; rentang kitab `makna`/`bacaan` | Hafalan/praktik saja; target per kelas per bulan kalender | Dokumen target lembaga atas memakai Aspek→Mapel, periode lintas bulan (5 Okt–7 Nov), dan satu dokumen per jenjang |

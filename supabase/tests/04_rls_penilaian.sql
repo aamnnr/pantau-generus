@@ -3,8 +3,8 @@ begin;
 \ir _setup.psql
 select plan(14);
 
-insert into public.materi_item (id, kelompok_id, jenis, nama) values
-  ('a0000000-0000-0000-0000-000000000301', 'a0000000-0000-0000-0000-000000000000', 'hafalan', 'Doa Sebelum Makan');
+insert into public.materi_item (id, kelompok_id, aspek, mapel, nama) values
+  ('a0000000-0000-0000-0000-000000000301', 'a0000000-0000-0000-0000-000000000000', 'alim', 'Hafalan', 'Doa Sebelum Makan');
 insert into public.penilaian (kelompok_id, generus_id, materi_item_id, status) values
   ('a0000000-0000-0000-0000-000000000000', 'a0000000-0000-0000-0000-0000000000e2', 'a0000000-0000-0000-0000-000000000301', 'proses');
 
@@ -42,7 +42,7 @@ select throws_ok(
   '23514', null, 'tilawati: entri "tambah" wajib mengisi jumlah tambahan'
 );
 select throws_ok(
-  $$ insert into public.target_bulanan (kelas_id, bulan) values ('a0000000-0000-0000-0000-0000000000c1', '2026-10-01') $$,
+  $$ insert into public.target_bulanan (judul, mulai, selesai) values ('Periode Oktober', '2026-10-05', '2026-11-07') $$,
   '42501', null, 'guru: tidak bisa menginput target bulanan'
 );
 select lives_ok(
@@ -55,12 +55,12 @@ select lives_ok(
 set local request.jwt.claims to '{"sub":"a0000000-0000-0000-0000-0000000000a1","role":"authenticated"}';
 
 select lives_ok(
-  $$ insert into public.target_bulanan (kelas_id, bulan) values ('a0000000-0000-0000-0000-0000000000c1', '2026-10-01') $$,
+  $$ insert into public.target_bulanan (judul, mulai, selesai) values ('Periode Oktober', '2026-10-05', '2026-11-07') $$,
   'admin: boleh menginput target bulanan'
 );
 select throws_ok(
-  $$ insert into public.target_bulanan (kelas_id, bulan) values ('a0000000-0000-0000-0000-0000000000c2', '2026-10-15') $$,
-  '23514', null, 'target bulanan harus tanggal 1'
+  $$ insert into public.target_bulanan (judul, mulai, selesai) values ('Terbalik', '2026-11-07', '2026-10-05') $$,
+  '23514', null, 'periode target: selesai tidak boleh sebelum mulai'
 );
 
 -- ── Pengurus ────────────────────────────────────────────────────────

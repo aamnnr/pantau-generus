@@ -82,9 +82,11 @@ pnpm akun:buat --nama "…" --hp 08… --pin 123456 --peran admin [--kelompok "�
 | Kitab | Sumber materi makna (Al-Qur'an / Al-Hadist) |
 | Makna | Materi pemaknaan; progres Al-Hadist per **halaman**, Al-Qur'an per **ayat** (disimpan sebagai nomor ayat global 1–6236, ditampilkan surat:ayat) |
 | Satuan | Unit progres makna: halaman atau ayat; kolom rentang selalu `mulai`/`selesai` |
-| Materi item | Butir hafalan atau praktik (doa, surat, wudhu, sholat, dll.) |
+| Materi item | Butir materi yang dinilai per anak, dikelompokkan **Aspek → Mapel** (format PPG): hafalan, kefahaman, praktek ibadah, akhlaq, tata krama, kemandirian |
+| Aspek | Kelompok besar kurikulum PPG: Alim, Faqih, Akhlaqul Karimah, Mandiri |
+| Bacaan | Membaca Al-Qur'an (mis. Remaja Juz 3); dicatat sebagai rentang ayat seperti makna, tetapi terpisah |
 | Tilawati | Metode baca Al-Qur'an Caberawit; dicatat per anak (jilid + halaman, input +N) |
 | Susulan | Mengejar materi yang terlewat karena tidak hadir |
-| Target bulanan | Target materi per kelas per bulan dari lembaga atas |
+| Target bulanan | Target materi dari lembaga atas per **periode** (mis. 5 Okt – 7 Nov), berlaku untuk ≥1 kelas |
 | Wali | Orang tua/wali generus |
 | Pengurus | Pengurus kelompok yang memantau semua progres dan membuat raport |

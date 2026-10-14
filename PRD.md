@@ -87,16 +87,23 @@ Remaja      → Pelajar (SLTA), Pra-nikah
 - **Kitab**: nama, jenis (`quran` | `hadist`). Satuan progres:
   - **Al-Hadist → per halaman** kitab (admin mengisi total halaman).
   - **Al-Qur'an → per surat & ayat** (bukan halaman mushaf, karena halaman berbeda antar mushaf). Data 114 surat beserta jumlah ayatnya (standar Kemenag, total 6.236 ayat) sudah tersedia di aplikasi.
-- **Materi item** hafalan & praktik: nama, jenis, jenjang/kelas yang berlaku.
+- **Materi item** mengikuti format kurikulum PPG — dikelompokkan **Aspek → Mapel**:
+  - **Alim**: Hafalan (surat, Asmaul Husna, dalil, do'a harian)
+  - **Faqih**: Kefahaman Agama, Praktek Ibadah
+  - **Akhlaqul Karimah**: Akhlaq, Tata Krama
+  - **Mandiri**: Kemandirian, Olahraga & Seni
+  - Field: aspek, mapel, nama, keterangan, jenjang (opsional), **khusus putra/putri** (opsional, mis. ketrampilan Mandiri).
+  - Bacaan & Keilmuan (makna) aspek Alim **bukan** materi item, melainkan rentang kitab (lihat F3/F5).
 - **Naik kelas massal**: pilih banyak generus → pindahkan ke kelas tujuan.
 
 ### F3. Jadwal Rutin & Kegiatan
 - Admin mengatur jadwal rutin per kelas (hari, jam, guru default).
 - Kegiatan dari jadwal rutin **disiapkan otomatis** dan muncul di halaman **"Pengajian Hari Ini"**.
 - Kegiatan berisi: tanggal, jam, **satu atau beberapa kelas** (kegiatan gabungan, mis. pengajian umum seluruh Remaja), pengajar (≥1), **rundown** (urutan, waktu, aktivitas), **materi yang disampaikan**, catatan.
-- Materi makna (boleh lebih dari satu baris):
-  - Al-Hadist: `kitab + halaman mulai–selesai`
-  - Al-Qur'an: `surat:ayat mulai – surat:ayat selesai` (boleh lintas surat, mis. Al-Baqarah 280 – Ali 'Imran 10)
+- Materi kitab (boleh lebih dari satu baris), masing-masing berjenis **makna** atau **bacaan**:
+  - Makna Al-Hadist: `kitab + halaman mulai–selesai`
+  - Makna Al-Qur'an: `surat:ayat mulai – surat:ayat selesai` (boleh lintas surat, mis. Al-Baqarah 280 – Ali 'Imran 10)
+  - **Bacaan Al-Qur'an** (mis. Remaja Juz 3): rentang `surat:ayat` yang dibaca; hanya untuk Al-Qur'an
 - Kegiatan bisa: ditambah manual (kegiatan khusus), dibatalkan/diliburkan, ditandai selesai.
 - Tercatat **pengajar** dan **penginput** (bisa berbeda).
 - **Kegiatan gabungan**: peserta presensi = seluruh generus aktif dari semua kelas yang dipilih. Materi yang disampaikan dihitung ke progres setiap kelas peserta. Guru dapat mengelola kegiatan gabungan bila mengajar minimal salah satu kelasnya.
@@ -108,12 +115,15 @@ Remaja      → Pelajar (SLTA), Pra-nikah
 - **Lembar presensi cetak** (PDF) per kelas untuk guru yang memakai kertas.
 
 ### F5. Target Bulanan
-- Admin menginput target per kelas per bulan:
+Mengikuti dokumen "Target Materi Pembelajaran" dari tim kurikulum PPG (per jenjang, per periode).
+- Admin menginput target per **periode**: judul (mis. "Periode Bulan Oktober"), semester, **tanggal mulai–selesai** (tidak harus bulan kalender, mis. 5 Okt – 7 Nov 2026), catatan (strategi pembelajaran).
+- Satu target berlaku untuk **satu atau beberapa kelas** (mis. Pelajar + Pra-nikah). Periode target satu kelas tidak boleh bertumpukan.
+- Isi target:
+  - Bacaan Al-Qur'an: `rentang surat:ayat`
   - Makna: Al-Hadist `kitab + rentang halaman`; Al-Qur'an `rentang surat:ayat`
-  - Hafalan: daftar materi item
-  - Praktik: daftar materi item
+  - Materi item per aspek/mapel (Alim–Hafalan, Faqih, Akhlaqul Karimah, Mandiri)
   - Tilawati (Caberawit): target jilid/halaman
-- Tombol **"Salin dari bulan lalu"**.
+- Tombol **"Salin dari periode sebelumnya"**.
 
 ### F6. Progres
 Aturan perhitungan **makna (Al-Qur'an & Al-Hadist)**:
@@ -128,7 +138,17 @@ Aturan perhitungan **makna (Al-Qur'an & Al-Hadist)**:
 6. **Susulan**: admin/guru dapat mencatat bahwa anak sudah mengejar materi terlewat (rentang materi + tanggal).
 7. Al-Qur'an juga ditampilkan **per surat** (mis. "Al-Baqarah 45%, Ali 'Imran 10%").
 
-Aturan **hafalan & praktik**: tidak dihitung dari kehadiran. Dinilai per anak per materi item dengan status `belum` / `proses` / `lancar` (tanpa nilai angka untuk versi pertama). Riwayat penilaian disimpan; status terakhir yang berlaku.
+Aturan **bacaan Al-Qur'an**: sama persis dengan makna (dari kegiatan yang dihadiri + susulan), dihitung terpisah dari makna.
+
+Aturan **materi item** (semua aspek): tidak dihitung dari kehadiran. Dinilai per anak per materi item dengan tiga tingkat (tanpa nilai angka untuk versi pertama). Labelnya menyesuaikan aspek:
+
+| Aspek | Label |
+|---|---|
+| Alim (Hafalan) | Belum · Proses · Lancar |
+| Faqih | Belum · Proses · Paham |
+| Akhlaqul Karimah, Mandiri | Belum · Proses · Terbiasa |
+
+Riwayat penilaian disimpan; status terakhir yang berlaku. Materi khusus putra/putri hanya dinilai untuk generus yang sesuai.
 
 Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posisi tiap anak berbeda.
 - Input cepat dengan tombol **+1 / +2 / +3** (atau angka lain) sesuai jumlah halaman yang diselesaikan anak pada pertemuan itu; bisa juga mengisi posisi langsung (koreksi).
@@ -137,10 +157,10 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 
 ### F7. Raport & Rekap
 **Raport bulanan per anak:**
-- Identitas (nama, kelas, bulan)
+- Identitas (nama, kelas, periode target)
 - Kehadiran: jumlah & persentase per status
-- Makna: progres per kitab vs target bulan
-- Hafalan & praktik: status per materi item target
+- Bacaan & makna: progres per kitab vs target periode
+- Materi item: status per materi target, **dikelompokkan per aspek** (Alim, Faqih, Akhlaqul Karimah, Mandiri) seperti dokumen PPG
 - Tilawati: posisi saat ini vs target
 - Materi terlewat
 - Catatan pengajar/pengurus
