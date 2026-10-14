@@ -22,23 +22,30 @@
 | `text-xl` | 24px | Judul bagian |
 | `text-2xl` | 30px | Judul halaman, angka utama di kartu |
 
-- Font: **Inter** (fallback `system-ui`). Angka memakai `tabular-nums`.
+- Font: **Poppins** 400/500/600/700 (fallback `system-ui`). Angka memakai `tabular-nums`.
 - Tidak ada teks di bawah 16px. Tidak ada teks abu-abu muda di atas latar putih.
 
 ## 3. Warna
 
-Token didefinisikan sebagai CSS variable (shadcn/ui) dengan mode terang (default) dan gelap.
+Arah visual (disetujui 14 Okt 2026, mockup: https://claude.ai/artifact/UbNjQaWTnBzpUnNM6UsoCS) diadaptasi dari referensi *Islamic Platform* (Dribbble): **hijau tenang + aksen kunyit**, blok hijau dengan motif geometris tipis, latar mint, kartu putih bersudut 14–20px dengan bayangan sangat tipis.
 
-| Token | Terang | Pemakaian |
+Token didefinisikan sebagai CSS variable (shadcn/ui).
+
+| Token | Nilai | Pemakaian |
 |---|---|---|
-| `--primary` | Hijau tua `#15803d` | Tombol utama, tautan, progres |
+| `--brand` | Hijau merek `#019147` | Latar besar: header halaman HP, sidebar desktop. Teks putih di atasnya ≥ 24px atau tebal ≥ 19px |
+| `--primary` | Hijau aksi `#017A3C` | Tombol utama, tautan, item aktif (kontras teks putih 5,5:1) |
 | `--primary-foreground` | `#ffffff` | Teks di atas primary |
-| `--background` | `#ffffff` | Latar |
-| `--muted` | `#f4f4f5` | Latar kartu sekunder |
-| `--foreground` | `#18181b` | Teks utama |
-| `--muted-foreground` | `#52525b` | Teks sekunder (kontras ≥ 7:1) |
-| `--destructive` | `#b91c1c` | Hapus, alpa |
-| `--border` | `#d4d4d8` | Garis |
+| `--kunyit` | `#FF9822` | Aksen & aksi sekunder penting (mis. Naik kelas). **Selalu dengan teks gelap** |
+| `--background` | `#F4F6F5` | Latar halaman |
+| `--card` | `#ffffff` | Kartu, form |
+| `--mint` | `#E7F5EC` | Latar bagian, kepala tabel, item terpilih |
+| `--foreground` | `#121413` | Teks utama |
+| `--muted-foreground` | `#575757` | Teks sekunder (kontras 7,2:1) |
+| `--destructive` | `#A61B1B` | Hapus, alpa |
+| `--border` / `--input` | `#E3E6E8` / `#CFD6D2` | Garis / tepi isian |
+
+Hijau referensi `#019147` tidak dipakai untuk teks putih kecil (kontras 4,1:1) — karena itu tombol memakai `--primary`.
 
 Kontras minimum **WCAG AA (4.5:1)** untuk semua teks; target AAA (7:1) untuk teks dasar.
 
@@ -67,7 +74,7 @@ Tiga tingkat yang sama di database (`belum`/`proses`/`lancar`); **label mengikut
 - **Target sentuh minimum 48×48px**; tombol utama tinggi **56px**, lebar penuh di mobile.
 - Jarak antar elemen yang bisa diketuk ≥ 8px.
 - Padding halaman 16px (mobile), 24px (≥ md).
-- Radius: `--radius: 0.75rem`.
+- Radius: `--radius: 0.875rem` (14px; kartu 16–20px, chip penuh).
 - Lebar konten maksimum 768px untuk halaman isian; 1200px untuk rekap/tabel.
 
 ## 5. Navigasi
@@ -77,11 +84,12 @@ Tiga tingkat yang sama di database (`belum`/`proses`/`lancar`); **label mengikut
 | Peran | Item navigasi |
 |---|---|
 | Admin | Hari Ini · Generus · Target · Lainnya |
-| Guru | Hari Ini · Kelasku · Riwayat |
-| Pengurus | Beranda · Generus · Raport · Rekap |
-| Wali | Anakku · Raport |
+| Guru | Hari Ini · Kelasku · Riwayat · Lainnya |
+| Pengurus | Beranda · Generus · Raport · Lainnya (Rekap: kartu di Beranda & sidebar desktop) |
+| Wali | Anakku · Raport · Lainnya |
 
-- Pengguna dengan beberapa peran: tombol **"Ganti Mode"** di menu Lainnya/profil.
+- **Lainnya** ada di semua peran: profil, Ganti Mode, Keluar, dan (admin/pengurus) menu Kelola data.
+- Pengguna dengan beberapa peran: tombol **"Ganti Mode"** di Lainnya; mode tersimpan di cookie dan menentukan navigasi.
 - Wali dengan satu anak langsung masuk ke halaman anak; lebih dari satu → pilih anak (kartu besar dengan nama & kelas).
 - Setiap halaman turunan punya tombol **← Kembali** berlabel di kiri atas.
 

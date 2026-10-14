@@ -224,10 +224,11 @@ Pola kebijakan:
 │   │   ├── beranda/                  # dashboard sesuai peran
 │   │   ├── hari-ini/                 # Pengajian Hari Ini
 │   │   ├── kegiatan/[id]/            # detail, materi, rundown, presensi
-│   │   ├── generus/[id]/             # profil & progres anak
+│   │   ├── generus/              # daftar (+naik kelas massal), baru/, [id]/ubah/; [id]/ = progres anak (Tahap 5)
 │   │   ├── target/                   # target bulanan
 │   │   ├── raport/                   # raport anak & rekap
-│   │   └── kelola/                   # master data (admin)
+│   │   ├── lainnya/                 # profil, ganti mode, keluar, menu kelola
+│   │   └── kelola/                   # master data: kelas, guru, akun (& wali), kitab, materi, tilawati — admin ubah, pengurus lihat
 │   ├── manifest.ts
 │   └── sw.ts                         # service worker (Serwist)
 ├── components/

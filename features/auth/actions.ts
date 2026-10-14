@@ -1,7 +1,10 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { normalizePhone, phoneToEmail } from "@/lib/auth/phone";
+import { COOKIE_MODE, getSession } from "@/lib/auth/session";
+import type { Peran } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { masukSchema } from "@/lib/validation/auth";
 
@@ -36,5 +39,14 @@ export async function masuk(_prev: MasukState, formData: FormData): Promise<Masu
 export async function keluar() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  (await cookies()).delete(COOKIE_MODE);
   redirect("/masuk");
+}
+
+/** Pengguna dengan beberapa peran memilih mode navigasi (DESIGN §5 "Ganti Mode"). */
+export async function gantiMode(peran: Peran) {
+  const session = await getSession();
+  if (!session.peran.includes(peran)) return;
+  (await cookies()).set(COOKIE_MODE, peran, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax" });
+  redirect("/beranda");
 }
