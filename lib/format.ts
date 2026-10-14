@@ -98,3 +98,49 @@ export function labelKelas(kelas: { jenjang: Jenjang; nama: string }): string {
   const jenjang = LABEL_JENJANG[kelas.jenjang];
   return kelas.nama === jenjang ? jenjang : `${jenjang} · ${kelas.nama}`;
 }
+
+/**
+ * Kelas sebuah kegiatan (DESIGN §7.2): satu kelas → "Caberawit · 1A";
+ * gabungan → "Pelajar + Pra-nikah", atau "Caberawit 1A + 1B" bila satu jenjang Caberawit.
+ */
+export function labelKelasKegiatan(kelas: { jenjang: Jenjang; nama: string }[]): string {
+  if (kelas.length === 0) return "Tanpa kelas";
+  if (kelas.length === 1) return labelKelas(kelas[0]);
+  const jenjang = new Set(kelas.map((k) => k.jenjang));
+  if (jenjang.size === 1 && kelas[0].jenjang === "caberawit") {
+    return `Caberawit ${kelas.map((k) => k.nama).join(" + ")}`;
+  }
+  return kelas.map((k) => k.nama).join(" + ");
+}
+
+export const LABEL_HARI = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"] as const;
+
+/** "19:30:00" → "19.30" (format jam Indonesia, DESIGN §8). */
+export function formatJam(jam: string | null | undefined): string {
+  if (!jam) return "";
+  return jam.slice(0, 5).replace(":", ".");
+}
+
+export function formatRentangJam(mulai: string | null, selesai: string | null): string {
+  if (!mulai) return "";
+  return selesai ? `${formatJam(mulai)}–${formatJam(selesai)}` : formatJam(mulai);
+}
+
+/** Geser tanggal `YYYY-MM-DD` sebanyak n hari (tanpa terpengaruh zona waktu server). */
+export function geserTanggal(tanggal: string, n: number): string {
+  const d = new Date(`${tanggal}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+export type StatusPresensi = Enums["status_presensi"];
+
+export const URUTAN_PRESENSI: StatusPresensi[] = ["hadir", "terlambat", "izin", "sakit", "alpa"];
+
+export const LABEL_PRESENSI: Record<StatusPresensi, string> = {
+  hadir: "Hadir",
+  terlambat: "Terlambat",
+  izin: "Izin",
+  sakit: "Sakit",
+  alpa: "Alpa",
+};

@@ -13,7 +13,7 @@ export function Halaman({ children, lebar = "lebar" }: { children: React.ReactNo
 }
 
 type HeaderProps = {
-  title: string;
+  title: React.ReactNode;
   subtitle?: React.ReactNode;
   back?: { href: string; label?: string };
   actions?: React.ReactNode;

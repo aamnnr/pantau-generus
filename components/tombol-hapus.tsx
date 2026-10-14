@@ -17,11 +17,13 @@ import { Button } from "@/components/ui/button";
 import type { FormState } from "@/lib/form";
 
 /** Aksi merusak selalu lewat konfirmasi (DESIGN §1.5). */
-export function TombolHapus({ action, judul, keterangan, label = "Hapus" }: {
+export function TombolHapus({ action, judul, keterangan, label = "Hapus", ikon, variant = "destructive" }: {
   action: () => Promise<FormState | void>;
   judul: string;
   keterangan: string;
   label?: string;
+  ikon?: React.ReactNode;
+  variant?: "destructive" | "outline";
 }) {
   const [open, setOpen] = useState(false);
   const [pending, start] = useTransition();
@@ -29,8 +31,8 @@ export function TombolHapus({ action, judul, keterangan, label = "Hapus" }: {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button type="button" variant="destructive" className="w-full lg:w-auto">
-          <Trash2 aria-hidden />
+        <Button type="button" variant={variant} className="w-full lg:w-auto">
+          {ikon ?? <Trash2 aria-hidden />}
           {label}
         </Button>
       </AlertDialogTrigger>

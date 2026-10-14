@@ -113,7 +113,7 @@ Remaja      → Pelajar (SLTA), Pra-nikah
 - Status: `hadir`, `terlambat`, `izin`, `sakit`, `alpa`.
 - **Presensi cepat**: semua anak di kelas default `hadir`; pengguna cukup mengetuk yang tidak hadir lalu simpan.
 - Bisa diubah setelah disimpan (dengan jejak siapa yang mengubah).
-- **Lembar presensi cetak** (PDF) per kelas untuk guru yang memakai kertas.
+- **Lembar presensi cetak** (PDF) per kelas untuk guru yang memakai kertas — dibangun di Tahap 6 bersama fitur cetak raport.
 
 ### F5. Target Bulanan
 Mengikuti dokumen "Target Materi Pembelajaran" dari tim kurikulum PPG (per jenjang, per periode).
@@ -196,11 +196,11 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 |---|---|---|
 | 0 | Dokumen fondasi (PRD, Arsitektur, Desain) | ✅ |
 | 1 | Setup proyek, skema DB + RLS, auth No. HP + PIN | ✅ |
-| 2 | Master data (kelas, generus, guru, wali, kitab, materi item) | ⏳ |
-| 3 | Jadwal rutin, kegiatan, presensi cepat | – |
+| 2 | Master data (kelas, generus, guru, wali, kitab, materi item) | ✅ |
+| 3 | Jadwal rutin, kegiatan, presensi cepat | ⏳ |
 | 4 | Target bulanan | – |
 | 5 | Progres, susulan, penilaian hafalan/praktik/tilawati | – |
-| 6 | Raport & rekap, cetak PDF | – |
+| 6 | Raport & rekap, cetak PDF (termasuk lembar presensi) | – |
 | 7 | PWA, deploy, backup | – |
 | Nanti | Mode offline, multi-kelompok, notifikasi, impor target dari foto/PDF dokumen PPG (ambil poin otomatis) | – |
 

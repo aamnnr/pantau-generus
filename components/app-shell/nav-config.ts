@@ -49,6 +49,7 @@ export const NAV_UTAMA: Record<Peran, NavItem[]> = {
 };
 
 const KELOLA = {
+  jadwal: { href: "/kelola/jadwal", label: "Jadwal Rutin", icon: "kalender" },
   kelas: { href: "/kelola/kelas", label: "Kelas", icon: "kelas" },
   guru: { href: "/kelola/guru", label: "Guru", icon: "guru" },
   akun: { href: "/kelola/akun", label: "Akun & Wali", icon: "akun" },

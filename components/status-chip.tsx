@@ -26,6 +26,15 @@ export function StatusChip({ nada, simbol, children, className }: {
   );
 }
 
+// ︎ memaksa simbol tampil sebagai teks, bukan emoji berwarna.
+export const CHIP_PRESENSI = {
+  hadir: { nada: "hijau", simbol: "✓" },
+  terlambat: { nada: "kunyit", simbol: "⏱︎" },
+  izin: { nada: "biru", simbol: "✉︎" },
+  sakit: { nada: "ungu", simbol: "✚" },
+  alpa: { nada: "merah", simbol: "✕" },
+} as const satisfies Record<string, { nada: Nada; simbol: string }>;
+
 export const CHIP_STATUS_GENERUS = {
   aktif: { nada: "hijau", simbol: "●" },
   lulus: { nada: "kunyit", simbol: "◆" },

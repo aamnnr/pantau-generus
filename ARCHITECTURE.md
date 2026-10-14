@@ -121,11 +121,17 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 | `kegiatan_kelas` | `kegiatan_id`, `kelas_id` | ≥1 kelas; >1 = **kegiatan gabungan**. Peserta = generus aktif semua kelas ini |
 | `kegiatan_pengajar` | `kegiatan_id`, `guru_id` | ≥1 pengajar |
 | `kegiatan_rundown` | `kegiatan_id`, `urutan`, `waktu`, `aktivitas` | |
-| `kegiatan_materi` | `kegiatan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai` | Satuan mengikuti `kitab.satuan` (lihat §4.6). `bacaan` hanya untuk Al-Qur'an. `CHECK (mulai <= selesai)` |
+| `kegiatan_materi` | `kegiatan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `urutan` | Satuan mengikuti `kitab.satuan` (lihat §4.6). `bacaan` hanya untuk Al-Qur'an. `CHECK (mulai <= selesai)` |
 | `presensi` | `kegiatan_id`, `generus_id`, `status` (`hadir`\|`terlambat`\|`izin`\|`sakit`\|`alpa`), `keterangan`, `diubah_oleh` | Unik (`kegiatan_id`, `generus_id`) |
 | `susulan` | `generus_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `tanggal`, `guru_id` | Menambah progres anak |
 
 **Pembuatan kegiatan rutin:** tidak memakai cron. Saat halaman "Pengajian Hari Ini" (atau daftar kegiatan suatu tanggal) dibuka, fungsi SQL `siapkan_kegiatan(tanggal)` melakukan `INSERT … ON CONFLICT DO NOTHING` dari `jadwal_rutin` yang cocok. Idempoten dan gratis.
+
+**Pendukung layar kegiatan (Tahap 3):**
+- `v_kegiatan_ringkas` (security_invoker): kelas (jsonb), pengajar, jumlah presensi & materi — kartu Hari Ini/Riwayat.
+- `v_kegiatan_materi` (security_invoker): materi + `teks` (`fn_format_rentang`) + surat:ayat untuk diedit.
+- `simpan_materi_kegiatan(kegiatan_id, baris jsonb)` & `simpan_rundown(kegiatan_id, baris jsonb)`: ganti seluruh baris secara atomik; Al-Qur'an dikirim sebagai surat:ayat dan dikonversi ke ayat global di SQL. Fungsi invoker, dicek `boleh_kelola_kegiatan`, RLS tetap berlaku.
+- Presensi disimpan dengan upsert `(kegiatan_id, generus_id)`; peserta = generus aktif semua kelas kegiatan + anak yang sudah punya presensi.
 
 ### 4.5 Penilaian & Target
 
@@ -224,12 +230,13 @@ Pola kebijakan:
 │   ├── (app)/                        # layout terautentikasi + navigasi per peran
 │   │   ├── beranda/                  # dashboard sesuai peran
 │   │   ├── hari-ini/                 # Pengajian Hari Ini
-│   │   ├── kegiatan/[id]/            # detail, materi, rundown, presensi
+│   │   ├── kegiatan/                 # baru/ (kegiatan khusus), [id]/ (Materi → Kehadiran → Selesai), [id]/ubah/
+│   │   ├── riwayat/                  # kegiatan 60 hari terakhir
 │   │   ├── generus/              # daftar (+naik kelas massal), baru/, [id]/ubah/; [id]/ = progres anak (Tahap 5)
 │   │   ├── target/                   # target bulanan
 │   │   ├── raport/                   # raport anak & rekap
 │   │   ├── lainnya/                 # profil, ganti mode, keluar, menu kelola
-│   │   └── kelola/                   # master data: kelas, guru, akun (& wali), kitab, materi, tilawati — admin ubah, pengurus lihat
+│   │   └── kelola/                   # master data: jadwal rutin, kelas, guru, akun (& wali), kitab, materi, tilawati — admin ubah, pengurus lihat
 │   ├── manifest.ts
 │   └── sw.ts                         # service worker (Serwist)
 ├── components/

@@ -80,6 +80,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "capaian_tilawati_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "capaian_tilawati_kelompok_id_fkey"
             columns: ["kelompok_id"]
             isOneToOne: false
@@ -582,6 +589,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "kegiatan_kelas_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "kegiatan_kelas_kelas_id_fkey"
             columns: ["kelas_id"]
             isOneToOne: false
@@ -608,6 +622,7 @@ export type Database = {
           mulai: number
           selesai: number
           updated_at: string
+          urutan: number
         }
         Insert: {
           created_at?: string
@@ -619,6 +634,7 @@ export type Database = {
           mulai: number
           selesai: number
           updated_at?: string
+          urutan?: number
         }
         Update: {
           created_at?: string
@@ -630,6 +646,7 @@ export type Database = {
           mulai?: number
           selesai?: number
           updated_at?: string
+          urutan?: number
         }
         Relationships: [
           {
@@ -637,6 +654,13 @@ export type Database = {
             columns: ["kegiatan_id"]
             isOneToOne: false
             referencedRelation: "kegiatan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
             referencedColumns: ["id"]
           },
           {
@@ -696,6 +720,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "kegiatan_pengajar_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "kegiatan_pengajar_kelompok_id_fkey"
             columns: ["kelompok_id"]
             isOneToOne: false
@@ -741,6 +772,13 @@ export type Database = {
             columns: ["kegiatan_id"]
             isOneToOne: false
             referencedRelation: "kegiatan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_rundown_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
             referencedColumns: ["id"]
           },
           {
@@ -1065,6 +1103,13 @@ export type Database = {
             columns: ["kegiatan_id"]
             isOneToOne: false
             referencedRelation: "kegiatan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "presensi_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
             referencedColumns: ["id"]
           },
           {
@@ -1560,7 +1605,110 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_kegiatan_materi: {
+        Row: {
+          id: string | null
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"] | null
+          kegiatan_id: string | null
+          kitab_id: string | null
+          kitab_jenis: Database["public"]["Enums"]["jenis_kitab"] | null
+          kitab_nama: string | null
+          mulai: number | null
+          mulai_ayat: number | null
+          mulai_surat: number | null
+          selesai: number | null
+          selesai_ayat: number | null
+          selesai_surat: number | null
+          teks: string | null
+          urutan: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kegiatan_materi_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "kegiatan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_kegiatan_id_fkey"
+            columns: ["kegiatan_id"]
+            isOneToOne: false
+            referencedRelation: "v_kegiatan_ringkas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_kitab_id_fkey"
+            columns: ["kitab_id"]
+            isOneToOne: false
+            referencedRelation: "kitab"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_kegiatan_ringkas: {
+        Row: {
+          id: string | null
+          jadwal_rutin_id: string | null
+          jam_mulai: string | null
+          jam_selesai: string | null
+          jenis: Database["public"]["Enums"]["jenis_kegiatan"] | null
+          judul: string | null
+          jumlah_materi: number | null
+          jumlah_presensi: number | null
+          kelas: Json | null
+          kelompok_id: string | null
+          pengajar: string[] | null
+          status: Database["public"]["Enums"]["status_kegiatan"] | null
+          tanggal: string | null
+        }
+        Insert: {
+          id?: string | null
+          jadwal_rutin_id?: string | null
+          jam_mulai?: string | null
+          jam_selesai?: string | null
+          jenis?: Database["public"]["Enums"]["jenis_kegiatan"] | null
+          judul?: string | null
+          jumlah_materi?: never
+          jumlah_presensi?: never
+          kelas?: never
+          kelompok_id?: string | null
+          pengajar?: never
+          status?: Database["public"]["Enums"]["status_kegiatan"] | null
+          tanggal?: string | null
+        }
+        Update: {
+          id?: string | null
+          jadwal_rutin_id?: string | null
+          jam_mulai?: string | null
+          jam_selesai?: string | null
+          jenis?: Database["public"]["Enums"]["jenis_kegiatan"] | null
+          judul?: string | null
+          jumlah_materi?: never
+          jumlah_presensi?: never
+          kelas?: never
+          kelompok_id?: string | null
+          pengajar?: never
+          status?: Database["public"]["Enums"]["status_kegiatan"] | null
+          tanggal?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kegiatan_jadwal_rutin_id_fkey"
+            columns: ["jadwal_rutin_id"]
+            isOneToOne: false
+            referencedRelation: "jadwal_rutin"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_kelompok_id_fkey"
+            columns: ["kelompok_id"]
+            isOneToOne: false
+            referencedRelation: "kelompok"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       boleh_kelola_kegiatan: {
@@ -1606,6 +1754,14 @@ export type Database = {
         Returns: boolean
       }
       siapkan_kegiatan: { Args: { p_tanggal: string }; Returns: number }
+      simpan_materi_kegiatan: {
+        Args: { p_baris: Json; p_kegiatan_id: string }
+        Returns: undefined
+      }
+      simpan_rundown: {
+        Args: { p_baris: Json; p_kegiatan_id: string }
+        Returns: undefined
+      }
       wali_dari: { Args: { p_generus_id: string }; Returns: boolean }
     }
     Enums: {
