@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useSyncExternalStore } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -119,12 +120,22 @@ export function PilihanKartu({ name, type = "radio", options, defaultValue = [],
   );
 }
 
+// Store "sudah terhidrasi": snapshot server false, klien true. Panggil sekali setelah
+// berlangganan agar React pasti membandingkan ulang dan beralih ke snapshot klien.
+const berlangganan = (ubah: () => void) => {
+  queueMicrotask(ubah);
+  return () => {};
+};
+
 export function SubmitButton({ children, pendingLabel = "Menyimpan…", className, ...props }: React.ComponentProps<typeof Button> & {
   pendingLabel?: string;
 }) {
   const { pending } = useFormStatus();
+  // Kunci sampai terhidrasi: kirim sebelum JS siap (HP lambat) jatuh ke POST biasa
+  // dan memicu galat cookies Next.js, juga membuang state form.
+  const siap = useSyncExternalStore(berlangganan, () => true, () => false);
   return (
-    <Button type="submit" size="lg" disabled={pending} className={cn("w-full lg:w-auto lg:min-w-48", className)} {...props}>
+    <Button type="submit" size="lg" disabled={pending || !siap} className={cn("w-full lg:w-auto lg:min-w-48", className)} {...props}>
       {pending ? pendingLabel : children}
     </Button>
   );

@@ -125,7 +125,7 @@ export function PilihMateriItem({ opsi, dipilih, onChange }: {
   );
 }
 
-function KartuItem({ o, aktif, onToggle }: { o: OpsiMateriItem; aktif: boolean; onToggle: () => void }) {
+export function KartuItem({ o, aktif, onToggle }: { o: OpsiMateriItem; aktif: boolean; onToggle: () => void }) {
   return (
     <button
       type="button"

@@ -1505,6 +1505,13 @@ export type Database = {
             referencedRelation: "target_bulanan"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "target_bulanan_kelas_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: false
+            referencedRelation: "v_target_ringkas"
+            referencedColumns: ["id"]
+          },
         ]
       }
       target_kitab: {
@@ -1518,6 +1525,7 @@ export type Database = {
           selesai: number
           target_bulanan_id: string
           updated_at: string
+          urutan: number
         }
         Insert: {
           created_at?: string
@@ -1529,6 +1537,7 @@ export type Database = {
           selesai: number
           target_bulanan_id: string
           updated_at?: string
+          urutan?: number
         }
         Update: {
           created_at?: string
@@ -1540,6 +1549,7 @@ export type Database = {
           selesai?: number
           target_bulanan_id?: string
           updated_at?: string
+          urutan?: number
         }
         Relationships: [
           {
@@ -1561,6 +1571,13 @@ export type Database = {
             columns: ["target_bulanan_id"]
             isOneToOne: false
             referencedRelation: "target_bulanan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_makna_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: false
+            referencedRelation: "v_target_ringkas"
             referencedColumns: ["id"]
           },
         ]
@@ -1612,6 +1629,13 @@ export type Database = {
             referencedRelation: "target_bulanan"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "target_materi_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: false
+            referencedRelation: "v_target_ringkas"
+            referencedColumns: ["id"]
+          },
         ]
       }
       target_tilawati: {
@@ -1655,6 +1679,13 @@ export type Database = {
             columns: ["target_bulanan_id"]
             isOneToOne: true
             referencedRelation: "target_bulanan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_tilawati_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: true
+            referencedRelation: "v_target_ringkas"
             referencedColumns: ["id"]
           },
         ]
@@ -1768,6 +1799,110 @@ export type Database = {
           },
         ]
       }
+      v_target_kitab: {
+        Row: {
+          id: string | null
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"] | null
+          kitab_id: string | null
+          kitab_jenis: Database["public"]["Enums"]["jenis_kitab"] | null
+          kitab_nama: string | null
+          mulai: number | null
+          mulai_ayat: number | null
+          mulai_surat: number | null
+          selesai: number | null
+          selesai_ayat: number | null
+          selesai_surat: number | null
+          target_bulanan_id: string | null
+          teks: string | null
+          urutan: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "target_makna_kitab_id_fkey"
+            columns: ["kitab_id"]
+            isOneToOne: false
+            referencedRelation: "kitab"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_makna_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: false
+            referencedRelation: "target_bulanan"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_makna_target_bulanan_id_fkey"
+            columns: ["target_bulanan_id"]
+            isOneToOne: false
+            referencedRelation: "v_target_ringkas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_target_ringkas: {
+        Row: {
+          ada_tilawati: boolean | null
+          boleh_kelola: boolean | null
+          catatan: string | null
+          dibuat_oleh: string | null
+          id: string | null
+          judul: string | null
+          jumlah_kitab: number | null
+          jumlah_materi: number | null
+          kelas: Json | null
+          kelompok_id: string | null
+          mulai: string | null
+          selesai: string | null
+          semester: string | null
+        }
+        Insert: {
+          ada_tilawati?: never
+          boleh_kelola?: never
+          catatan?: string | null
+          dibuat_oleh?: string | null
+          id?: string | null
+          judul?: string | null
+          jumlah_kitab?: never
+          jumlah_materi?: never
+          kelas?: never
+          kelompok_id?: string | null
+          mulai?: string | null
+          selesai?: string | null
+          semester?: string | null
+        }
+        Update: {
+          ada_tilawati?: never
+          boleh_kelola?: never
+          catatan?: string | null
+          dibuat_oleh?: string | null
+          id?: string | null
+          judul?: string | null
+          jumlah_kitab?: never
+          jumlah_materi?: never
+          kelas?: never
+          kelompok_id?: string | null
+          mulai?: string | null
+          selesai?: string | null
+          semester?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "target_bulanan_dibuat_oleh_fkey"
+            columns: ["dibuat_oleh"]
+            isOneToOne: false
+            referencedRelation: "profil"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "target_bulanan_kelompok_id_fkey"
+            columns: ["kelompok_id"]
+            isOneToOne: false
+            referencedRelation: "kelompok"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       boleh_kelola_kegiatan: {
@@ -1791,6 +1926,10 @@ export type Database = {
       fn_format_rentang: {
         Args: { p_kitab_id: string; p_mulai: number; p_selesai: number }
         Returns: string
+      }
+      fn_rentang_masukan: {
+        Args: { p_baris: Json; p_nomor: number }
+        Returns: Record<string, unknown>
       }
       fn_surat_ayat: {
         Args: { p_global: number }
@@ -1816,7 +1955,20 @@ export type Database = {
         Args: { p: Database["public"]["Enums"]["peran"] }
         Returns: boolean
       }
+      salin_isi_target: {
+        Args: { p_sumber_id: string; p_tujuan_id: string }
+        Returns: undefined
+      }
       siapkan_kegiatan: { Args: { p_tanggal: string }; Returns: number }
+      simpan_isi_target: {
+        Args: {
+          p_kitab: Json
+          p_materi_item_ids: string[]
+          p_target_id: string
+          p_tilawati: Json
+        }
+        Returns: undefined
+      }
       simpan_materi_item_kegiatan: {
         Args: { p_kegiatan_id: string; p_materi_item_ids: string[] }
         Returns: undefined

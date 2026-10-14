@@ -143,11 +143,18 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 | `capaian_tilawati` | `generus_id`, `jenis` (`tambah`\|`koreksi`\|`naik_jilid`), `tambahan` (int, untuk `tambah`), `jilid`, `halaman` (posisi **setelah** entri), `kegiatan_id` (nullable), `tanggal`, `dinilai_oleh` | Append-only; entri terakhir = posisi saat ini. Tombol +N membuat entri `tambah` |
 | `target_bulanan` | `judul` (mis. "Periode Bulan Oktober"), `semester`, `mulai`, `selesai` (date), `catatan`, `dibuat_oleh` | Periode dari lembaga atas, tidak harus bulan kalender (mis. 5 Okt – 7 Nov) |
 | `target_bulanan_kelas` | `target_bulanan_id`, `kelas_id` | ≥1 kelas per target. Periode target satu kelas tidak boleh bertumpukan (trigger) |
-| `target_kitab` | `target_bulanan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai` | Makna Al-Qur'an/Al-Hadist dan bacaan Al-Qur'an |
+| `target_kitab` | `target_bulanan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `urutan` | Makna Al-Qur'an/Al-Hadist dan bacaan Al-Qur'an |
 | `target_materi` | `target_bulanan_id`, `materi_item_id` | Materi item semua aspek (Alim/Faqih/Akhlaqul Karimah/Mandiri) |
 | `target_tilawati` | `target_bulanan_id`, `jilid`, `halaman` | |
 | `catatan_raport` | `generus_id`, `bulan`, `catatan`, `ditulis_oleh` | |
 | `pengaturan` | `kelompok_id`, `ambang_kehadiran` (default 60) | |
+
+**Pendukung layar target (Tahap 4):**
+- `v_target_ringkas` (security_invoker): kelas (jsonb), jumlah kitab/materi, ada tilawati, `boleh_kelola` (`boleh_kelola_target`) — kartu daftar & header detail.
+- `v_target_kitab` (security_invoker): baris kitab + `teks` + surat:ayat untuk diedit.
+- `simpan_isi_target(target_id, kitab jsonb, materi_item_ids uuid[], tilawati jsonb)`: ganti seluruh isi target secara atomik; `salin_isi_target(sumber_id, tujuan_id)` menyalin isi periode sebelumnya ke target baru.
+- `fn_rentang_masukan(baris jsonb, nomor)`: konversi & validasi satu baris rentang (halaman atau surat:ayat), dipakai bersama `simpan_materi_kegiatan` dan `simpan_isi_target`.
+- Info target (judul, periode, kelas) lewat insert/update biasa; trigger menolak periode bertumpukan (`23P01`) dan Server Action menampilkannya sebagai pesan ramah.
 
 ### 4.6 Satuan Makna: Halaman vs Ayat Global
 
@@ -234,7 +241,7 @@ Pola kebijakan:
 │   │   ├── kegiatan/                 # baru/ (kegiatan khusus), [id]/ (Materi → Kehadiran → Selesai), [id]/ubah/
 │   │   ├── riwayat/                  # kegiatan 60 hari terakhir
 │   │   ├── generus/              # daftar (+naik kelas massal), baru/, [id]/ubah/; [id]/ = progres anak (Tahap 5)
-│   │   ├── target/                   # target bulanan
+│   │   ├── target/                   # daftar (berjalan/akan datang/lewat), baru/ (+salin isi), [id]/ (isi per aspek), [id]/ubah/
 │   │   ├── raport/                   # raport anak & rekap
 │   │   ├── lainnya/                 # profil, ganti mode, keluar, menu kelola
 │   │   └── kelola/                   # master data: jadwal rutin, kelas, guru, akun (& wali), kitab, materi, tilawati — admin ubah, pengurus lihat
