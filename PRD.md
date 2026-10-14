@@ -62,7 +62,7 @@ Pengguna utama berusia **30–50 tahun**, sebagian besar memakai HP Android kela
 ## 5. Struktur Jenjang & Kelas
 
 ```
-Caberawit   → Kelas A, Kelas B, Kelas C   (rincian menyusul)
+Caberawit   → TK, 1A, 1B, 2A, 2B, 3A, 3B   (mengikuti kelas sekolah: TK → kelas TK; SD → 1A–3B)
 Pra-remaja  → (usia SMP)
 Remaja      → Pelajar (SLTA), Pra-nikah
 ```
@@ -185,7 +185,7 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 
 ## 9. Pertanyaan Terbuka
 
-1. ~~Rincian kelas Caberawit~~ → kelas adalah data master yang dikelola admin lewat aplikasi (Tahap 2); rinciannya diisi menyusul.
+1. ~~Rincian kelas Caberawit~~ → TK, 1A, 1B, 2A, 2B, 3A, 3B; anak ditempatkan sesuai kelas sekolahnya. Tetap data master yang dikelola admin.
 2. ~~Tilawati~~ → diputuskan: per anak, input +N halaman (lihat F6).
 3. Apakah raport perlu format/kop khusus dari lembaga atas?
 4. ~~Ambang "perlu perhatian"~~ → diputuskan: hanya kehadiran < 60% (dapat diatur); kriteria "materi terlewat" tidak dipakai, cukup lewat daftar susulan.

@@ -74,7 +74,7 @@ pnpm akun:buat --nama "…" --hp 08… --pin 123456 --peran admin [--kelompok "�
 |---|---|
 | Generus | Anak/remaja binaan |
 | Jenjang | Caberawit, Pra-remaja (usia SMP), Remaja |
-| Kelas | Pembagian dalam jenjang (Caberawit A/B/C; Remaja: Pelajar, Pra-nikah) |
+| Kelas | Pembagian dalam jenjang (Caberawit: TK, 1A–3B; Remaja: Pelajar, Pra-nikah) |
 | Kegiatan | Satu sesi pengajian (tanggal, kelas, rundown, materi) |
 | Kegiatan gabungan | Kegiatan untuk lebih dari satu kelas sekaligus |
 | Jadwal rutin | Pola kegiatan mingguan per kelas |
