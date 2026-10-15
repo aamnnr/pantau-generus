@@ -7,7 +7,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Lewati aset statis agar CSS/JS/ikon tetap termuat tanpa sesi.
-    "/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    // Lewati aset statis, service worker, manifest, ikon, dan halaman offline: harus termuat tanpa sesi.
+    "/((?!_next/static|_next/image|favicon.ico|serwist/|~offline|manifest.webmanifest|ikon/|.*\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

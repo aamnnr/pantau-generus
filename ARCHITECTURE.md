@@ -253,8 +253,11 @@ Pola kebijakan:
 │   │   ├── lembar-presensi/          # lembar presensi cetak per kelas per bulan (A4 mendatar)
 │   │   ├── lainnya/                 # profil, ganti mode, keluar, menu kelola
 │   │   └── kelola/                   # master data: jadwal rutin, kelas, guru, akun (& wali), kitab, materi, tilawati — admin ubah, pengurus lihat
-│   ├── manifest.ts
-│   └── sw.ts                         # service worker (Serwist)
+│   ├── manifest.ts                   # manifest PWA (/manifest.webmanifest)
+│   ├── ikon/[ukuran]/                # ikon PWA 192/512/maskable/apple (next/og, dibuat saat build)
+│   ├── ~offline/                     # halaman tanpa koneksi (di-precache)
+│   ├── serwist/[path]/               # route pembangun service worker
+│   └── sw.ts                         # service worker (Serwist): aset statis saja
 ├── components/
 │   ├── ui/                           # shadcn/ui
 │   └── …                             # komponen domain
@@ -309,10 +312,22 @@ Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
 
 | Kebutuhan | Solusi |
 |---|---|
-| Deploy | Vercel terhubung ke GitHub (preview per PR) |
-| Migrasi produksi | `supabase db push` dari CI/manual |
-| Backup | GitHub Action mingguan: `pg_dump` → artifact terenkripsi |
-| Supabase pause (7 hari tidak aktif) | GitHub Action ping harian |
+| Deploy | Vercel Hobby terhubung ke GitHub (deploy otomatis dari `main`, preview per PR); region fungsi `sin1` (`vercel.json`) |
+| Migrasi produksi | Manual: `pnpm exec supabase db push --db-url "<session pooler produksi>"` (CLI tetap ter-link ke dev) |
+| Backup | `.github/workflows/backup.yml` mingguan (Senin 02.00 WIB): `supabase db dump` roles + skema + data (termasuk `auth`) → `tar.gz` → GPG AES-256 → artifact 90 hari |
+| Supabase pause (7 hari tidak aktif) | `.github/workflows/keep-alive.yml`: satu permintaan REST per hari |
+| PWA | Serwist: hanya aset statis yang di-cache; halaman & data selalu dari jaringan; tanpa koneksi → `/~offline`. SW nonaktif di dev |
+
+**Langkah deploy pertama (oleh pemilik akun):**
+1. **Supabase produksi**: buat proyek `pantau-generus` (region Singapore). Authentication → Sign In / Providers: Email aktif, **matikan pendaftaran baru** dan konfirmasi email (sama seperti dev). Catat URL, publishable key, secret key, dan *Session pooler connection string* (Connect → Session pooler).
+2. **Skema**: `pnpm exec supabase db push --db-url "<session pooler produksi>"` — semua migrasi diterapkan; jangan pernah `db reset` ke produksi.
+3. **Admin pertama**: salin `.env.example` → `.env.produksi.local` berisi kunci produksi, lalu `pnpm akun:buat:produksi --nama "…" --hp 08… --pin …… --peran admin --kelompok "…"`.
+4. **Vercel**: Add New → Project → impor repo GitHub; isi Environment Variables (Production) `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `AUTH_EMAIL_DOMAIN` (sama dengan dev); Deploy.
+5. **GitHub → Settings → Secrets and variables → Actions**: `SUPABASE_DB_URL` (session pooler produksi), `BACKUP_PASSPHRASE` (simpan juga di tempat aman — tanpa ini backup tidak bisa dibuka), `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`. Jalankan **Backup mingguan** dan **Keep-alive** sekali lewat *Run workflow* untuk memastikan berhasil.
+6. **Uji**: buka domain Vercel di HP Android → masuk → "Pasang" → buka dari layar utama.
+
+**Memulihkan backup:** unduh artifact → `gpg -d pantau-generus-YYYYMMDD.tar.gz.gpg > b.tar.gz && tar -xzf b.tar.gz` → ke proyek Supabase baru/kosong:
+`psql --single-transaction --variable ON_ERROR_STOP=1 --file roles.sql --file schema.sql --command "SET session_replication_role = replica" --file data.sql --dbname "<connection string>"`.
 
 ## 11. Keputusan Arsitektur (ADR singkat)
 
