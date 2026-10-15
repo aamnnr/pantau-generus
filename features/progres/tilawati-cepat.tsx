@@ -17,11 +17,13 @@ type Jilid = { jilid: number; total_halaman: number };
  * Tilawati Cepat (DESIGN §7.4a): +1/+2/+3/… per anak, Urungkan lewat toast,
  * tawaran naik jilid di akhir jilid, dan koreksi posisi dengan mengetuk posisi.
  */
-export function TilawatiCepat({ baris, jilid, kegiatanId = null, bisa }: {
+export function TilawatiCepat({ baris, jilid, kegiatanId = null, bisa, polos }: {
   baris: BarisTilawati[];
   jilid: Jilid[];
   kegiatanId?: string | null;
   bisa: boolean;
+  /** Tanpa kartu per anak, untuk dipakai di dalam kartu lain (Progres Anak). */
+  polos?: boolean;
 }) {
   const [posisi, setPosisi] = useState<Record<string, Posisi | null>>(() =>
     Object.fromEntries(baris.map((b) => [b.generus_id, b.posisi])),
@@ -77,7 +79,7 @@ export function TilawatiCepat({ baris, jilid, kegiatanId = null, bisa }: {
           const p = posisi[b.generus_id];
           const tunggu = sibuk === b.generus_id;
           return (
-            <li key={b.generus_id} className="flex flex-col gap-3 rounded-2xl bg-card p-3.5 shadow-[0_1px_2px_rgba(18,20,19,0.06)]">
+            <li key={b.generus_id} className={cn("flex flex-col gap-3", !polos && "rounded-2xl bg-card p-3.5 shadow-[0_1px_2px_rgba(18,20,19,0.06)]")}>
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                 <span className="text-lg font-medium">{b.nama}</span>
                 {bisa && p ? (

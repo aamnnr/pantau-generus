@@ -35,8 +35,9 @@ export function formatNoHp(nomor: string | null | undefined): string {
   return lokal.replace(/^(\d{4})(\d{4})(\d+)$/, "$1-$2-$3");
 }
 
+/** Huruf awal dua kata pertama; kata yang tidak diawali huruf (mis. "(uji)") dilewati. */
 export function inisial(nama: string): string {
-  const kata = nama.trim().split(/\s+/);
+  const kata = nama.trim().split(/\s+/).filter((k) => /^\p{L}/u.test(k));
   return ((kata[0]?.[0] ?? "") + (kata[1]?.[0] ?? "")).toUpperCase();
 }
 

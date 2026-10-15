@@ -83,7 +83,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
           {caberawit && (
             <Kartu className="flex flex-col gap-3">
               <h2 className="text-xl font-bold">Tilawati</h2>
-              <TilawatiCepat baris={[{ generus_id: id, nama: d.anak.nama, posisi: d.tilawati && { jilid: d.tilawati.jilid!, halaman: d.tilawati.halaman!, total_halaman: d.tilawati.total_halaman } }]} jilid={jilid} bisa={d.bolehNilai} />
+              <TilawatiCepat baris={[{ generus_id: id, nama: d.anak.nama, posisi: d.tilawati && { jilid: d.tilawati.jilid!, halaman: d.tilawati.halaman!, total_halaman: d.tilawati.total_halaman } }]} jilid={jilid} bisa={d.bolehNilai} polos />
             </Kartu>
           )}
           {(d.susulan.length > 0 || d.bolehNilai) && <KartuSusulan d={d} id={id} />}
@@ -195,7 +195,15 @@ function KartuMakna({ d }: { d: ProgresAnak }) {
             <h3 className="text-lg font-semibold">
               {k.jenis === "bacaan" ? `Bacaan ${k.kitab_nama}` : `Makna ${k.kitab_nama}`}
             </h3>
-            <BarProgres nilai={k.diikuti!} total={k.total!} satuan={satuan} pembanding={{ nilai: k.kelas!, label: "Kelas" }} />
+            {k.kitab_jenis === "quran" ? (
+              // Persen terhadap 6.236 ayat hampir selalu 0%, jadi Al-Qur'an diringkas per surat (PRD F6 aturan 7).
+              <p>
+                <strong className="text-xl tabular-nums">{formatAngka(k.diikuti!)} ayat</strong>
+                <span className="text-muted-foreground"> diikuti · kelas {formatAngka(k.kelas!)} ayat</span>
+              </p>
+            ) : (
+              <BarProgres nilai={k.diikuti!} total={k.total!} satuan={satuan} pembanding={{ nilai: k.kelas!, label: "Kelas" }} />
+            )}
             {surat.length > 0 && (
               <ul className="flex flex-col gap-2.5 rounded-xl bg-muted/60 p-3">
                 {surat.map((s) => (

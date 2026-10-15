@@ -48,7 +48,7 @@ export function DaftarPenilaian({ baris, action, bisa, perAspek }: {
   const daftar = kelompok.map((g) => (
     <section key={g.judul || "semua"} className="flex flex-col gap-2">
       {g.judul && <h3 className="pt-1 text-lg font-bold text-primary">{g.judul}</h3>}
-      <ul className="flex flex-col gap-2">
+      <ul className="@container flex flex-col gap-2">
         {g.isi.map((b) => {
           const k = kunci(b);
           const sekarang = pilihan[k] ?? b.status;
@@ -57,7 +57,7 @@ export function DaftarPenilaian({ baris, action, bisa, perAspek }: {
             <li
               key={k}
               className={cn(
-                "flex flex-col gap-3 rounded-2xl bg-muted/60 p-3.5 lg:flex-row lg:items-center",
+                "flex flex-col gap-3 rounded-2xl bg-muted/60 p-3.5 @2xl:flex-row @2xl:items-center",
                 diubah && "bg-[#fffaf2] ring-2 ring-kunyit",
               )}
             >
@@ -70,7 +70,7 @@ export function DaftarPenilaian({ baris, action, bisa, perAspek }: {
                 </p>
               </div>
               {bisa ? (
-                <div role="radiogroup" aria-label={`Penilaian ${b.judul}`} className="grid grid-cols-3 gap-1.5 rounded-2xl bg-secondary p-1 lg:w-[420px]">
+                <div role="radiogroup" aria-label={`Penilaian ${b.judul}`} className="grid grid-cols-3 gap-1.5 rounded-2xl bg-secondary p-1 @2xl:w-[400px] @2xl:shrink-0">
                   {URUTAN.map((s) => (
                     <button
                       key={s}

@@ -15,6 +15,7 @@ describe("format", () => {
 
   it("inisial dari dua kata pertama", () => {
     expect(inisial("Ahmad Fauzan Hakim")).toBe("AF");
+    expect(inisial("Ahmad (uji)")).toBe("A");
     expect(inisial("bilal")).toBe("B");
   });
 
