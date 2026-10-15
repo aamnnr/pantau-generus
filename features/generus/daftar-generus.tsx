@@ -61,7 +61,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
   return (
     <div className="flex flex-col gap-4 px-4 lg:px-0">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <label className="flex h-11 flex-1 items-center gap-2.5 rounded-2xl border border-input bg-card px-4 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
+        <label className="flex h-11 shrink-0 items-center gap-2.5 rounded-xl border border-input bg-card px-3.5 transition-[border-color,box-shadow] duration-150 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/25 lg:flex-1">
           <Search aria-hidden className="size-5 shrink-0 text-muted-foreground" />
           <span className="sr-only">Cari nama</span>
           <input

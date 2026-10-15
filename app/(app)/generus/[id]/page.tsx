@@ -88,7 +88,8 @@ async function Isi({ params, searchParams }: { params: Promise<{ id: string }>; 
         <div className="flex flex-col gap-4">
           <KartuKehadiran k={d.kehadiran} label={periode.label} keseluruhan={periode.jenis === "semua"} />
           {d.target && <KartuTarget d={d} />}
-          <KartuMakna d={d} label={periode.label} />
+          {/* Caberawit tanpa makna Al-Qur'an/Al-Hadist (PRD §5); tetap tampil bila ada data lama. */}
+          {(!caberawit || d.kitab.length > 0) && <KartuMakna d={d} label={periode.label} />}
         </div>
         <div className="flex flex-col gap-4">
           <Kartu className="flex flex-col gap-3">

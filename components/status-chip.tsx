@@ -37,8 +37,8 @@ export const CHIP_PRESENSI = {
 
 export const CHIP_STATUS_GENERUS = {
   aktif: { nada: "hijau", simbol: "●" },
-  lulus: { nada: "kunyit", simbol: "◆" },
-  pindah: { nada: "biru", simbol: "→" },
+  lulus: { nada: "biru", simbol: "◆" },
+  pindah: { nada: "abu", simbol: "→" },
   nonaktif: { nada: "abu", simbol: "○" },
 } as const satisfies Record<string, { nada: Nada; simbol: string }>;
 

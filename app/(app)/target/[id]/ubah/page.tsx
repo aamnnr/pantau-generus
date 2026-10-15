@@ -27,6 +27,7 @@ async function Form({ params }: { params: Promise<{ id: string }> }) {
       awal={{
         judul: t.judul,
         semester: t.semester ?? "",
+        rentang_usia: t.rentang_usia ?? "",
         mulai: t.mulai,
         selesai: t.selesai,
         kelas: t.kelas.map((k) => k.id),

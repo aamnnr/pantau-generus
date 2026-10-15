@@ -97,9 +97,10 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
   periode: Periode;
 }) {
   const caberawit = kelas.jenjang === "caberawit";
+  // Caberawit tidak memakai makna Al-Qur'an/Al-Hadist (PRD §5) → tanpa kolom "Materi diikuti".
   const angkaRingkas = [
     { label: "Rata-rata kehadiran", nilai: ringkas.rata_kehadiran },
-    { label: "Materi diikuti", nilai: ringkas.rata_ketuntasan },
+    ...(caberawit ? [] : [{ label: "Materi diikuti", nilai: ringkas.rata_ketuntasan }]),
     { label: "Butir target tuntas", nilai: ringkas.rata_target },
   ];
 
@@ -128,7 +129,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
         </div>
       </div>
 
-      <dl className="grid grid-cols-3 gap-2">
+      <dl className={cn("grid gap-2", caberawit ? "grid-cols-2" : "grid-cols-3")}>
         {angkaRingkas.map((x) => (
           <Kartu key={x.label} className="flex flex-col gap-0.5 p-3 lg:p-4">
             <dd className="text-2xl font-bold text-primary tabular-nums">{x.nilai == null ? "—" : `${x.nilai}%`}</dd>
@@ -156,7 +157,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
               </span>
               <span className="grid grid-cols-2 gap-x-3 gap-y-1 text-base">
                 <Nilai label="Hadir" isi={teksHadir(a)} />
-                <Nilai label="Materi" isi={teksMateri(a)} />
+                {!caberawit && <Nilai label="Materi" isi={teksMateri(a)} />}
                 <Nilai label="Target" isi={teksTarget(a)} />
                 {caberawit && <Nilai label="Tilawati" isi={teksTilawati(a)} />}
               </span>
@@ -172,7 +173,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
             <tr className="bg-mint text-base text-mint-foreground">
               <th scope="col" className="px-4 py-3 font-semibold">Nama</th>
               <th scope="col" className="px-2 py-3 font-semibold">Kehadiran</th>
-              <th scope="col" className="px-2 py-3 font-semibold">Materi diikuti</th>
+              {!caberawit && <th scope="col" className="px-2 py-3 font-semibold">Materi diikuti</th>}
               <th scope="col" className="px-2 py-3 font-semibold">Butir target tuntas</th>
               {caberawit && <th scope="col" className="px-2 py-3 font-semibold">Tilawati</th>}
             </tr>
@@ -195,7 +196,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
                     )}
                   </span>
                 </td>
-                <td className="px-2 py-3">{teksMateri(a)}</td>
+                {!caberawit && <td className="px-2 py-3">{teksMateri(a)}</td>}
                 <td className="px-2 py-3">{teksTarget(a)}</td>
                 {caberawit && <td className="px-2 py-3">{teksTilawati(a)}</td>}
               </tr>

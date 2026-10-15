@@ -37,6 +37,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
             <p className="text-muted-foreground">
               {formatTanggal(t.mulai)} – {formatTanggal(t.selesai)}
               {t.semester && ` · ${t.semester}`}
+              {t.rentang_usia && ` · ${t.rentang_usia}`}
             </p>
             <p className="text-lg font-medium">{labelKelasKegiatan(t.kelas)}</p>
           </div>
@@ -72,6 +73,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
             jilid={jilid}
             awalTilawati={t.tilawati}
             adaCaberawit={adaCaberawit}
+            tanpaKitab={jenjang.every((j) => j === "caberawit")}
             action={simpanIsiTarget.bind(null, t.id)}
           />
         ) : (

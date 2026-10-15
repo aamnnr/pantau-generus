@@ -1416,6 +1416,7 @@ export type Database = {
           judul: string
           kelompok_id: string
           mulai: string
+          rentang_usia: string | null
           selesai: string
           semester: string | null
           updated_at: string
@@ -1428,6 +1429,7 @@ export type Database = {
           judul: string
           kelompok_id?: string
           mulai: string
+          rentang_usia?: string | null
           selesai: string
           semester?: string | null
           updated_at?: string
@@ -1440,6 +1442,7 @@ export type Database = {
           judul?: string
           kelompok_id?: string
           mulai?: string
+          rentang_usia?: string | null
           selesai?: string
           semester?: string | null
           updated_at?: string
@@ -1985,6 +1988,7 @@ export type Database = {
           kelas: Json | null
           kelompok_id: string | null
           mulai: string | null
+          rentang_usia: string | null
           selesai: string | null
           semester: string | null
         }
@@ -2000,6 +2004,7 @@ export type Database = {
           kelas?: never
           kelompok_id?: string | null
           mulai?: string | null
+          rentang_usia?: string | null
           selesai?: string | null
           semester?: string | null
         }
@@ -2015,6 +2020,7 @@ export type Database = {
           kelas?: never
           kelompok_id?: string | null
           mulai?: string | null
+          rentang_usia?: string | null
           selesai?: string | null
           semester?: string | null
         }
@@ -2084,6 +2090,15 @@ export type Database = {
       fn_format_rentang: {
         Args: { p_kitab_id: string; p_mulai: number; p_selesai: number }
         Returns: string
+      }
+      fn_kehadiran_harian: {
+        Args: { p_dari: string; p_sampai: string }
+        Returns: {
+          hadir: number
+          persen: number
+          tanggal: string
+          total: number
+        }[]
       }
       fn_progres_anak: {
         Args: { p_dari?: string; p_generus_id: string; p_sampai?: string }

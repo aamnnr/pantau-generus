@@ -26,7 +26,7 @@ export function KelasForm({ action, awal, hapus }: {
         error={e.jenjang}
         options={URUTAN_JENJANG.map((j) => ({ value: j, label: LABEL_JENJANG[j] }))}
       />
-      <Field label="Nama kelas" htmlFor="nama" error={e.nama} hint="Contoh: TK, 1A, 2B, Pelajar, Pra-nikah">
+      <Field label="Nama kelas" htmlFor="nama" error={e.nama} hint="Contoh: TK, 1A, 2B, Usia sekolah (SLTA), Usia mandiri">
         <Input id="nama" name="nama" defaultValue={v.str("nama")} autoComplete="off" />
       </Field>
       <Field label="Urutan tampil" htmlFor="urutan" error={e.urutan} hint="Angka kecil tampil lebih dulu dalam jenjangnya.">

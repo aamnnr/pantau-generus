@@ -29,6 +29,8 @@ export type Periode = {
   sebelum?: Record<string, string>;
   sesudah?: Record<string, string>;
   targetId?: string;
+  /** Dipilih "Target" tetapi belum ada periode target sama sekali. */
+  kosong?: boolean;
 };
 
 const AWAL = "2000-01-01";
@@ -107,7 +109,8 @@ export function bacaPeriode(cari: CariPeriode, hari: string, target: TargetPerio
         targetId: t.id,
       };
     }
-    // Belum ada target sama sekali → jatuh ke keseluruhan.
+    // Belum ada target: tetap di pilihan Target (jangan diam-diam pindah ke Semua) dengan rentang kosong.
+    return { jenis, dari: hari, sampai: geserTanggal(hari, -1), label: "Belum ada periode target", param: { periode: "target" }, kosong: true };
   }
 
   return { jenis: "semua", dari: AWAL, sampai: hari, label: "Keseluruhan", param: { periode: "semua" } };

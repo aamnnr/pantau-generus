@@ -21,7 +21,7 @@ async function Daftar() {
       <Konten>
         <Kosong
           judul="Belum ada kelas"
-          keterangan="Mulai dengan menambahkan kelas, mis. TK, 1A–3B untuk Caberawit, Pra-remaja, Pelajar, dan Pra-nikah."
+          keterangan="Mulai dengan menambahkan kelas, mis. TK, 1A–3B untuk Caberawit, Pra-remaja, serta Usia sekolah (SLTA) dan Usia mandiri untuk Remaja."
           aksi={admin && <Button asChild size="lg"><Link href="/kelola/kelas/baru">Tambah Kelas</Link></Button>}
         />
       </Konten>

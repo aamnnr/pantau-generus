@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react";
 import { useState } from "react";
+import { IndikatorGeser } from "@/components/indikator-geser";
 import { cn } from "@/lib/utils";
 
 type Langkah = "materi" | "kehadiran" | "tilawati" | "selesai";
@@ -52,9 +53,10 @@ export function LangkahKegiatan({ materi, kehadiran, tilawati, selesai, sudah }:
   return (
     <div className="flex flex-col gap-5 px-4 lg:px-0">
       <nav aria-label="Langkah" className="sticky top-0 z-20 -mx-4 bg-background/90 px-4 py-2 backdrop-blur-md lg:hidden">
-        <ol className={cn("grid gap-1 rounded-xl bg-secondary p-1", tilawati ? "grid-cols-4" : "grid-cols-3")}>
+        <ol className={cn("relative grid gap-1 rounded-xl bg-secondary p-1", tilawati ? "grid-cols-4" : "grid-cols-3")}>
+          <IndikatorGeser indeks={daftar.findIndex((l) => l.id === aktif)} jumlah={daftar.length} />
           {daftar.map((l, i) => (
-            <li key={l.id}>
+            <li key={l.id} className="relative z-10">
               <button
                 type="button"
                 aria-current={aktif === l.id ? "step" : undefined}
@@ -63,9 +65,9 @@ export function LangkahKegiatan({ materi, kehadiran, tilawati, selesai, sudah }:
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 className={cn(
-                  "flex w-full items-center justify-center rounded-lg text-base font-medium text-muted-foreground transition-colors",
+                  "flex w-full items-center justify-center rounded-lg text-base font-medium text-muted-foreground transition-colors duration-200",
                   tilawati ? "h-14 flex-col gap-1 text-sm" : "h-10 gap-1.5",
-                  aktif === l.id && "bg-card font-semibold text-primary shadow-[0_1px_3px_rgba(20,22,22,0.12)]",
+                  aktif === l.id && "font-semibold text-primary",
                 )}
               >
                 <span

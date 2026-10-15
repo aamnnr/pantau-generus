@@ -18,35 +18,43 @@ export type NavIcon =
 
 export type NavItem = { href: string; label: string; icon: NavIcon };
 
+const M = {
+  beranda: { href: "/beranda", label: "Beranda", icon: "beranda" },
+  hariIni: { href: "/hari-ini", label: "Hari Ini", icon: "kalender" },
+  generus: { href: "/generus", label: "Generus", icon: "anak" },
+  kelasku: { href: "/generus", label: "Kelasku", icon: "anak" },
+  target: { href: "/target", label: "Target", icon: "target" },
+  riwayat: { href: "/riwayat", label: "Riwayat", icon: "riwayat" },
+  rekap: { href: "/rekap", label: "Rekap", icon: "rekap" },
+  raport: { href: "/raport", label: "Raport", icon: "raport" },
+  anakku: { href: "/anakku", label: "Anakku", icon: "anak" },
+  lainnya: { href: "/lainnya", label: "Lainnya", icon: "menu" },
+} satisfies Record<string, NavItem>;
+
 /**
  * Navigasi bawah (HP) per peran — maksimal 4 item (DESIGN §5).
- * "Lainnya" ada di semua peran agar Ganti Mode & Keluar selalu terjangkau.
+ * "Lainnya" ada di semua peran agar menu lain, Ganti Mode & Keluar selalu terjangkau.
  */
 export const NAV_UTAMA: Record<Peran, NavItem[]> = {
-  admin: [
-    { href: "/hari-ini", label: "Hari Ini", icon: "kalender" },
-    { href: "/generus", label: "Generus", icon: "anak" },
-    { href: "/target", label: "Target", icon: "target" },
-    { href: "/lainnya", label: "Lainnya", icon: "menu" },
-  ],
-  guru: [
-    { href: "/hari-ini", label: "Hari Ini", icon: "kalender" },
-    { href: "/generus", label: "Kelasku", icon: "anak" },
-    { href: "/riwayat", label: "Riwayat", icon: "riwayat" },
-    { href: "/lainnya", label: "Lainnya", icon: "menu" },
-  ],
-  pengurus: [
-    { href: "/rekap", label: "Rekap", icon: "rekap" },
-    { href: "/generus", label: "Generus", icon: "anak" },
-    { href: "/raport", label: "Raport", icon: "raport" },
-    { href: "/lainnya", label: "Lainnya", icon: "menu" },
-  ],
-  wali: [
-    { href: "/anakku", label: "Anakku", icon: "anak" },
-    { href: "/raport", label: "Raport", icon: "raport" },
-    { href: "/lainnya", label: "Lainnya", icon: "menu" },
-  ],
+  admin: [M.beranda, M.hariIni, M.generus, M.lainnya],
+  guru: [M.beranda, M.hariIni, M.kelasku, M.lainnya],
+  pengurus: [M.beranda, M.rekap, M.raport, M.lainnya],
+  wali: [M.anakku, M.raport, M.lainnya],
 };
+
+/** Menu sidebar desktop (urutan lengkap). Item yang tidak ada di navigasi bawah muncul di Lainnya pada HP. */
+export const NAV_SIDEBAR: Record<Peran, NavItem[]> = {
+  admin: [M.beranda, M.hariIni, M.generus, M.target, M.riwayat, M.rekap, M.raport],
+  guru: [M.beranda, M.hariIni, M.kelasku, M.target, M.riwayat, M.raport],
+  pengurus: [M.beranda, M.rekap, M.raport, M.generus, M.target, M.riwayat],
+  wali: [M.anakku, M.raport],
+};
+
+/** Menu yang di HP hanya bisa dicapai lewat Lainnya. */
+export function menuLainnya(peran: Peran): NavItem[] {
+  const bawah = new Set(NAV_UTAMA[peran].map((i) => i.href));
+  return NAV_SIDEBAR[peran].filter((i) => !bawah.has(i.href));
+}
 
 const KELOLA = {
   jadwal: { href: "/kelola/jadwal", label: "Jadwal Rutin", icon: "kalender" },
@@ -68,13 +76,3 @@ export const NAV_KELOLA: Record<Peran, NavItem[]> = {
   guru: [KELOLA.materi],
   wali: [],
 };
-
-/** Laporan per peran: admin melihat Rekap & Raport dari sidebar desktop, di HP lewat menu Lainnya. */
-export const NAV_LAPORAN: Partial<Record<Peran, NavItem[]>> = {
-  admin: [
-    { href: "/rekap", label: "Rekap", icon: "rekap" },
-    { href: "/raport", label: "Raport", icon: "raport" },
-  ],
-};
-
-export const NAV_TAMBAHAN_DESKTOP: Partial<Record<Peran, NavItem[]>> = NAV_LAPORAN;

@@ -7,6 +7,7 @@ export type TargetRingkas = {
   id: string;
   judul: string;
   semester: string | null;
+  rentang_usia: string | null;
   mulai: string;
   selesai: string;
   catatan: string | null;
@@ -17,7 +18,7 @@ export type TargetRingkas = {
   boleh_kelola: boolean;
 };
 
-const KOLOM = "id, judul, semester, mulai, selesai, catatan, kelas, jumlah_kitab, jumlah_materi, ada_tilawati, boleh_kelola";
+const KOLOM = "id, judul, semester, rentang_usia, mulai, selesai, catatan, kelas, jumlah_kitab, jumlah_materi, ada_tilawati, boleh_kelola";
 
 function ringkas(r: Record<keyof TargetRingkas, unknown>): TargetRingkas {
   return {

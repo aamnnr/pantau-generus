@@ -1,8 +1,9 @@
 "use client";
 
 import { AlertCircle, Check, Loader2 } from "lucide-react";
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useFormStatus } from "react-dom";
+import { IndikatorGeser } from "@/components/indikator-geser";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -47,23 +48,27 @@ export function Segmen({ name, legend, options, defaultValue, error }: {
   defaultValue?: string;
   error?: string[];
 }) {
+  // Nilai terpilih dilacak hanya untuk menggeser latar; nilai yang terkirim tetap dari radio asli.
+  const [dipilih, setDipilih] = useState(defaultValue);
   return (
     <fieldset className="flex flex-col gap-2">
       <legend className="mb-1.5 text-base font-semibold">{legend}</legend>
       <div
-        className="grid gap-1 rounded-xl bg-secondary p-1"
+        className="relative grid gap-1 rounded-xl bg-secondary p-1"
         style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
       >
+        <IndikatorGeser indeks={options.findIndex((o) => o.value === dipilih)} jumlah={options.length} />
         {options.map((o) => (
-          <label key={o.value} className="relative cursor-pointer">
+          <label key={o.value} className="relative z-10 cursor-pointer">
             <input
               type="radio"
               name={name}
               value={o.value}
               defaultChecked={defaultValue === o.value}
+              onChange={() => setDipilih(o.value)}
               className="peer sr-only"
             />
-            <span className="flex min-h-10 items-center justify-center rounded-lg px-2 text-center text-base leading-tight font-medium text-muted-foreground transition-[background-color,color,box-shadow] duration-200 hover:text-foreground peer-checked:bg-card peer-checked:font-semibold peer-checked:text-primary peer-checked:shadow-[0_1px_3px_rgba(20,22,22,0.12)] peer-focus-visible:ring-3 peer-focus-visible:ring-ring/40">
+            <span className="flex min-h-10 items-center justify-center rounded-lg px-2 text-center text-base leading-tight font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground peer-checked:font-semibold peer-checked:text-primary peer-focus-visible:ring-3 peer-focus-visible:ring-ring/40">
               {o.label}
             </span>
           </label>

@@ -20,6 +20,7 @@ export function KartuTarget({ t }: { t: TargetRingkas }) {
         <span className="block text-muted-foreground tabular-nums">
           {formatTanggalPendek(t.mulai)} – {formatTanggalPendek(t.selesai)}
           {t.semester && ` · ${t.semester}`}
+          {t.rentang_usia && ` · ${t.rentang_usia}`}
         </span>
         <span className="block font-medium">{labelKelasKegiatan(t.kelas)}</span>
         <span className="block text-muted-foreground">{isi.length ? isi.join(" · ") : "Isi target belum diisi"}</span>

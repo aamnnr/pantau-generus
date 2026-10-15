@@ -9,6 +9,7 @@ export const targetInfoSchema = z
   .object({
     judul: z.string({ error: "Judul wajib diisi." }).trim().min(1, "Judul wajib diisi.").max(120),
     semester: z.preprocess(kosongJadiUndefined, z.string().trim().max(60).optional()),
+    rentang_usia: z.preprocess(kosongJadiUndefined, z.string().trim().max(60, "Maksimal 60 huruf.").optional()),
     mulai: z.iso.date({ error: "Pilih tanggal mulai." }),
     selesai: z.iso.date({ error: "Pilih tanggal selesai." }),
     kelas: daftar(z.uuid()).pipe(z.array(z.uuid()).min(1, "Pilih minimal satu kelas.")),

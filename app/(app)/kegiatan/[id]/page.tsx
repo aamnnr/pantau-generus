@@ -66,6 +66,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
       rundownAwal={k.rundown}
       opsiItem={opsiItem}
       itemAwal={k.materiItem.map((m) => m.id)}
+      tanpaKitab={jenjang.every((j) => j === "caberawit")}
       action={simpanMateri.bind(null, k.id)}
     />
   ) : (

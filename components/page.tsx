@@ -68,7 +68,8 @@ export function BackLink({ href, label = "Kembali", className }: { href: string;
 
 /** Isi halaman di bawah header: padding 16px di HP (DESIGN §4). */
 export function Konten({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("flex flex-col gap-4 px-4 lg:px-0", className)}>{children}</div>;
+  // Isi yang datang belakangan (Suspense) ikut muncul halus, tidak tiba-tiba menggantikan kerangka.
+  return <div className={cn("flex animate-muncul flex-col gap-4 px-4 lg:px-0", className)}>{children}</div>;
 }
 
 export function Kartu({ children, className }: { children: React.ReactNode; className?: string }) {

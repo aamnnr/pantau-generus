@@ -31,7 +31,7 @@ export async function buatTarget(_prev: FormState, formData: FormData): Promise<
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("target_bulanan")
-    .insert({ ...info, semester: info.semester ?? null, catatan: info.catatan ?? null })
+    .insert({ ...info, semester: info.semester ?? null, rentang_usia: info.rentang_usia ?? null, catatan: info.catatan ?? null })
     .select("id")
     .single();
   if (error) return { error: pesanGalatDb(error), values };
@@ -53,12 +53,12 @@ export async function ubahInfoTarget(id: string, _prev: FormState, formData: For
   const values = nilaiForm(formData);
   const parsed = targetInfoSchema.safeParse(values);
   if (!parsed.success) return dariZod(parsed.error, values);
-  const { kelas, judul, semester, mulai, selesai, catatan } = parsed.data;
+  const { kelas, judul, semester, rentang_usia, mulai, selesai, catatan } = parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase
     .from("target_bulanan")
-    .update({ judul, mulai, selesai, semester: semester ?? null, catatan: catatan ?? null })
+    .update({ judul, mulai, selesai, semester: semester ?? null, rentang_usia: rentang_usia ?? null, catatan: catatan ?? null })
     .eq("id", id);
   const err = error ?? (await gantiKelas(supabase, id, kelas));
   if (err) return { error: err.code === "23P01" ? PESAN_BENTROK : pesanGalatDb(err), values };

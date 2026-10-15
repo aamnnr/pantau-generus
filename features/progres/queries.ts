@@ -18,7 +18,7 @@ export type BarisPenilaian = {
 const cocokJenisKelamin = (item: JenisKelamin | null, anak: JenisKelamin) => !item || item === anak;
 
 /** Target periode yang sedang berjalan untuk sebuah kelas (periode tidak bertumpukan, jadi paling banyak satu). */
-async function targetBerjalan(kelasId: string, hari: string) {
+export async function targetBerjalan(kelasId: string, hari: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("target_bulanan_kelas")

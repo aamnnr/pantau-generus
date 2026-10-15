@@ -26,7 +26,7 @@ import type { SimpanState } from "./actions";
  * Isi target mengikuti dokumen PPG (DESIGN §7.6):
  * Alim (Bacaan Al-Qur'an, Makna, Hafalan) · Faqih · Akhlaqul Karimah · Mandiri (+ Tilawati Caberawit).
  */
-export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMateri, jilid, awalTilawati, adaCaberawit, action }: {
+export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMateri, jilid, awalTilawati, adaCaberawit, tanpaKitab = false, action }: {
   kitab: Kitab[];
   surat: Surat[];
   awalKitab: RentangAwal[];
@@ -35,11 +35,15 @@ export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMater
   jilid: { jilid: number; total_halaman: number }[];
   awalTilawati: { jilid: number; halaman: number } | null;
   adaCaberawit: boolean;
+  /** Target khusus Caberawit: tanpa bacaan & makna Al-Qur'an/Al-Hadist (PRD §5). */
+  tanpaKitab?: boolean;
   action: (prev: SimpanState, fd: FormData) => Promise<SimpanState>;
 }) {
   const quran = kitab.filter((k) => k.jenis === "quran");
   const [bacaan, setBacaan] = useState<Baris[]>(() => awalKitab.filter((x) => x.jenis === "bacaan").map(barisDariAwal));
   const [makna, setMakna] = useState<Baris[]>(() => awalKitab.filter((x) => x.jenis === "makna").map(barisDariAwal));
+  // Data lama tetap tampil agar tidak hilang diam-diam walau targetnya khusus Caberawit.
+  const tampilKitab = !tanpaKitab || bacaan.length > 0 || makna.length > 0;
   const [materi, setMateri] = useState<string[]>(awalMateri);
   const [tilawati, setTilawati] = useState({
     jilid: awalTilawati ? String(awalTilawati.jilid) : "",
@@ -84,7 +88,9 @@ export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMater
       <input type="hidden" name="isi" value={JSON.stringify(isi)} />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 xl:items-start">
-        <Bagian judul="Alim" sub="Bacaan, keilmuan (makna), dan hafalan">
+        <Bagian judul="Alim" sub={tampilKitab ? "Bacaan, keilmuan (makna), dan hafalan" : "Hafalan dan latihan makna"}>
+          {tampilKitab && (
+            <>
           <h3 className="text-lg font-semibold">Bacaan Al-Qur&apos;an</h3>
           {bacaan.map((b, i) => (
             <BarisRentang
@@ -125,8 +131,10 @@ export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMater
             <Plus aria-hidden />
             Tambah target makna
           </Button>
+            </>
+          )}
 
-          <h3 className="pt-2 text-lg font-semibold">Hafalan</h3>
+          <h3 className={tampilKitab ? "pt-2 text-lg font-semibold" : "text-lg font-semibold"}>Butir materi Alim</h3>
           {bagianMateri("alim")}
         </Bagian>
 

@@ -67,7 +67,7 @@ export const URUTAN_ASPEK: Aspek[] = ["alim", "faqih", "akhlaqul_karimah", "mand
 
 /** Mapel yang lazim di dokumen PPG — hanya saran, admin boleh mengetik mapel lain. */
 export const SARAN_MAPEL: Record<Aspek, string[]> = {
-  alim: ["Hafalan"],
+  alim: ["Hafalan", "Makna"],
   faqih: ["Kefahaman Agama", "Praktek Ibadah"],
   akhlaqul_karimah: ["Akhlaq", "Tata Krama"],
   mandiri: ["Kemandirian", "Olahraga & Seni"],
@@ -94,7 +94,7 @@ export function labelPenilaian(aspek: Aspek, status: StatusPenilaian): string {
   return "Terbiasa";
 }
 
-/** "Caberawit · 1B", "Pra-remaja", "Remaja · Pelajar" — nama kelas tidak diulang bila sama dengan jenjang. */
+/** "Caberawit · 1B", "Pra-remaja", "Remaja · Usia mandiri" — nama kelas tidak diulang bila sama dengan jenjang. */
 export function labelKelas(kelas: { jenjang: Jenjang; nama: string }): string {
   const jenjang = LABEL_JENJANG[kelas.jenjang];
   return kelas.nama === jenjang ? jenjang : `${jenjang} · ${kelas.nama}`;
@@ -102,7 +102,7 @@ export function labelKelas(kelas: { jenjang: Jenjang; nama: string }): string {
 
 /**
  * Kelas sebuah kegiatan (DESIGN §7.2): satu kelas → "Caberawit · 1A";
- * gabungan → "Pelajar + Pra-nikah", atau "Caberawit 1A + 1B" bila satu jenjang Caberawit.
+ * gabungan → "Usia sekolah (SLTA) + Usia mandiri", atau "Caberawit 1A + 1B" bila satu jenjang Caberawit.
  */
 export function labelKelasKegiatan(kelas: { jenjang: Jenjang; nama: string }[]): string {
   if (kelas.length === 0) return "Tanpa kelas";
@@ -149,4 +149,9 @@ export const LABEL_PRESENSI: Record<StatusPresensi, string> = {
 /** "Jilid 3 · hal. 24" (DESIGN §7.4a). */
 export function teksPosisiTilawati(p: { jilid: number | null; halaman: number | null } | null | undefined): string {
   return p?.jilid != null ? `Jilid ${p.jilid} · hal. ${p.halaman ?? 0}` : "Posisi belum diisi";
+}
+
+/** "Sen", "Sel", … untuk sumbu grafik harian. */
+export function formatHariSingkat(tanggal: string): string {
+  return format(parseISO(tanggal), "EEE", { locale: id });
 }

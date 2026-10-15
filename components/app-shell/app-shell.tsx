@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import { getSession } from "@/lib/auth/session";
 import { BottomNav, Sidebar } from "./app-nav";
-import { NAV_KELOLA, NAV_TAMBAHAN_DESKTOP, NAV_UTAMA } from "./nav-config";
+import { NAV_KELOLA, NAV_SIDEBAR, NAV_UTAMA } from "./nav-config";
 
 async function Navigasi() {
   const session = await getSession();
   const utama = NAV_UTAMA[session.mode];
   const kelola = NAV_KELOLA[session.mode];
-  const desktop = [...utama, ...(NAV_TAMBAHAN_DESKTOP[session.mode] ?? [])];
+  const desktop = NAV_SIDEBAR[session.mode];
   return (
     // Navigasi tidak ikut tercetak (raport, lembar presensi — DESIGN §7.7).
     <div className="contents print:hidden">

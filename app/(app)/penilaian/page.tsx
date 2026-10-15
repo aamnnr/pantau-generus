@@ -181,7 +181,7 @@ function TautanKartu({ href, judul, sub, target }: { href: string; judul: string
         {sub && <span className="block text-muted-foreground">{sub}</span>}
       </span>
       {target && (
-        <StatusChip nada="kunyit" simbol="★">
+        <StatusChip nada="biru" simbol="★">
           Target
         </StatusChip>
       )}

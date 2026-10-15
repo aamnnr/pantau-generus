@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { pilihNilai, type FormState } from "@/lib/form";
 import { formatTanggalPendek, LABEL_JENJANG, labelKelasKegiatan, URUTAN_JENJANG, type Jenjang } from "@/lib/format";
 
-type Awal = { judul: string; semester: string; mulai: string; selesai: string; kelas: string[]; catatan: string; salin_dari: string };
+type Awal = { judul: string; semester: string; rentang_usia: string; mulai: string; selesai: string; kelas: string[]; catatan: string; salin_dari: string };
 type Sumber = { id: string; judul: string; mulai: string; selesai: string; kelas: { nama: string; jenjang: Jenjang }[] };
 
 export function TargetForm({ action, awal, kelas, sumberSalin, labelSimpan, hapus }: {
@@ -64,6 +64,18 @@ export function TargetForm({ action, awal, kelas, sumberSalin, labelSimpan, hapu
         hint="mis. Semester 1 - 2026"
       >
         <Input id="semester" name="semester" defaultValue={v.str("semester")} autoComplete="off" />
+      </Field>
+      <Field
+        label={
+          <>
+            Rentang usia <span className="font-normal text-muted-foreground">(opsional, untuk target Caberawit)</span>
+          </>
+        }
+        htmlFor="rentang_usia"
+        error={e.rentang_usia}
+        hint="Sesuai dokumen PPG, mis. Usia 6–7 tahun. Lalu centang kelas Caberawit yang memakai target ini."
+      >
+        <Input id="rentang_usia" name="rentang_usia" defaultValue={v.str("rentang_usia")} autoComplete="off" />
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Mulai" htmlFor="mulai" error={e.mulai}>

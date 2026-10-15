@@ -77,14 +77,19 @@
 
   /* Gerak (DESIGN.md §11): halus, singkat, dimatikan bila pengguna memilih kurangi gerak */
   --ease-halus: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --animate-muncul: muncul 0.32s var(--ease-halus) both;
+  --animate-muncul: muncul 0.36s var(--ease-halus) both;
   --animate-isi-bar: isi-bar 0.7s var(--ease-halus) both;
+  --animate-tumbuh: tumbuh 0.6s var(--ease-halus) both;
   --animate-kilau: kilau 1.4s ease-in-out infinite;
-  --animate-pop: pop 0.28s var(--ease-halus) both;
+  --animate-pop: pop 0.26s var(--ease-halus) both;
 
   @keyframes muncul {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: none; }
+  }
+  @keyframes tumbuh {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
   }
   @keyframes isi-bar {
     from { transform: scaleX(0); }
@@ -95,7 +100,8 @@
     100% { background-position: -100% 0; }
   }
   @keyframes pop {
-    0% { transform: scale(0.85); opacity: 0; }
+    0% { transform: scale(0.94); opacity: 0.55; }
+    60% { transform: scale(1.02); opacity: 1; }
     100% { transform: scale(1); opacity: 1; }
   }
 }
@@ -151,8 +157,31 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Perubahan warna pada semua tombol & tautan berlangsung halus (DESIGN §11); kelas transition-* tetap menang. */
+  a,
+  button,
+  summary,
+  [role="radio"] {
+    transition-property: color, background-color, border-color, box-shadow, opacity;
+    transition-duration: 160ms;
+    transition-timing-function: var(--ease-halus);
+  }
+  /* Bagian yang bisa dilipat membuka/menutup halus (Chrome/Edge terbaru; lainnya langsung). */
+  details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition: block-size 0.25s var(--ease-halus), content-visibility 0.25s allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
+  }
+  /* Garis fokus hanya untuk keyboard, bukan setelah diketuk. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
   html {
     @apply font-sans;
+    interpolate-size: allow-keywords;
     -webkit-tap-highlight-color: transparent;
   }
   h1, h2, h3 {

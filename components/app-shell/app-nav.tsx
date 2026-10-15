@@ -68,7 +68,7 @@ export function Sidebar({ utama, kelola, nama, mode }: Props) {
         href={item.href}
         aria-current={on ? "page" : undefined}
         className={cn(
-          "group flex h-10 items-center gap-3 rounded-lg px-3 text-base transition-colors duration-150",
+          "group flex h-10 shrink-0 items-center gap-3 rounded-lg px-3 text-base transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
           on ? "bg-mint font-semibold text-mint-foreground" : "font-medium text-teks-2 hover:bg-muted hover:text-foreground",
         )}
       >
@@ -79,30 +79,32 @@ export function Sidebar({ utama, kelola, nama, mode }: Props) {
   };
 
   return (
-    <nav aria-label="Navigasi utama" className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-1 border-r bg-card px-4 py-6 lg:flex">
-      <Link href="/beranda" className="mb-7 px-1">
+    <nav aria-label="Navigasi utama" className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-3 border-r bg-card px-4 py-6 lg:flex">
+      <Link href="/beranda" className="mb-3 shrink-0 rounded-lg px-1 outline-none focus-visible:ring-2 focus-visible:ring-ring/60">
         <Logo />
       </Link>
-      <p className="px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Menu</p>
-      <div className="flex flex-col gap-0.5">{utama.filter((i) => i.href !== "/lainnya").map(tautan)}</div>
-      {kelola.length > 0 && (
-        <>
-          <p className="mt-5 px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Kelola</p>
-          <div className="flex flex-col gap-0.5">{kelola.map(tautan)}</div>
-        </>
-      )}
-      <div className="flex-1" />
+      {/* Menu bisa digulir sendiri agar kartu profil di bawah tidak terpotong pada layar pendek. */}
+      <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-1 [scrollbar-width:thin]">
+        <p className="px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Menu</p>
+        {utama.filter((i) => i.href !== "/lainnya").map(tautan)}
+        {kelola.length > 0 && (
+          <>
+            <p className="mt-4 px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Kelola</p>
+            {kelola.map(tautan)}
+          </>
+        )}
+      </div>
       <Link
         href="/lainnya"
         aria-current={aktif(pathname, "/lainnya") ? "page" : undefined}
-        className="flex items-center gap-3 rounded-xl border p-2.5 transition-colors hover:bg-muted aria-[current=page]:border-primary/30 aria-[current=page]:bg-mint"
+        className="flex shrink-0 items-center gap-3 rounded-xl border p-2.5 transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/60 aria-[current=page]:border-primary/30 aria-[current=page]:bg-mint"
       >
         <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-mint text-sm font-bold text-mint-foreground">
           {inisial(nama)}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-base font-semibold">{nama}</span>
-          <span className="block text-sm text-muted-foreground">{LABEL_PERAN[mode]} · Akun & pengaturan</span>
+          <span className="block text-sm text-muted-foreground">{LABEL_PERAN[mode]}</span>
         </span>
       </Link>
     </nav>
@@ -125,7 +127,7 @@ export function BottomNav({ utama }: Pick<Props, "utama">) {
             href={item.href}
             aria-current={on ? "page" : undefined}
             className={cn(
-              "relative flex h-16 flex-col items-center justify-center gap-1 text-sm transition-colors",
+              "relative flex h-16 flex-col items-center justify-center gap-1 text-sm transition-colors outline-none focus-visible:bg-mint",
               on ? "font-semibold text-primary" : "font-medium text-muted-foreground",
             )}
           >

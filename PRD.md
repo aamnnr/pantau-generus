@@ -65,8 +65,11 @@ Pengguna utama berusia **30–50 tahun**, sebagian besar memakai HP Android kela
 ```
 Caberawit   → TK, 1A, 1B, 2A, 2B, 3A, 3B   (mengikuti kelas sekolah: TK → kelas TK; SD → 1A–3B)
 Pra-remaja  → (usia SMP)
-Remaja      → Pelajar (SLTA), Pra-nikah
+Remaja      → Usia sekolah (SLTA), Usia mandiri
 ```
+
+- **Caberawit tidak memakai makna Al-Qur'an/Al-Hadist** (juga bacaan Al-Qur'an — membaca lewat Tilawati). Latihan makna untuk kelas Caberawit yang besar dicatat sebagai **butir materi** Alim · Makna dan dinilai Belum/Proses/Lancar.
+- Target PPG: Pra-remaja & Remaja punya target per kelas; Caberawit punya target per **rentang usia**. Karena pembagian usia ke kelas TK–3B belum pasti, target Caberawit tetap dipasang **per kelas** (pengisi target mencentang kelas yang memakainya) dengan keterangan rentang usia (mis. "Usia 6–7 tahun").
 
 - **Jenjang** tetap: Caberawit, Pra-remaja, Remaja.
 - **Kelas** dapat dikelola admin (tambah, ubah nama, urutan, nonaktifkan).
@@ -119,7 +122,7 @@ Remaja      → Pelajar (SLTA), Pra-nikah
 ### F5. Target Bulanan
 Mengikuti dokumen "Target Materi Pembelajaran" dari tim kurikulum PPG (per jenjang, per periode).
 - Admin atau guru (untuk kelas yang diajarnya) menginput target per **periode**: judul (mis. "Periode Bulan Oktober"), semester, **tanggal mulai–selesai** (tidak harus bulan kalender, mis. 5 Okt – 7 Nov 2026), catatan (strategi pembelajaran).
-- Satu target berlaku untuk **satu atau beberapa kelas** (mis. Pelajar + Pra-nikah). Periode target satu kelas tidak boleh bertumpukan.
+- Satu target berlaku untuk **satu atau beberapa kelas** (mis. Usia sekolah + Usia mandiri). Periode target satu kelas tidak boleh bertumpukan.
 - Isi target:
   - Bacaan Al-Qur'an: `rentang surat:ayat`
   - Makna: Al-Hadist `kitab + rentang halaman`; Al-Qur'an `rentang surat:ayat`
@@ -157,7 +160,9 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 - Jumlah halaman tiap jilid dapat diatur admin. Bila halaman melewati batas jilid, aplikasi menawarkan **naik jilid** (tidak otomatis, perlu konfirmasi guru).
 - Pencatatan bisa dilakukan dari dalam kegiatan Caberawit (hanya anak yang hadir ditampilkan) atau dari halaman anak.
 
-### F7. Raport & Rekap
+### F7. Beranda, Raport & Rekap
+**Beranda (ringkasan)** untuk admin, guru (kelasnya), dan pengurus: pengajian hari ini yang belum diisi, kehadiran 7 hari terakhir, anak yang perlu perhatian bulan ini, dan capaian target periode berjalan per kelas.
+
 **Raport bulanan per anak:**
 - Identitas (nama, kelas, periode target)
 - Kehadiran: jumlah & persentase per status

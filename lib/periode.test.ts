@@ -30,7 +30,8 @@ describe("periode", () => {
     expect([p.targetId, p.dari, p.sampai]).toEqual(["t1", "2026-10-05", "2026-11-07"]);
     expect(p.sebelum).toBeUndefined();
     expect(p.sesudah).toEqual({ periode: "target", target: "t2" });
-    expect(bacaPeriode({ periode: "target" }, HARI, [], "bulan").jenis).toBe("semua");
+    const kosong = bacaPeriode({ periode: "target" }, HARI, [], "bulan");
+    expect([kosong.jenis, kosong.kosong, kosong.label]).toEqual(["target", true, "Belum ada periode target"]);
   });
 
   it("parameter tidak dikenal → bawaan", () => {

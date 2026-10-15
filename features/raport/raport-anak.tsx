@@ -43,6 +43,18 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
   const h = d.kehadiran.periode;
   const satuan = (jenis: string | null) => (jenis === "quran" ? "ayat" : "hal.");
   const terlewat = d.kitab.filter((k) => k.terlewat.length);
+  // Caberawit tanpa makna/bacaan Al-Qur'an & Al-Hadist (PRD §5): bagiannya hanya muncul bila ada data lama.
+  const caberawit = d.anak.kelas?.jenjang === "caberawit";
+  const tampilMakna = !caberawit || d.kitab.length > 0 || (d.target?.kitab.length ?? 0) > 0;
+  const urut = [
+    "kehadiran",
+    tampilMakna && "makna",
+    "materi",
+    caberawit && "tilawati",
+    (!caberawit || terlewat.length > 0) && "terlewat",
+    "catatan",
+  ].filter(Boolean);
+  const no = (bagian: string) => urut.indexOf(bagian) + 1;
 
   return (
     <article
@@ -69,7 +81,7 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
         </tbody>
       </table>
 
-      <Bagian judul="1. Kehadiran">
+      <Bagian judul={`${no("kehadiran")}. Kehadiran`}>
         {h && h.total > 0 ? (
           <Tabel kepala={[...URUTAN_PRESENSI.map((s) => LABEL_PRESENSI[s]), "Kehadiran"]}>
             <tr>
@@ -88,7 +100,8 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
         )}
       </Bagian>
 
-      <Bagian judul="2. Bacaan & makna">
+      {tampilMakna && (
+      <Bagian judul={`${no("makna")}. Bacaan & makna`}>
         {d.target && d.target.kitab.length > 0 && (
           <Tabel kepala={["Target periode", "Capaian anak", "Disampaikan di kelas"]}>
             {d.target.kitab.map((x) => (
@@ -128,7 +141,9 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
         )}
       </Bagian>
 
-      <Bagian judul="3. Hafalan, kefahaman, akhlaq & kemandirian">
+      )}
+
+      <Bagian judul={`${no("materi")}. Hafalan, kefahaman, akhlaq & kemandirian`}>
         {d.materi.length ? (
           <Tabel kepala={["Aspek", "Butir materi", "Status", "Sudah menerima"]}>
             {URUTAN_ASPEK.flatMap((a) =>
@@ -159,8 +174,8 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
         )}
       </Bagian>
 
-      {d.anak.kelas?.jenjang === "caberawit" && (
-        <Bagian judul="4. Tilawati">
+      {caberawit && (
+        <Bagian judul={`${no("tilawati")}. Tilawati`}>
           <p>
             Posisi sekarang: <strong>{teksPosisiTilawati(d.tilawati)}</strong>
             {d.target?.tilawati && <> · Target: {teksPosisiTilawati(d.target.tilawati)}</>}
@@ -168,7 +183,8 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
         </Bagian>
       )}
 
-      <Bagian judul={`${d.anak.kelas?.jenjang === "caberawit" ? 5 : 4}. Materi terlewat`}>
+      {no("terlewat") > 0 && (
+      <Bagian judul={`${no("terlewat")}. Materi terlewat`}>
         {terlewat.length ? (
           <ul className="list-disc pl-6">
             {terlewat.map((k) => (
@@ -182,7 +198,9 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
         )}
       </Bagian>
 
-      <Bagian judul={`${d.anak.kelas?.jenjang === "caberawit" ? 6 : 5}. Catatan`}>
+      )}
+
+      <Bagian judul={`${no("catatan")}. Catatan`}>
         {catatan.length ? (
           catatan.map((c) => (
             <p key={c.bulan} className="whitespace-pre-line">

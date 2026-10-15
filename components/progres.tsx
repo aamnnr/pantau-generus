@@ -47,12 +47,12 @@ export function BarProgres({ nilai, total, satuan, label, pembanding, kecil, cla
       >
         <div className="h-full origin-left animate-isi-bar rounded-full bg-primary" style={{ width: `${p}%` }} />
         {pk != null && pk > 0 && (
-          <div aria-hidden className="absolute inset-y-0 w-0.5 bg-kunyit" style={{ left: `calc(${pk}% - 1px)` }} />
+          <div aria-hidden className="absolute inset-y-0 w-0.5 bg-teks-2" style={{ left: `calc(${pk}% - 1px)` }} />
         )}
       </div>
       {pembanding && (
         <p className="text-sm text-muted-foreground">
-          <span aria-hidden className="mr-1.5 inline-block h-3 w-0.5 bg-kunyit align-middle" />
+          <span aria-hidden className="mr-1.5 inline-block h-3 w-0.5 bg-teks-2 align-middle" />
           {pembanding.label}: {pk}% ({formatAngka(pembanding.nilai)} {satuan})
         </p>
       )}
@@ -90,7 +90,7 @@ export function CincinProgres({ nilai, ukuran = 96, tebal = 8, label, className 
         />
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-xl font-bold tabular-nums">{nilai == null ? "—" : `${p}%`}</span>
+        <span className={cn("font-bold tabular-nums", ukuran < 64 ? "text-xs" : "text-xl")}>{nilai == null ? "—" : `${p}%`}</span>
         {label && <span className="text-xs text-muted-foreground">{label}</span>}
       </span>
     </div>

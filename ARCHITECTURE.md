@@ -202,6 +202,8 @@ Dibungkus menjadi:
 
 **Per periode & rekap (Tahap 6):** semua periode (bulan, periode target, semester tetap Jul–Des/Jan–Jun, keseluruhan) diterjemahkan ke rentang tanggal di `lib/periode.ts`. `fn_satuan_diikuti(generus, dari, sampai)` & `fn_satuan_disampaikan(kelas, dari, sampai)` menjadi dasar `fn_progres_anak(generus, dari, sampai)` dan `fn_progres_quran_per_surat(generus, jenis, dari, sampai)` (argumen tanggal ber-default = keseluruhan). Materi terlewat = disampaikan di periode yang **belum pernah** diikuti (kapan pun). `fn_rekap_kelas(kelas, dari, sampai)` → per anak aktif: kehadiran, `perlu_perhatian` (persen < `pengaturan.ambang_kehadiran`), satuan kelas vs diikuti, butir target periode yang beririsan & yang tuntas, posisi tilawati; `fn_rekap_kelas_ringkas` → rata-rata kelas. Raport memakai data Progres Anak pada periode yang sama; `catatan_raport` per bulan (raport bulanan/periode target menulis ke bulan awal periodenya).
 
+**Beranda:** `fn_kehadiran_harian(dari, sampai)` (hadir+terlambat ÷ presensi per hari, hari tanpa kegiatan tetap muncul) + `fn_rekap_kelas_ringkas` untuk target berjalan + `fn_rekap_kelas` (bulan ini) untuk perlu perhatian. Target punya kolom `rentang_usia` (keterangan target Caberawit dari PPG).
+
 View dibuat `security_invoker = true` agar RLS tabel sumber tetap berlaku.
 
 Volume diperkirakan kecil (±30 rb baris presensi/tahun), sehingga perhitungan langsung tanpa tabel ringkasan sudah cukup. Materialisasi baru dipertimbangkan bila terbukti lambat.
@@ -240,7 +242,7 @@ Pola kebijakan:
 ├── app/
 │   ├── (auth)/masuk/                 # halaman login
 │   ├── (app)/                        # layout terautentikasi + navigasi per peran
-│   │   ├── beranda/                  # dashboard sesuai peran
+│   │   ├── beranda/                  # ringkasan: hari ini, kehadiran 7 hari, perlu perhatian, target berjalan (admin, guru, pengurus)
 │   │   ├── hari-ini/                 # Pengajian Hari Ini
 │   │   ├── kegiatan/                 # baru/ (kegiatan khusus), [id]/ (Materi → Kehadiran → Selesai), [id]/ubah/
 │   │   ├── riwayat/                  # kegiatan 60 hari terakhir

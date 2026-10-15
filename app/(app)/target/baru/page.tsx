@@ -26,6 +26,7 @@ async function Form() {
       awal={{
         judul: "",
         semester: terakhir?.semester ?? "",
+        rentang_usia: "",
         mulai,
         selesai: geserTanggal(mulai, 27),
         kelas: kelas.length === 1 ? [kelas[0].id] : (terakhir?.kelas.map((k) => k.id).filter((id) => kelas.some((x) => x.id === id)) ?? []),

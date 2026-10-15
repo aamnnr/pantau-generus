@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { IndikatorGeser } from "@/components/indikator-geser";
 import { hrefDengan, JENIS_PERIODE, type Periode } from "@/lib/periode";
 import { cn } from "@/lib/utils";
 
@@ -11,15 +12,16 @@ export function PilihPeriode({ base, periode, tetap }: { base: string; periode: 
   const panah = "flex size-10 shrink-0 items-center justify-center rounded-lg border bg-card text-teks-2 transition-colors hover:bg-muted active:scale-95";
   return (
     <div className="flex flex-col gap-2">
-      <nav aria-label="Jenis periode" className="grid grid-cols-4 gap-1 rounded-xl bg-secondary p-1">
+      <nav aria-label="Jenis periode" className="relative grid grid-cols-4 gap-1 rounded-xl bg-secondary p-1">
+        <IndikatorGeser indeks={JENIS_PERIODE.findIndex((j) => j.value === periode.jenis)} jumlah={JENIS_PERIODE.length} />
         {JENIS_PERIODE.map((j) => (
           <Link
             key={j.value}
             href={hrefDengan(base, tetap, { periode: j.value })}
             aria-current={periode.jenis === j.value ? "page" : undefined}
             className={cn(
-              "flex h-10 items-center justify-center rounded-lg text-base font-medium text-muted-foreground transition-colors",
-              periode.jenis === j.value && "bg-card font-semibold text-primary shadow-[0_1px_3px_rgba(20,22,22,0.12)]",
+              "relative z-10 flex h-10 items-center justify-center rounded-lg text-base font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground",
+              periode.jenis === j.value && "font-semibold text-primary hover:text-primary",
             )}
           >
             {j.label}
@@ -45,6 +47,11 @@ export function PilihPeriode({ base, periode, tetap }: { base: string; periode: 
           periode.jenis !== "semua" && <span className="size-10 shrink-0" />
         )}
       </div>
+      {periode.kosong && (
+        <p className="rounded-lg border border-info/20 bg-info-soft px-3 py-2 text-sm text-info">
+          Belum ada periode target. Buat target di menu <Link href="/target" className="font-semibold underline underline-offset-2">Target</Link> terlebih dulu, atau pilih Bulan/Semester.
+        </p>
+      )}
     </div>
   );
 }

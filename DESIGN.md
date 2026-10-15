@@ -45,6 +45,19 @@ Arah visual (15 Okt 2026) mengikuti referensi *Zenius — Online education dashb
 
 Warna status (chip, peringatan) memakai pasangan lembut `ok`/`warn`/`info`/`ungu`/`bahaya` (latar `*-soft`, teks gelap) dan **selalu** disertai simbol + kata. Kontras minimum **WCAG AA (4.5:1)** untuk semua teks.
 
+**Makna warna (wajib konsisten):**
+
+| Nada | Arti | Contoh pemakaian |
+|---|---|---|
+| Teal (`ok`, `primary`) | Beres / positif / aksi utama | Hadir, Selesai, Lancar/Paham/Terbiasa, target tercapai, "semua sudah diisi" |
+| Biru (`info`) | Informasi / sedang berjalan, netral | Sudah diisi (belum selesai), Izin, Lulus, penanda Target, petunjuk "belum ada periode target" |
+| Oranye (`warn`, `kunyit`) | Perlu tindakan, bukan galat | Belum diisi, Terlambat, Proses, materi terlewat, perubahan belum disimpan, batang kehadiran < 60% |
+| Merah (`bahaya`, `destructive`) | Galat, bahaya, masalah | Alpa, Perlu perhatian, pesan galat, Hapus |
+| Ungu (`ungu`) | Kategori khusus | Sakit, butir khusus putra/putri |
+| Abu (`secondary`) | Netral / tidak aktif | Libur, Pindah, Nonaktif, Belum dinilai, angka nol |
+
+Petunjuk umum (mis. "Ketuk nama anak yang tidak hadir") memakai mint (`--mint`), bukan biru.
+
 ### Warna Status Presensi
 
 | Status | Warna | Label & ikon |
@@ -79,12 +92,15 @@ Tiga tingkat yang sama di database (`belum`/`proses`/`lancar`); **label mengikut
 
 | Peran | Item navigasi |
 |---|---|
-| Admin | Hari Ini · Generus · Target · Lainnya (Rekap & Raport: grup Laporan di Lainnya; sidebar desktop) |
-| Guru | Hari Ini · Kelasku · Riwayat · Lainnya |
-| Pengurus | Rekap · Generus · Raport · Lainnya (Beranda pengurus = Rekap) |
+| Admin | Beranda · Hari Ini · Generus · Lainnya |
+| Guru | Beranda · Hari Ini · Kelasku · Lainnya |
+| Pengurus | Beranda · Rekap · Raport · Lainnya |
 | Wali | Anakku · Raport · Lainnya |
 
-- **Lainnya** ada di semua peran: profil, Ganti Mode, Keluar, dan (admin/pengurus) menu Kelola data.
+Menu lain (Target, Riwayat, Rekap, Raport sesuai peran) ada di sidebar desktop dan di grup **Menu lain** pada halaman Lainnya (HP).
+
+- **Lainnya** ada di semua peran: profil, menu lain, Ganti Mode, Keluar, dan (admin/pengurus) menu Kelola data.
+- Sidebar desktop: menu bisa digulir sendiri; kartu profil (nama + peran) tetap di bawah.
 - Pengguna dengan beberapa peran: tombol **"Ganti Mode"** di Lainnya; mode tersimpan di cookie dan menentukan navigasi.
 - Wali dengan satu anak langsung masuk ke halaman anak; lebih dari satu → pilih anak (kartu besar dengan nama & kelas).
 - Setiap halaman turunan punya tombol **← Kembali** berlabel di kiri atas.
@@ -138,9 +154,17 @@ Aturan adaptasi komponen:
 - Logo/nama aplikasi, field **No. HP** (`inputmode="tel"`), field **PIN** (`inputmode="numeric"`, 6 kotak), tombol **Masuk**.
 - Teks bantuan: "Lupa PIN? Hubungi admin kelompok."
 
+### 7.1a Beranda (Admin, Guru, Pengurus)
+- Halaman pertama setelah masuk. Sapaan + tanggal; tiga kotak ringkas pengajian hari ini (total, sudah diisi, belum diisi).
+- **Perlu diisi hari ini**: kartu kegiatan yang belum diisi (atau pesan "semua sudah diisi").
+- **Kehadiran 7 hari terakhir**: persen keseluruhan + grafik batang per hari (teal ≥ 60%, oranye di bawahnya, batang kosong = tidak ada pengajian).
+- **Perlu perhatian**: anak dengan kehadiran bulan ini di bawah ambang (maks. 6, sisanya ke Rekap).
+- **Target berjalan**: per kelas, cincin rata-rata butir target tuntas + materi diikuti.
+- Guru hanya melihat kelas yang diajarnya; wali diarahkan ke Anakku.
+
 ### 7.2 Pengajian Hari Ini (Admin/Guru)
 - Judul: "Senin, 13 Oktober 2026".
-- Kartu per kegiatan: nama kelas (kegiatan gabungan menampilkan semua kelas, mis. "Pelajar + Pra-nikah"), jam, pengajar, status (Belum diisi / Sudah diisi / Libur).
+- Kartu per kegiatan: nama kelas (kegiatan gabungan menampilkan semua kelas, mis. "Usia sekolah (SLTA) + Usia mandiri"), jam, pengajar, status (Belum diisi / Sudah diisi / Libur).
 - Ketuk kartu → detail kegiatan.
 - Tombol sekunder: "+ Kegiatan Lain".
 

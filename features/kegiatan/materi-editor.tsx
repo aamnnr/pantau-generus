@@ -23,17 +23,19 @@ import type { OpsiMateriItem } from "./queries";
 
 type RundownAwal = { waktu: string | null; aktivitas: string };
 
-export function MateriEditor({ kitab, surat, awal, rundownAwal, opsiItem, itemAwal, action }: {
+export function MateriEditor({ kitab, surat, awal, rundownAwal, opsiItem, itemAwal, tanpaKitab = false, action }: {
   kitab: Kitab[];
   surat: Surat[];
   awal: RentangAwal[];
   rundownAwal: RundownAwal[];
   opsiItem: OpsiMateriItem[];
   itemAwal: string[];
+  /** Kegiatan khusus Caberawit: tanpa makna/bacaan Al-Qur'an & Al-Hadist (PRD §5). */
+  tanpaKitab?: boolean;
   action: (prev: SimpanState, fd: FormData) => Promise<SimpanState>;
 }) {
   const [baris, setBaris] = useState<Baris[]>(() =>
-    awal.length ? awal.map(barisDariAwal) : [barisBaru(kitab.length === 1 ? kitab[0].id : "")],
+    awal.length ? awal.map(barisDariAwal) : tanpaKitab ? [] : [barisBaru(kitab.length === 1 ? kitab[0].id : "")],
   );
   const [rundown, setRundown] = useState(() =>
     rundownAwal.map((r) => ({ key: kunciBaru(), waktu: r.waktu?.slice(0, 5) ?? "", aktivitas: r.aktivitas })),
@@ -54,6 +56,12 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, opsiItem, itemAw
       <input type="hidden" name="materi_item" value={JSON.stringify(items)} />
       <input type="hidden" name="rundown" value={JSON.stringify(rundown.map(({ waktu, aktivitas }) => ({ waktu, aktivitas })))} />
 
+      {tanpaKitab && baris.length === 0 && (
+        <p className="rounded-xl border border-info/20 bg-info-soft px-3.5 py-2.5 text-sm text-info">
+          Caberawit tidak memakai makna Al-Qur&apos;an/Al-Hadist. Catat hafalan, latihan makna, dan materi lain lewat butir materi di bawah.
+        </p>
+      )}
+
       {baris.map((b, i) => (
         <BarisRentang
           key={b.key}
@@ -62,23 +70,25 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, opsiItem, itemAw
           kitab={kitab}
           surat={surat}
           ubah={(p) => ubah(b.key, p)}
-          hapus={baris.length > 1 ? () => setBaris((s) => s.filter((x) => x.key !== b.key)) : undefined}
+          hapus={baris.length > 1 || tanpaKitab ? () => setBaris((s) => s.filter((x) => x.key !== b.key)) : undefined}
         />
       ))}
 
-      <Button type="button" variant="outline" className="w-full lg:w-fit" onClick={() => setBaris((s) => [...s, barisBaru(s.at(-1)?.kitab_id)])}>
-        <Plus aria-hidden />
-        Tambah baris materi
-      </Button>
+      {(!tanpaKitab || baris.length > 0) && (
+        <Button type="button" variant="outline" className="w-full lg:w-fit" onClick={() => setBaris((s) => [...s, barisBaru(s.at(-1)?.kitab_id)])}>
+          <Plus aria-hidden />
+          Tambah baris materi
+        </Button>
+      )}
 
       <PilihMateriItem opsi={opsiItem} dipilih={items} onChange={setItems} />
 
       <details className="group rounded-2xl border border-input bg-card" open={rundown.length > 0 || undefined}>
-        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-4 text-lg font-semibold">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-2xl px-4 text-base font-semibold hover:bg-muted">
           <span>
             Rundown <span className="font-normal text-muted-foreground">(opsional)</span>
           </span>
-          <ChevronDown aria-hidden className="ml-auto size-6 transition-transform group-open:rotate-180" />
+          <ChevronDown aria-hidden className="ml-auto size-5 transition-transform duration-250 ease-(--ease-halus) group-open:rotate-180" />
         </summary>
         <div className="flex flex-col gap-3 border-t px-4 py-4">
           {rundown.map((r, i) => (
