@@ -1,3 +1,7 @@
+# Skrip instal dependensi dimatikan: biner platform sudah datang lewat optionalDependencies.
+# esbuild & @swc/core dibawa Serwist (membangun service worker), sharp & unrs-resolver oleh Next/ESLint.
 allowBuilds:
   sharp: false
   unrs-resolver: false
+  esbuild: false
+  '@swc/core': false
