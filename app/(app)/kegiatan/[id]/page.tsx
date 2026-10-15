@@ -1,9 +1,9 @@
-import { CalendarX2, CheckCheck, Pencil, RotateCcw } from "lucide-react";
+import { CalendarX2, CheckCheck, ClipboardCheck, Pencil, RotateCcw } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { BackLink, Halaman, Kartu, SkeletonDaftar } from "@/components/page";
+import { BackLink, Halaman, Kartu, Kosong, SkeletonDaftar } from "@/components/page";
 import { StatusChip } from "@/components/status-chip";
 import { TombolHapus } from "@/components/tombol-hapus";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,11 @@ import { LangkahKegiatan } from "@/features/kegiatan/langkah-kegiatan";
 import { MateriEditor } from "@/features/kegiatan/materi-editor";
 import { PresensiCepat } from "@/features/kegiatan/presensi-cepat";
 import { ambilKegiatan, daftarSurat, kitabAktif, opsiMateriItem, pesertaKegiatan } from "@/features/kegiatan/queries";
+import { tilawatiKegiatan } from "@/features/progres/queries";
+import { TilawatiCepat } from "@/features/progres/tilawati-cepat";
+import { daftarJilid } from "@/features/target/queries";
 import { requirePeran } from "@/lib/auth/session";
+import { createClient } from "@/lib/supabase/server";
 import { formatJam, formatRentangJam, formatTanggal, LABEL_ASPEK, LABEL_PRESENSI, labelKelasKegiatan, URUTAN_PRESENSI } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Kegiatan · Pantau Generus" };
@@ -26,11 +30,18 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
 
   const kelasIds = k.kegiatan_kelas.map((x) => x.kelas_id);
   const jenjang = [...new Set(k.ringkas.kelas.map((x) => x.jenjang))];
-  const [peserta, kitab, surat, opsiItem] = await Promise.all([
+  const kelasCaberawit = k.ringkas.kelas.filter((x) => x.jenjang === "caberawit").map((x) => x.id);
+  const supabase = await createClient();
+  const [peserta, kitab, surat, opsiItem, barisTilawati, jilid, catatanTilawati] = await Promise.all([
     pesertaKegiatan(k.id, kelasIds),
     kitabAktif(),
     daftarSurat(),
     k.bolehKelola ? opsiMateriItem(k.id, jenjang) : Promise.resolve([]),
+    tilawatiKegiatan(k.id, kelasCaberawit),
+    kelasCaberawit.length ? daftarJilid() : Promise.resolve([]),
+    kelasCaberawit.length
+      ? supabase.from("capaian_tilawati").select("id", { count: "exact", head: true }).eq("kegiatan_id", k.id)
+      : Promise.resolve({ count: 0 }),
   ]);
   const r = k.ringkas;
   const status = statusKegiatan(r);
@@ -101,6 +112,19 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
     <PresensiCepat peserta={peserta} kelas={r.kelas} action={simpanPresensi.bind(null, k.id)} bisaUbah={bisa} />
   );
 
+  const tilawati = kelasCaberawit.length > 0 && (
+    !sudahPresensi ? (
+      <Kosong judul="Isi kehadiran dulu" keterangan="Hanya anak yang hadir yang ditampilkan untuk dicatat tilawatinya." />
+    ) : barisTilawati.length === 0 ? (
+      <Kosong judul="Tidak ada anak Caberawit yang hadir" />
+    ) : (
+      <div className="flex flex-col gap-3">
+        {bisa && <p className="rounded-2xl bg-mint px-4 py-3 text-mint-foreground">Ketuk <strong>+1 / +2 / +3</strong> sesuai halaman yang diselesaikan anak. Ketuk posisi untuk mengoreksi.</p>}
+        <TilawatiCepat baris={barisTilawati} jilid={jilid} kegiatanId={k.id} bisa={bisa} />
+      </div>
+    )
+  );
+
   const selesai = (
     <Kartu className="flex flex-col gap-4">
       <dl className="grid gap-3 sm:grid-cols-2">
@@ -122,6 +146,18 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
         </div>
       </dl>
       {k.catatan && <p className="rounded-xl bg-muted px-4 py-3">{k.catatan}</p>}
+
+      {bisa && sudahPresensi && k.materiItem.length > 0 && (
+        <div className="flex flex-col gap-2 rounded-xl bg-mint p-4 text-mint-foreground">
+          <p>Nilai hafalan/kefahaman anak yang hadir untuk materi item pengajian ini.</p>
+          <Button asChild variant="outline" size="lg" className="w-full bg-card lg:w-auto lg:self-start">
+            <Link href={`/penilaian?kegiatan=${k.id}`}>
+              <ClipboardCheck aria-hidden />
+              Nilai materi pengajian
+            </Link>
+          </Button>
+        </div>
+      )}
 
       {k.bolehKelola && (
         <div className="flex flex-col gap-2 lg:flex-row lg:flex-wrap">
@@ -193,8 +229,14 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
       <LangkahKegiatan
         materi={materi}
         kehadiran={kehadiran}
+        tilawati={tilawati || undefined}
         selesai={selesai}
-        sudah={{ materi: k.materi.length > 0 || k.materiItem.length > 0, kehadiran: sudahPresensi, selesai: k.status === "selesai" }}
+        sudah={{
+          materi: k.materi.length > 0 || k.materiItem.length > 0,
+          kehadiran: sudahPresensi,
+          tilawati: (catatanTilawati.count ?? 0) > 0,
+          selesai: k.status === "selesai",
+        }}
       />
     </>
   );

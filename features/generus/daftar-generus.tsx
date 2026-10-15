@@ -148,7 +148,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
           <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:hidden">
             {tampil.map((g) => (
               <li key={g.id}>
-                <KartuGenerus g={g} pilihMode={pilihMode} dipilih={dipilih.has(g.id)} onToggle={() => toggle(g.id)} bisaUbah={bisaUbah} />
+                <KartuGenerus g={g} pilihMode={pilihMode} dipilih={dipilih.has(g.id)} onToggle={() => toggle(g.id)} />
               </li>
             ))}
           </ul>
@@ -192,7 +192,11 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
                           />
                         </td>
                       )}
-                      <td className="px-4 py-3 font-medium">{g.nama}</td>
+                      <td className="px-4 py-3 font-medium">
+                        <Link href={`/generus/${g.id}`} className="text-primary underline-offset-4 hover:underline">
+                          {g.nama}
+                        </Link>
+                      </td>
                       <td className="px-2 py-3 text-[#444444]">{g.kelas ? labelKelas(g.kelas) : "—"}</td>
                       <td className="px-2 py-3 text-[#444444]">{g.wali.join(", ") || "—"}</td>
                       <td className="px-2 py-3">
@@ -227,12 +231,11 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
   );
 }
 
-function KartuGenerus({ g, pilihMode, dipilih, onToggle, bisaUbah }: {
+function KartuGenerus({ g, pilihMode, dipilih, onToggle }: {
   g: GenerusRow;
   pilihMode: boolean;
   dipilih: boolean;
   onToggle: () => void;
-  bisaUbah: boolean;
 }) {
   const chip = CHIP_STATUS_GENERUS[g.status];
   const isi = (
@@ -254,7 +257,7 @@ function KartuGenerus({ g, pilihMode, dipilih, onToggle, bisaUbah }: {
           {LABEL_STATUS_GENERUS[g.status]}
         </StatusChip>
       )}
-      {!pilihMode && bisaUbah && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
+      {!pilihMode && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
     </>
   );
   const kelasKartu = cn(
@@ -270,14 +273,11 @@ function KartuGenerus({ g, pilihMode, dipilih, onToggle, bisaUbah }: {
       </label>
     );
   }
-  if (bisaUbah) {
-    return (
-      <Link href={`/generus/${g.id}/ubah`} className={cn(kelasKartu, "hover:bg-mint/60")}>
-        {isi}
-      </Link>
-    );
-  }
-  return <div className={kelasKartu}>{isi}</div>;
+  return (
+    <Link href={`/generus/${g.id}`} className={cn(kelasKartu, "hover:bg-mint/60")}>
+      {isi}
+    </Link>
+  );
 }
 
 function DialogNaikKelas({ open, onOpenChange, dipilih, kelas, action }: {

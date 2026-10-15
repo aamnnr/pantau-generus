@@ -140,7 +140,7 @@ Konvensi: nama tabel/kolom **snake_case**, istilah domain Bahasa Indonesia (liha
 |---|---|---|
 | `penilaian` | `generus_id`, `materi_item_id`, `status` (`belum`\|`proses`\|`lancar`), `tanggal`, `dinilai_oleh` | Append-only; status terakhir berlaku. Label tampilan per aspek (DESIGN §3) |
 | `jilid_tilawati` | `jilid`, `total_halaman` | Diatur admin |
-| `capaian_tilawati` | `generus_id`, `jenis` (`tambah`\|`koreksi`\|`naik_jilid`), `tambahan` (int, untuk `tambah`), `jilid`, `halaman` (posisi **setelah** entri), `kegiatan_id` (nullable), `tanggal`, `dinilai_oleh` | Append-only; entri terakhir = posisi saat ini. Tombol +N membuat entri `tambah` |
+| `capaian_tilawati` | `generus_id`, `jenis` (`tambah`\|`koreksi`\|`naik_jilid`), `tambahan` (int, untuk `tambah`), `jilid`, `halaman` (posisi **setelah** entri), `kegiatan_id` (nullable), `tanggal`, `dinilai_oleh`, `no_urut` (identity) | Append-only; entri yang terakhir **dicatat** (`no_urut`, bukan `tanggal`) = posisi saat ini. Tombol +N membuat entri `tambah`; Urungkan = entri `koreksi` |
 | `target_bulanan` | `judul` (mis. "Periode Bulan Oktober"), `semester`, `mulai`, `selesai` (date), `catatan`, `dibuat_oleh` | Periode dari lembaga atas, tidak harus bulan kalender (mis. 5 Okt – 7 Nov) |
 | `target_bulanan_kelas` | `target_bulanan_id`, `kelas_id` | ≥1 kelas per target. Periode target satu kelas tidak boleh bertumpukan (trigger) |
 | `target_kitab` | `target_bulanan_id`, `kitab_id`, `jenis` (`makna`\|`bacaan`), `mulai`, `selesai`, `urutan` | Makna Al-Qur'an/Al-Hadist dan bacaan Al-Qur'an |
@@ -198,6 +198,8 @@ Dibungkus menjadi:
 - `fn_materi_terlewat(generus_id, kitab_id)` — satuan disampaikan tetapi tidak diikuti, diringkas menjadi rentang (gaps-and-islands) lalu diformat dengan `fn_format_rentang`.
 - `fn_rekap_presensi(generus_id, dari, sampai)`.
 
+**Terimplementasi (Tahap 5):** `v_satuan_disampaikan`, `v_satuan_diikuti`, `fn_progres_anak(generus_id)` (per kitab & jenis: total, diikuti, kelas, `terlewat` jsonb rentang via `fn_ringkas_rentang`), `fn_progres_quran_per_surat(generus_id, jenis)`, `fn_capaian_target_kitab(generus_id, target_id)` (satuan dalam rentang target), `fn_rekap_presensi` (persen = hadir+terlambat ÷ presensi terisi, kegiatan libur tidak dihitung), `v_penilaian_terakhir`, `v_materi_item_diterima`, `v_posisi_tilawati`, `v_susulan`. Penulisan: `simpan_susulan`, `tambah_tilawati` (berhenti di akhir jilid, mengembalikan `sisa` → UI menawarkan naik jilid), `atur_posisi_tilawati` (koreksi/naik jilid, divalidasi jumlah halaman jilid); semuanya memanggil `cek_boleh_nilai` (admin atau guru kelas anak) lalu RLS. Penilaian ditulis langsung ke tabel `penilaian` (hanya baris yang berubah). Kelas pembanding progres = kelas anak **saat ini**.
+
 View dibuat `security_invoker = true` agar RLS tabel sumber tetap berlaku.
 
 Volume diperkirakan kecil (±30 rb baris presensi/tahun), sehingga perhitungan langsung tanpa tabel ringkasan sudah cukup. Materialisasi baru dipertimbangkan bila terbukti lambat.
@@ -240,7 +242,9 @@ Pola kebijakan:
 │   │   ├── hari-ini/                 # Pengajian Hari Ini
 │   │   ├── kegiatan/                 # baru/ (kegiatan khusus), [id]/ (Materi → Kehadiran → Selesai), [id]/ubah/
 │   │   ├── riwayat/                  # kegiatan 60 hari terakhir
-│   │   ├── generus/              # daftar (+naik kelas massal), baru/, [id]/ubah/; [id]/ = progres anak (Tahap 5)
+│   │   ├── generus/              # daftar (+naik kelas massal), baru/, [id]/ubah/; [id]/ = progres anak (+ penilaian, tilawati), [id]/susulan/
+│   │   ├── penilaian/                # satu butir untuk banyak anak: ?kelas=&item= atau ?kegiatan=&item= (anak yang hadir)
+│   │   ├── anakku/                   # daftar anak untuk wali → progres anak
 │   │   ├── target/                   # daftar (berjalan/akan datang/lewat), baru/ (+salin isi), [id]/ (isi per aspek), [id]/ubah/
 │   │   ├── raport/                   # raport anak & rekap
 │   │   ├── lainnya/                 # profil, ganti mode, keluar, menu kelola

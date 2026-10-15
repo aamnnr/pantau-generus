@@ -163,6 +163,8 @@ Tiga langkah berurutan dengan indikator ✓:
 - Tombol sticky: **Simpan Kehadiran**.
 
 ### 7.4a Tilawati Cepat (Caberawit)
+- Menjadi langkah ke-3 detail kegiatan bila ada kelas Caberawit; di HP empat langkah memakai label singkat (Materi · Hadir · Tilawati · Selesai) dengan indikator di atas label.
+- Anak tanpa posisi: tombol **Isi posisi awal** (pilih jilid + halaman).
 - Hanya anak yang **hadir** ditampilkan.
 - Tiap baris: nama + posisi saat ini ("Jilid 3 · hal. 24") + tombol besar **+1 · +2 · +3 · …** (… membuka input angka).
 - Setelah ditekan: posisi langsung diperbarui ("→ hal. 26") dengan toast **Urungkan**.
@@ -175,7 +177,15 @@ Tiga langkah berurutan dengan indikator ✓:
 - Kartu per kitab Al-Hadist: bar progres anak vs kelas, tautan "Materi terlewat: hal. 15–20".
 - Kartu Al-Qur'an: progres total + daftar per surat yang sudah dimulai (bar kecil per surat), "Materi terlewat: Al-Baqarah 21–40".
 - Daftar hafalan & praktik dengan status.
-- Tilawati: "Jilid 3 · hal. 24".
+- Tilawati: "Jilid 3 · hal. 24" + tombol +N yang sama seperti §7.4a (bagi yang berhak).
+- Kartu target periode berjalan: bar per baris bacaan/makna target (anak vs yang sudah disampaikan di kelas), jumlah butir target yang tuntas, tilawati target vs posisi.
+- Materi terlewat per rentang punya tombol **Catat susulan** (isian sudah terisi rentangnya). Riwayat susulan bisa dihapus bila salah catat.
+- Penilaian materi item dikelompokkan per aspek, tiga tombol per butir; baris yang diubah ditandai "belum disimpan" sampai tombol **Simpan Penilaian (n)** ditekan.
+- Kartu kehadiran menampilkan chip **Perlu perhatian** bila persen bulan ini < ambang (default 60%).
+
+### 7.5a Penilaian (Admin/Guru)
+- Satu butir untuk banyak anak: pilih kelas → pilih butir (target periode di atas, sisanya per aspek) → daftar anak dengan tiga tombol.
+- Dari langkah Selesai kegiatan: **Nilai materi pengajian** → butir yang disampaikan → hanya anak yang hadir.
 
 ### 7.6 Target Bulanan (Admin)
 - Daftar periode target (judul, tanggal mulai–selesai, kelas yang dicakup). Buat baru → tombol besar **"Salin dari periode sebelumnya"**.

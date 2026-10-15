@@ -25,6 +25,7 @@ export type Database = {
           jilid: number
           kegiatan_id: string | null
           kelompok_id: string
+          no_urut: number
           tambahan: number | null
           tanggal: string
           updated_at: string
@@ -39,6 +40,7 @@ export type Database = {
           jilid: number
           kegiatan_id?: string | null
           kelompok_id?: string
+          no_urut?: never
           tambahan?: number | null
           tanggal?: string
           updated_at?: string
@@ -53,6 +55,7 @@ export type Database = {
           jilid?: number
           kegiatan_id?: string | null
           kelompok_id?: string
+          no_urut?: never
           tambahan?: number | null
           tanggal?: string
           updated_at?: string
@@ -1799,6 +1802,135 @@ export type Database = {
           },
         ]
       }
+      v_materi_item_diterima: {
+        Row: {
+          generus_id: string | null
+          kali: number | null
+          materi_item_id: string | null
+          terakhir: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kegiatan_materi_item_materi_item_id_fkey"
+            columns: ["materi_item_id"]
+            isOneToOne: false
+            referencedRelation: "materi_item"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "presensi_generus_id_fkey"
+            columns: ["generus_id"]
+            isOneToOne: false
+            referencedRelation: "generus"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_penilaian_terakhir: {
+        Row: {
+          generus_id: string | null
+          materi_item_id: string | null
+          status: Database["public"]["Enums"]["status_penilaian"] | null
+          tanggal: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "penilaian_generus_id_fkey"
+            columns: ["generus_id"]
+            isOneToOne: false
+            referencedRelation: "generus"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "penilaian_materi_item_id_fkey"
+            columns: ["materi_item_id"]
+            isOneToOne: false
+            referencedRelation: "materi_item"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_posisi_tilawati: {
+        Row: {
+          generus_id: string | null
+          halaman: number | null
+          jilid: number | null
+          tanggal: string | null
+          total_halaman: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "capaian_tilawati_generus_id_fkey"
+            columns: ["generus_id"]
+            isOneToOne: false
+            referencedRelation: "generus"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_satuan_diikuti: {
+        Row: {
+          generus_id: string | null
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"] | null
+          kitab_id: string | null
+          satuan: number | null
+        }
+        Relationships: []
+      }
+      v_satuan_disampaikan: {
+        Row: {
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"] | null
+          kelas_id: string | null
+          kitab_id: string | null
+          satuan: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kegiatan_kelas_kelas_id_fkey"
+            columns: ["kelas_id"]
+            isOneToOne: false
+            referencedRelation: "kelas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kegiatan_materi_kitab_id_fkey"
+            columns: ["kitab_id"]
+            isOneToOne: false
+            referencedRelation: "kitab"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_susulan: {
+        Row: {
+          generus_id: string | null
+          guru_nama: string | null
+          id: string | null
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"] | null
+          kitab_id: string | null
+          kitab_nama: string | null
+          mulai: number | null
+          selesai: number | null
+          tanggal: string | null
+          teks: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "susulan_generus_id_fkey"
+            columns: ["generus_id"]
+            isOneToOne: false
+            referencedRelation: "generus"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "susulan_kitab_id_fkey"
+            columns: ["kitab_id"]
+            isOneToOne: false
+            referencedRelation: "kitab"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_target_kitab: {
         Row: {
           id: string | null
@@ -1905,6 +2037,16 @@ export type Database = {
       }
     }
     Functions: {
+      atur_posisi_tilawati: {
+        Args: {
+          p_generus_id: string
+          p_halaman: number
+          p_jilid: number
+          p_kegiatan_id?: string
+          p_naik?: boolean
+        }
+        Returns: undefined
+      }
       boleh_kelola_kegiatan: {
         Args: { p_kegiatan_id: string }
         Returns: boolean
@@ -1915,6 +2057,8 @@ export type Database = {
         Args: { p_kegiatan_id: string }
         Returns: boolean
       }
+      boleh_nilai_generus: { Args: { p_generus_id: string }; Returns: boolean }
+      cek_boleh_nilai: { Args: { p_generus_id: string }; Returns: undefined }
       cek_target_tumpang_tindih: {
         Args: { p_target_id: string }
         Returns: undefined
@@ -1923,18 +2067,75 @@ export type Database = {
         Args: { p_ayat: number; p_surat: number }
         Returns: number
       }
+      fn_capaian_target_kitab: {
+        Args: { p_generus_id: string; p_target_id: string }
+        Returns: {
+          diikuti: number
+          id: string
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
+          kelas: number
+          kitab_id: string
+          kitab_jenis: Database["public"]["Enums"]["jenis_kitab"]
+          kitab_nama: string
+          teks: string
+          total: number
+        }[]
+      }
       fn_format_rentang: {
         Args: { p_kitab_id: string; p_mulai: number; p_selesai: number }
         Returns: string
+      }
+      fn_progres_anak: {
+        Args: { p_generus_id: string }
+        Returns: {
+          diikuti: number
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
+          kelas: number
+          kitab_id: string
+          kitab_jenis: Database["public"]["Enums"]["jenis_kitab"]
+          kitab_nama: string
+          terlewat: Json
+          total: number
+        }[]
+      }
+      fn_progres_quran_per_surat: {
+        Args: {
+          p_generus_id: string
+          p_jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
+        }
+        Returns: {
+          diikuti: number
+          jumlah_ayat: number
+          kelas: number
+          nama: string
+          surat: number
+        }[]
+      }
+      fn_rekap_presensi: {
+        Args: { p_dari: string; p_generus_id: string; p_sampai: string }
+        Returns: {
+          alpa: number
+          hadir: number
+          izin: number
+          persen: number
+          sakit: number
+          terlambat: number
+          total: number
+        }[]
       }
       fn_rentang_masukan: {
         Args: { p_baris: Json; p_nomor: number }
         Returns: Record<string, unknown>
       }
+      fn_ringkas_rentang: {
+        Args: { p_kitab_id: string; p_satuan: number[] }
+        Returns: Json
+      }
       fn_surat_ayat: {
         Args: { p_global: number }
         Returns: Record<string, unknown>
       }
+      fn_tanggal_capaian: { Args: { p_kegiatan_id: string }; Returns: string }
       guru_mengajar_generus: {
         Args: { p_generus_id: string }
         Returns: boolean
@@ -1980,6 +2181,23 @@ export type Database = {
       simpan_rundown: {
         Args: { p_baris: Json; p_kegiatan_id: string }
         Returns: undefined
+      }
+      simpan_susulan: {
+        Args: { p_baris: Json; p_generus_id: string; p_tanggal: string }
+        Returns: string
+      }
+      tambah_tilawati: {
+        Args: {
+          p_generus_id: string
+          p_kegiatan_id?: string
+          p_tambahan: number
+        }
+        Returns: {
+          halaman: number
+          jilid: number
+          sisa: number
+          total_halaman: number
+        }[]
       }
       wali_dari: { Args: { p_generus_id: string }; Returns: boolean }
     }

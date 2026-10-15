@@ -41,3 +41,10 @@ export const CHIP_STATUS_GENERUS = {
   pindah: { nada: "biru", simbol: "→" },
   nonaktif: { nada: "abu", simbol: "○" },
 } as const satisfies Record<string, { nada: Nada; simbol: string }>;
+
+// Tiga tingkat penilaian (DESIGN §3): simbol + label sesuai aspek (labelPenilaian).
+export const CHIP_PENILAIAN = {
+  belum: { nada: "abu", simbol: "○" },
+  proses: { nada: "kunyit", simbol: "◐" },
+  lancar: { nada: "hijau", simbol: "●" },
+} as const satisfies Record<string, { nada: Nada; simbol: string }>;

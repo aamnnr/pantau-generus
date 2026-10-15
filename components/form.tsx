@@ -127,7 +127,7 @@ const berlangganan = (ubah: () => void) => {
   return () => {};
 };
 
-export function SubmitButton({ children, pendingLabel = "Menyimpan…", className, ...props }: React.ComponentProps<typeof Button> & {
+export function SubmitButton({ children, pendingLabel = "Menyimpan…", className, disabled, ...props }: React.ComponentProps<typeof Button> & {
   pendingLabel?: string;
 }) {
   const { pending } = useFormStatus();
@@ -135,7 +135,7 @@ export function SubmitButton({ children, pendingLabel = "Menyimpan…", classNam
   // dan memicu galat cookies Next.js, juga membuang state form.
   const siap = useSyncExternalStore(berlangganan, () => true, () => false);
   return (
-    <Button type="submit" size="lg" disabled={pending || !siap} className={cn("w-full lg:w-auto lg:min-w-48", className)} {...props}>
+    <Button type="submit" size="lg" disabled={pending || !siap || disabled} className={cn("w-full lg:w-auto lg:min-w-48", className)} {...props}>
       {pending ? pendingLabel : children}
     </Button>
   );

@@ -144,3 +144,8 @@ export const LABEL_PRESENSI: Record<StatusPresensi, string> = {
   sakit: "Sakit",
   alpa: "Alpa",
 };
+
+/** "Jilid 3 · hal. 24" (DESIGN §7.4a). */
+export function teksPosisiTilawati(p: { jilid: number | null; halaman: number | null } | null | undefined): string {
+  return p?.jilid != null ? `Jilid ${p.jilid} · hal. ${p.halaman ?? 0}` : "Posisi belum diisi";
+}
