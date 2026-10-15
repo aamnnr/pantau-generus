@@ -258,7 +258,7 @@ Tiga langkah berurutan dengan indikator ✓:
 - Nama pendek di layar utama: maksimal 12 karakter.
 - Petunjuk pasang ("Tambahkan ke layar utama") ditampilkan sekali setelah login, bisa ditutup.
   - Android/Chrome: kartu "Pasang Pantau Generus" dengan tombol **Pasang** (dialog bawaan) dan **Nanti saja**. iPhone: langkah "Bagikan → Tambahkan ke Layar Utama". Tidak muncul lagi setelah ditutup atau bila sudah terpasang.
-- Ikon: bintang delapan putih di atas gradasi teal (sama dengan tanda logo di sidebar & halaman Masuk).
+- Ikon & logo: logo resmi Pantau Generus (gradasi hijau–biru, pengajar & dua generus di bawah kubah, buku terbuka, grafik naik). Berkas di `public/ikon/` (192, 512, maskable 512, Apple 180) + `app/icon.png` (favicon) & `app/apple-icon.png`; logo di sidebar & halaman Masuk memakai berkas yang sama. Versi maskable & Apple dibuat tanpa tepi (latar meneruskan gradasi logo) dengan isi di zona aman.
 - Tanpa internet: halaman "Tidak ada koneksi internet" + tombol **Coba lagi** (mode offline penuh bukan tujuan versi pertama).
 - Halaman Masuk: PIN tampil sebagai titik; tombol **Tampilkan / Sembunyikan** di samping label PIN.
 

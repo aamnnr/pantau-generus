@@ -14,7 +14,6 @@ export const metadata: Metadata = {
   description: "Pemantauan kehadiran, materi, dan capaian target generus",
   applicationName: "Pantau Generus",
   appleWebApp: { capable: true, title: "Generus", statusBarStyle: "default" },
-  icons: { apple: "/ikon/apple-180.png" },
   formatDetection: { telephone: false },
 };
 
