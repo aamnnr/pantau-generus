@@ -157,7 +157,7 @@ Aturan adaptasi komponen:
 ### 7.1a Beranda (Admin, Guru, Pengurus)
 - Halaman pertama setelah masuk. Sapaan + tanggal; tiga kotak ringkas pengajian hari ini (total, sudah diisi, belum diisi).
 - **Perlu diisi hari ini**: kartu kegiatan yang belum diisi (atau pesan "semua sudah diisi").
-- **Kehadiran 7 hari terakhir**: persen keseluruhan + grafik batang per hari (teal ≥ 60%, oranye di bawahnya, batang kosong = tidak ada pengajian).
+- **Kehadiran 7 hari terakhir**: persen keseluruhan + grafik batang per hari (teal ≥ 60%, oranye di bawahnya, batang kosong = tidak ada pengajian). Filter tombol segmen **Semua · Caberawit · Pra-remaja · Remaja**, lalu chip kelas bila jenjangnya punya lebih dari satu kelas (Caberawit TK–3B; Remaja Usia sekolah/Usia mandiri). Filter tersimpan di URL dan tidak menggulir halaman.
 - **Perlu perhatian**: anak dengan kehadiran bulan ini di bawah ambang (maks. 6, sisanya ke Rekap).
 - **Target berjalan**: per kelas, cincin rata-rata butir target tuntas + materi diikuti.
 - Guru hanya melihat kelas yang diajarnya; wali diarahkan ke Anakku.

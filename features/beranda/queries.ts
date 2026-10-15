@@ -7,9 +7,9 @@ import { createClient } from "@/lib/supabase/server";
 type KelasDasar = { id: string; nama: string; jenjang: Jenjang };
 
 /** Kehadiran per hari (SQL: fn_kehadiran_harian; RLS membatasi guru ke kelasnya). */
-export async function kehadiranHarian(dari: string, sampai: string) {
+export async function kehadiranHarian(dari: string, sampai: string, kelasIds: string[] | null = null) {
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("fn_kehadiran_harian", { p_dari: dari, p_sampai: sampai });
+  const { data, error } = await supabase.rpc("fn_kehadiran_harian", { p_dari: dari, p_sampai: sampai, p_kelas_ids: kelasIds ?? undefined });
   if (error) throw error;
   return data;
 }

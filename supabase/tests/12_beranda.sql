@@ -1,7 +1,7 @@
 -- Beranda: kehadiran harian per peran; rentang usia target.
 begin;
 \ir _setup.psql
-select plan(5);
+select plan(6);
 
 insert into public.kegiatan (id, kelompok_id, tanggal) values
   ('a0000000-0000-0000-0000-000000000b01', 'a0000000-0000-0000-0000-000000000000', '2026-10-13'),
@@ -19,6 +19,12 @@ select results_eq(
   $$ select tanggal, hadir, total, persen from public.fn_kehadiran_harian('2026-10-12', '2026-10-13') $$,
   $$ values ('2026-10-12'::date, 0, 0, null::integer), ('2026-10-13'::date, 1, 2, 50) $$,
   'admin: semua kelas, hari tanpa kegiatan tetap muncul'
+);
+
+select results_eq(
+  $$ select hadir, total from public.fn_kehadiran_harian('2026-10-13', '2026-10-13', array['a0000000-0000-0000-0000-0000000000c2']::uuid[]) $$,
+  $$ values (0, 1) $$,
+  'filter kelas: hanya anak kelas tsb.'
 );
 
 set local request.jwt.claims to '{"sub":"a0000000-0000-0000-0000-0000000000a2","role":"authenticated"}';

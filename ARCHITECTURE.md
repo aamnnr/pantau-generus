@@ -202,7 +202,7 @@ Dibungkus menjadi:
 
 **Per periode & rekap (Tahap 6):** semua periode (bulan, periode target, semester tetap Jul–Des/Jan–Jun, keseluruhan) diterjemahkan ke rentang tanggal di `lib/periode.ts`. `fn_satuan_diikuti(generus, dari, sampai)` & `fn_satuan_disampaikan(kelas, dari, sampai)` menjadi dasar `fn_progres_anak(generus, dari, sampai)` dan `fn_progres_quran_per_surat(generus, jenis, dari, sampai)` (argumen tanggal ber-default = keseluruhan). Materi terlewat = disampaikan di periode yang **belum pernah** diikuti (kapan pun). `fn_rekap_kelas(kelas, dari, sampai)` → per anak aktif: kehadiran, `perlu_perhatian` (persen < `pengaturan.ambang_kehadiran`), satuan kelas vs diikuti, butir target periode yang beririsan & yang tuntas, posisi tilawati; `fn_rekap_kelas_ringkas` → rata-rata kelas. Raport memakai data Progres Anak pada periode yang sama; `catatan_raport` per bulan (raport bulanan/periode target menulis ke bulan awal periodenya).
 
-**Beranda:** `fn_kehadiran_harian(dari, sampai)` (hadir+terlambat ÷ presensi per hari, hari tanpa kegiatan tetap muncul) + `fn_rekap_kelas_ringkas` untuk target berjalan + `fn_rekap_kelas` (bulan ini) untuk perlu perhatian. Target punya kolom `rentang_usia` (keterangan target Caberawit dari PPG).
+**Beranda:** `fn_kehadiran_harian(dari, sampai, kelas_ids?)` (filter menurut kelas **anak**, sehingga kegiatan gabungan terbagi benar) (hadir+terlambat ÷ presensi per hari, hari tanpa kegiatan tetap muncul) + `fn_rekap_kelas_ringkas` untuk target berjalan + `fn_rekap_kelas` (bulan ini) untuk perlu perhatian. Target punya kolom `rentang_usia` (keterangan target Caberawit dari PPG).
 
 View dibuat `security_invoker = true` agar RLS tabel sumber tetap berlaku.
 
@@ -324,9 +324,10 @@ Pengembangan **tanpa Docker**: memakai dua proyek Supabase Free di cloud.
 1. **Supabase produksi**: buat proyek `pantau-generus` (region Singapore). Authentication → Sign In / Providers: Email aktif, **matikan pendaftaran baru** dan konfirmasi email (sama seperti dev). Catat URL, publishable key, secret key, dan *Session pooler connection string* (Connect → Session pooler).
 2. **Skema**: `pnpm exec supabase db push --db-url "<session pooler produksi>"` — semua migrasi diterapkan; jangan pernah `db reset` ke produksi.
 3. **Admin pertama**: salin `.env.example` → `.env.produksi.local` berisi kunci produksi, lalu `pnpm akun:buat:produksi --nama "…" --hp 08… --pin …… --peran admin --kelompok "…"`.
-4. **Vercel**: Add New → Project → impor repo GitHub; isi Environment Variables (Production) `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `AUTH_EMAIL_DOMAIN` (sama dengan dev); Deploy.
-5. **GitHub → Settings → Secrets and variables → Actions**: `SUPABASE_DB_URL` (session pooler produksi), `BACKUP_PASSPHRASE` (simpan juga di tempat aman — tanpa ini backup tidak bisa dibuka), `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`. Jalankan **Backup mingguan** dan **Keep-alive** sekali lewat *Run workflow* untuk memastikan berhasil.
-6. **Uji**: buka domain Vercel di HP Android → masuk → "Pasang" → buka dari layar utama.
+4. **Kelas baku**: `pnpm exec supabase db query --db-url "<session pooler produksi>" -f supabase/data/kelas-awal.sql` (TK, 1A–3B, Pra-remaja, Usia sekolah (SLTA), Usia mandiri — aman dijalankan ulang).
+5. **Vercel**: Add New → Project → impor repo GitHub; isi Environment Variables (Production) `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `AUTH_EMAIL_DOMAIN` (sama dengan dev); Deploy.
+6. **GitHub → Settings → Secrets and variables → Actions**: `SUPABASE_DB_URL` (session pooler produksi), `BACKUP_PASSPHRASE` (simpan juga di tempat aman — tanpa ini backup tidak bisa dibuka), `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`. Jalankan **Backup mingguan** dan **Keep-alive** sekali lewat *Run workflow* untuk memastikan berhasil.
+7. **Uji**: buka domain Vercel di HP Android → masuk → "Pasang" → buka dari layar utama.
 
 **Memulihkan backup:** unduh artifact → `gpg -d pantau-generus-YYYYMMDD.tar.gz.gpg > b.tar.gz && tar -xzf b.tar.gz` → ke proyek Supabase baru/kosong:
 `psql --single-transaction --variable ON_ERROR_STOP=1 --file roles.sql --file schema.sql --command "SET session_replication_role = replica" --file data.sql --dbname "<connection string>"`.

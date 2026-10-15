@@ -2092,7 +2092,7 @@ export type Database = {
         Returns: string
       }
       fn_kehadiran_harian: {
-        Args: { p_dari: string; p_sampai: string }
+        Args: { p_dari: string; p_kelas_ids?: string[]; p_sampai: string }
         Returns: {
           hadir: number
           persen: number

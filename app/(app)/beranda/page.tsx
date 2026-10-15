@@ -13,7 +13,8 @@ import { KartuKegiatan, statusKegiatan } from "@/features/kegiatan/kartu-kegiata
 import { kegiatanTanggal, kelasUntukKegiatan } from "@/features/kegiatan/queries";
 import { daftarKelas } from "@/features/kelas/queries";
 import { getSession } from "@/lib/auth/session";
-import { formatHariSingkat, formatTanggal, geserTanggal, hariIni, labelKelas } from "@/lib/format";
+import { bacaFilterKelas, PilihKelasFilter } from "@/features/beranda/filter-kelas";
+import { formatHariSingkat, formatTanggal, geserTanggal, hariIni, LABEL_JENJANG, labelKelas } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Beranda · Pantau Generus" };
@@ -23,6 +24,13 @@ async function kelasRingkasan() {
   const s = await getSession();
   if (s.mode === "guru") return kelasUntukKegiatan(s.userId, false);
   return (await daftarKelas({ hanyaAktif: true })).filter((k) => k.jumlahAnak > 0);
+}
+
+/** Pilihan filter kehadiran: semua kelas aktif (guru: kelas yang diajar), meski belum berisi anak. */
+async function kelasFilter() {
+  const s = await getSession();
+  if (s.mode === "guru") return kelasUntukKegiatan(s.userId, false);
+  return daftarKelas({ hanyaAktif: true });
 }
 
 async function Sapaan() {
@@ -71,15 +79,23 @@ async function HariIni() {
   );
 }
 
-async function GrafikKehadiran() {
+type Cari = { jenjang?: string; kelas?: string };
+
+async function GrafikKehadiran({ searchParams }: { searchParams: Promise<Cari> }) {
   await connection();
   const hari = hariIni();
-  const data = await kehadiranHarian(geserTanggal(hari, -6), hari);
+  const [cari, kelas] = await Promise.all([searchParams, kelasFilter()]);
+  const filter = bacaFilterKelas(cari, kelas);
+  const data = await kehadiranHarian(geserTanggal(hari, -6), hari, filter.kelasIds);
+  const judul = filter.kelas ? labelKelas(filter.kelas) : filter.jenjang ? LABEL_JENJANG[filter.jenjang] : null;
   const hadir = data.reduce((n, d) => n + d.hadir, 0);
   const total = data.reduce((n, d) => n + d.total, 0);
   return (
     <Kartu className="flex flex-col gap-4">
-      <JudulKartu aksi={<span className="text-sm text-muted-foreground">7 hari terakhir</span>}>Kehadiran</JudulKartu>
+      <JudulKartu aksi={<span className="text-sm text-muted-foreground">7 hari terakhir</span>}>
+        Kehadiran{judul && <span className="font-medium text-muted-foreground"> · {judul}</span>}
+      </JudulKartu>
+      <PilihKelasFilter base="/beranda" kelas={kelas} filter={filter} />
       <p className="flex items-baseline gap-2">
         <span className="text-3xl font-bold tabular-nums">{total ? `${Math.round((100 * hadir) / total)}%` : "—"}</span>
         <span className="text-sm text-muted-foreground">{total ? `hadir · ${hadir} dari ${total} catatan` : "Belum ada presensi"}</span>
@@ -197,7 +213,7 @@ function TautanKecil({ href, children }: { href: string; children: React.ReactNo
   );
 }
 
-export default function BerandaPage() {
+export default function BerandaPage({ searchParams }: PageProps<"/beranda">) {
   return (
     <Halaman>
       <PageHeader
@@ -230,7 +246,7 @@ export default function BerandaPage() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-start">
           <div className="lg:col-span-2">
             <Suspense fallback={<Kerangka className="h-64" />}>
-              <GrafikKehadiran />
+              <GrafikKehadiran searchParams={searchParams as Promise<Cari>} />
             </Suspense>
           </div>
           <Suspense fallback={<Kerangka className="h-64" />}>
