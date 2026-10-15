@@ -3,6 +3,7 @@ import type { MetadataRoute } from "next";
 /** PWA (PRD F8, DESIGN §10): bisa dipasang ke layar utama, tampil tanpa bilah peramban. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    id: "/",
     name: "Pantau Generus",
     short_name: "Generus",
     description: "Pemantauan kehadiran, materi, dan capaian target generus",

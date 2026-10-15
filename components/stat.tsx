@@ -18,13 +18,14 @@ export function KotakAngka({ ikon: Ikon, nilai, label, nada = "teal", className 
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-3 rounded-2xl border bg-card p-3.5", className)}>
-      <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-full", NADA[nada])}>
-        <Ikon aria-hidden className="size-5" />
+    // HP (3 kotak sejajar ±110px): ikon di atas angka agar label tidak terpotong; berdampingan mulai sm.
+    <div className={cn("flex flex-col items-start gap-2 rounded-2xl border bg-card p-3 sm:flex-row sm:items-center sm:gap-3 sm:p-3.5", className)}>
+      <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full sm:size-10", NADA[nada])}>
+        <Ikon aria-hidden className="size-[18px] sm:size-5" />
       </span>
       <span className="min-w-0">
         <span className="block text-xl leading-tight font-bold tabular-nums">{nilai}</span>
-        <span className="block truncate text-sm text-muted-foreground">{label}</span>
+        <span className="block text-sm leading-snug text-muted-foreground">{label}</span>
       </span>
     </div>
   );

@@ -53,7 +53,7 @@ async function HariIni() {
   return (
     <>
       <div className="grid grid-cols-3 gap-2.5 lg:gap-3">
-        <KotakAngka ikon={CalendarCheck2} nilai={aktif.length} label="Pengajian hari ini" />
+        <KotakAngka ikon={CalendarCheck2} nilai={aktif.length} label="Pengajian" />
         <KotakAngka ikon={CircleCheck} nilai={aktif.length - belumList.length} label="Sudah diisi" nada="biru" />
         <KotakAngka ikon={CircleAlert} nilai={belumList.length} label="Belum diisi" nada={belumList.length ? "oranye" : "abu"} />
       </div>
