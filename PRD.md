@@ -204,8 +204,8 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 | 3 | Jadwal rutin, kegiatan, presensi cepat | ✅ |
 | 4 | Target bulanan | ✅ |
 | 5 | Progres, susulan, penilaian hafalan/praktik/tilawati | ✅ |
-| 6 | Raport & rekap, cetak PDF (termasuk lembar presensi) | ⏳ |
-| 7 | PWA, deploy, backup | – |
+| 6 | Raport & rekap, cetak PDF (termasuk lembar presensi) | ✅ |
+| 7 | PWA, deploy, backup | ⏳ |
 | Nanti | Mode offline, multi-kelompok, notifikasi, impor target dari foto/PDF dokumen PPG (ambil poin otomatis) | – |
 
 ## 9. Pertanyaan Terbuka

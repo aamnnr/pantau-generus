@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -9,6 +10,7 @@ import { masuk, type MasukState } from "./actions";
 
 export function MasukForm() {
   const [state, formAction, pending] = useActionState<MasukState, FormData>(masuk, {});
+  const [lihatPin, setLihatPin] = useState(false);
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -27,7 +29,20 @@ export function MasukForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="pin">PIN</Label>
+        <div className="flex items-center justify-between gap-2">
+          <Label htmlFor="pin">PIN</Label>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => setLihatPin((v) => !v)}
+            aria-pressed={lihatPin}
+            aria-controls="pin"
+            className="-mr-2 h-12 text-primary"
+          >
+            {lihatPin ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
+            {lihatPin ? "Sembunyikan" : "Tampilkan"}
+          </Button>
+        </div>
         <InputOTP
           id="pin"
           name="pin"
@@ -39,7 +54,7 @@ export function MasukForm() {
         >
           <InputOTPGroup>
             {Array.from({ length: 6 }, (_, i) => (
-              <InputOTPSlot key={i} index={i} />
+              <InputOTPSlot key={i} index={i} samar={!lihatPin} />
             ))}
           </InputOTPGroup>
         </InputOTP>
