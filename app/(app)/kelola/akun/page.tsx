@@ -19,7 +19,7 @@ async function TombolTambah() {
   const { peran } = await requirePeran("admin", "pengurus");
   if (!peran.includes("admin")) return null;
   return (
-    <Button asChild size="lg" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85">
+    <Button asChild size="lg">
       <Link href="/kelola/akun/baru">
         <Plus aria-hidden />
         Buat Akun

@@ -23,7 +23,7 @@ export function SusulanForm({ kitab, surat, awal, tanggal, action }: {
       <input type="hidden" name="baris" value={JSON.stringify(json)} />
       <BarisRentang judul="Materi yang dikejar" b={b} kitab={kitab} surat={surat} ubah={(p) => setB((x) => ({ ...x, ...p }))} />
       <Field label="Tanggal susulan" htmlFor="tanggal">
-        <Input id="tanggal" name="tanggal" type="date" defaultValue={String(state.values?.tanggal ?? tanggal)} required className="h-14 text-lg" />
+        <Input id="tanggal" name="tanggal" type="date" defaultValue={String(state.values?.tanggal ?? tanggal)} required className="h-11 text-lg" />
       </Field>
       <FormError error={state.error} />
       <AksiBawah>

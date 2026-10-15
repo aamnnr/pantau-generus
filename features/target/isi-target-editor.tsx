@@ -152,8 +152,8 @@ export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMater
                           aria-pressed={tilawati.jilid === nilai}
                           onClick={() => setTilawati((t) => ({ ...t, jilid: nilai }))}
                           className={cn(
-                            "min-h-12 min-w-14 rounded-xl border-[1.5px] px-4 text-base font-semibold",
-                            tilawati.jilid === nilai ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card",
+                            "min-h-10 min-w-14 rounded-lg border px-4 text-base font-semibold",
+                            tilawati.jilid === nilai ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
                           )}
                         >
                           {j.jilid ? j.jilid : "Tanpa target"}
@@ -172,7 +172,7 @@ export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMater
                     inputMode="numeric"
                     value={tilawati.halaman}
                     onChange={(e) => setTilawati((t) => ({ ...t, halaman: e.target.value.replace(/\D/g, "") }))}
-                    className="h-14 text-center text-xl font-semibold tabular-nums"
+                    className="h-11 text-center text-xl font-semibold tabular-nums"
                   />
                   <span className="text-muted-foreground">
                     dari {jilid.find((j) => String(j.jilid) === tilawati.jilid)?.total_halaman ?? "?"} halaman
@@ -194,9 +194,9 @@ export function IsiTargetEditor({ kitab, surat, awalKitab, opsiMateri, awalMater
 
 function Bagian({ judul, sub, children }: { judul: string; sub?: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(18,20,19,0.06)] lg:p-5">
+    <section className="flex flex-col gap-3 rounded-2xl bg-card p-4 border lg:p-5">
       <div className="border-b pb-2">
-        <h2 className="text-xl font-bold text-primary">{judul}</h2>
+        <h2 className="text-lg font-semibold text-primary">{judul}</h2>
         {sub && <p className="text-muted-foreground">{sub}</p>}
       </div>
       {children}

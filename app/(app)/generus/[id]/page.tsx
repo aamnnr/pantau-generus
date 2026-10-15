@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { BackLink, Halaman, Kartu, SkeletonDaftar } from "@/components/page";
-import { BarProgres, formatAngka } from "@/components/progres";
+import { BarProgres, CincinProgres, formatAngka } from "@/components/progres";
 import { CHIP_PRESENSI, StatusChip } from "@/components/status-chip";
 import { TombolHapus } from "@/components/tombol-hapus";
 import { Button } from "@/components/ui/button";
@@ -49,11 +49,11 @@ async function Isi({ params, searchParams }: { params: Promise<{ id: string }>; 
 
   return (
     <>
-      <header className="flex flex-col gap-2 border-b bg-card px-2 pt-3 pb-4 lg:border-0 lg:bg-transparent lg:p-0">
-        {kembali && <BackLink {...kembali} className="text-primary" />}
-        <div className="flex flex-wrap items-center justify-between gap-3 px-2 lg:px-0">
+      <header className="flex flex-col gap-2 px-4 pt-4 lg:p-0">
+        {kembali && <BackLink {...kembali} />}
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3.5">
-            <span aria-hidden className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-mint text-xl font-bold text-mint-foreground">
+            <span aria-hidden className="flex size-12 shrink-0 items-center justify-center rounded-full bg-mint text-base font-bold text-mint-foreground">
               {inisial(d.anak.nama)}
             </span>
             <div className="min-w-0">
@@ -93,7 +93,7 @@ async function Isi({ params, searchParams }: { params: Promise<{ id: string }>; 
         <div className="flex flex-col gap-4">
           <Kartu className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-xl font-bold">Hafalan, kefahaman & akhlaq</h2>
+              <h2 className="text-lg font-semibold">Hafalan, kefahaman & akhlaq</h2>
             </div>
             {d.materi.length ? (
               <DaftarPenilaian baris={d.materi} action={simpanPenilaian} bisa={d.bolehNilai} perAspek />
@@ -105,7 +105,7 @@ async function Isi({ params, searchParams }: { params: Promise<{ id: string }>; 
           </Kartu>
           {caberawit && (
             <Kartu className="flex flex-col gap-3">
-              <h2 className="text-xl font-bold">Tilawati</h2>
+              <h2 className="text-lg font-semibold">Tilawati</h2>
               <TilawatiCepat baris={[{ generus_id: id, nama: d.anak.nama, posisi: d.tilawati && { jilid: d.tilawati.jilid!, halaman: d.tilawati.halaman!, total_halaman: d.tilawati.total_halaman } }]} jilid={jilid} bisa={d.bolehNilai} polos />
             </Kartu>
           )}
@@ -122,7 +122,7 @@ function KartuKehadiran({ k, label, keseluruhan }: { k: ProgresAnak["kehadiran"]
   return (
     <Kartu className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-bold">
+        <h2 className="text-lg font-semibold">
           Kehadiran <span className="font-medium text-muted-foreground">· {label}</span>
         </h2>
         {perhatian && (
@@ -132,26 +132,28 @@ function KartuKehadiran({ k, label, keseluruhan }: { k: ProgresAnak["kehadiran"]
         )}
       </div>
       {b && b.total > 0 ? (
-        <>
-          <p className="flex items-baseline gap-2">
-            <span className="text-4xl font-bold text-primary tabular-nums">{b.persen}%</span>
-            <span className="text-muted-foreground">hadir dari {b.total} pengajian</span>
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {URUTAN_PRESENSI.filter((s) => b[s] > 0).map((s) => (
-              <li key={s}>
-                <StatusChip nada={CHIP_PRESENSI[s].nada} simbol={CHIP_PRESENSI[s].simbol}>
-                  {LABEL_PRESENSI[s]} {b[s]}
-                </StatusChip>
-              </li>
-            ))}
-          </ul>
-        </>
+        <div className="flex items-center gap-4">
+          <CincinProgres nilai={b.persen} label="hadir" />
+          <div className="flex min-w-0 flex-col gap-2">
+            <p className="text-base text-teks-2">
+              Hadir di <strong className="text-foreground">{b.hadir + b.terlambat}</strong> dari {b.total} pengajian
+            </p>
+            <ul className="flex flex-wrap gap-1.5">
+              {URUTAN_PRESENSI.filter((s) => b[s] > 0).map((s) => (
+                <li key={s}>
+                  <StatusChip nada={CHIP_PRESENSI[s].nada} simbol={CHIP_PRESENSI[s].simbol}>
+                    {LABEL_PRESENSI[s]} {b[s]}
+                  </StatusChip>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       ) : (
         <p className="text-muted-foreground">Belum ada kehadiran yang tercatat pada periode ini.</p>
       )}
       {!keseluruhan && k.semua && k.semua.total > 0 && (
-        <p className="border-t pt-3 text-muted-foreground">
+        <p className="border-t pt-3 text-sm text-muted-foreground">
           Sejak awal: <strong className="text-foreground">{k.semua.persen}%</strong> dari {k.semua.total} pengajian
         </p>
       )}
@@ -171,7 +173,7 @@ function KartuTarget({ d }: { d: ProgresAnak }) {
   return (
     <Kartu className="flex flex-col gap-4">
       <div>
-        <h2 className="text-xl font-bold">Target {t.judul}</h2>
+        <h2 className="text-lg font-semibold">Target {t.judul}</h2>
         <p className="text-muted-foreground">
           {formatTanggalPendek(t.mulai)} – {formatTanggalPendek(t.selesai)}
         </p>
@@ -210,7 +212,7 @@ function KartuMakna({ d, label }: { d: ProgresAnak; label: string }) {
   const id = d.anak.id;
   return (
     <Kartu className="flex flex-col gap-5">
-      <h2 className="text-xl font-bold">
+      <h2 className="text-lg font-semibold">
         Bacaan & makna <span className="font-medium text-muted-foreground">· {label}</span>
       </h2>
       {d.kitab.length === 0 && <p className="text-muted-foreground">Belum ada materi bacaan atau makna yang tercatat pada periode ini.</p>}
@@ -241,7 +243,7 @@ function KartuMakna({ d, label }: { d: ProgresAnak; label: string }) {
               </ul>
             )}
             {k.terlewat.length > 0 && (
-              <div className="flex flex-col gap-2 rounded-xl bg-[#fff1de] p-3 text-[#5c3200]">
+              <div className="flex flex-col gap-2 rounded-xl bg-warn-soft p-3 text-warn">
                 <p className="font-semibold">Materi terlewat ({formatAngka(k.terlewat.reduce((n, r) => n + r.selesai - r.mulai + 1, 0))} {satuan})</p>
                 <ul className="flex flex-col gap-1.5">
                   {k.terlewat.map((r) => (
@@ -271,7 +273,7 @@ function KartuSusulan({ d, id }: { d: ProgresAnak; id: string }) {
   return (
     <Kartu className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-bold">Susulan</h2>
+        <h2 className="text-lg font-semibold">Susulan</h2>
         {d.bolehNilai && (
           <Button asChild variant="outline">
             <Link href={`/generus/${id}/susulan`}>

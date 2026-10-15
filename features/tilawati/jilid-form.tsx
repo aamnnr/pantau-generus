@@ -31,9 +31,9 @@ export function BarisJilid({ jilid, totalHalaman, action, hapus, bisaUbah }: {
   useHasil(state);
 
   return (
-    <form action={formAction} className="flex flex-wrap items-end gap-3 rounded-2xl bg-card p-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)]">
+    <form action={formAction} className="flex flex-wrap items-end gap-3 rounded-2xl bg-card p-3 border">
       <input type="hidden" name="jilid" value={jilid} />
-      <span className="flex size-14 shrink-0 flex-col items-center justify-center rounded-xl bg-mint leading-none text-mint-foreground">
+      <span className="flex size-12 shrink-0 flex-col items-center justify-center rounded-xl bg-mint leading-none text-mint-foreground">
         <span className="text-base">Jilid</span>
         <span className="text-xl font-bold">{jilid}</span>
       </span>

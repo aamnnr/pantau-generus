@@ -40,11 +40,11 @@ export function MateriForm({ action, awal, mapelTerpakai, hapus }: {
       {/* Aspek dikendalikan agar saran mapel ikut berganti. */}
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-2 text-base font-semibold">Aspek</legend>
-        <div className="grid grid-cols-2 gap-1 rounded-2xl bg-secondary p-1 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1 rounded-xl bg-secondary p-1 sm:grid-cols-4">
           {URUTAN_ASPEK.map((a) => (
             <label key={a} className="relative cursor-pointer">
               <input type="radio" name="aspek" value={a} checked={aspek === a} onChange={() => setAspek(a)} className="peer sr-only" />
-              <span className="flex min-h-12 items-center justify-center rounded-xl px-2 text-center text-base leading-tight font-medium text-[#444444] peer-checked:bg-card peer-checked:font-semibold peer-checked:text-primary peer-checked:shadow-sm peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50">
+              <span className="flex min-h-10 items-center justify-center rounded-xl px-2 text-center text-base leading-tight font-medium text-muted-foreground peer-checked:bg-card peer-checked:font-semibold peer-checked:text-primary peer-checked:shadow-sm peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50">
                 {LABEL_ASPEK[a]}
               </span>
             </label>
@@ -67,7 +67,7 @@ export function MateriForm({ action, awal, mapelTerpakai, hapus }: {
                 type="button"
                 onClick={() => setMapel(s)}
                 className={cn(
-                  "min-h-11 rounded-full border-[1.5px] px-4 text-base font-medium",
+                  "min-h-11 rounded-full border px-4 text-base font-medium",
                   mapel === s ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
                 )}
               >

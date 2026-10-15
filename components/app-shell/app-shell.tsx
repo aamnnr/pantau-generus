@@ -21,10 +21,10 @@ async function Navigasi() {
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-1">
-      <Suspense fallback={<div className="hidden w-72 shrink-0 bg-brand lg:block" />}>
+      <Suspense fallback={<div className="hidden w-64 shrink-0 border-r bg-card lg:block" />}>
         <Navigasi />
       </Suspense>
-      <div className="min-w-0 flex-1 pb-24 lg:pb-0 print:pb-0">{children}</div>
+      <div className="min-w-0 flex-1 pb-20 lg:pb-0 print:pb-0">{children}</div>
     </div>
   );
 }

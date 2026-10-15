@@ -137,11 +137,11 @@ function PilihWali({ akunWali, awal, hubunganAwal }: { akunWali: Wali[]; awal: s
       {dipilih.map((d, i) => {
         const w = byId.get(d.id);
         return (
-          <div key={d.id} className="flex flex-col gap-3 rounded-2xl border-[1.5px] border-input bg-card p-3">
+          <div key={d.id} className="flex flex-col gap-3 rounded-2xl border border-input bg-card p-3">
             <input type="hidden" name="wali" value={d.id} />
             <input type="hidden" name="hubungan" value={d.hubungan} />
             <div className="flex items-center gap-3">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#fff1de] font-bold text-[#8a4b00]">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-warn-soft text-sm font-bold text-warn">
                 {inisial(w?.nama ?? "?")}
               </span>
               <span className="min-w-0 flex-1">
@@ -166,8 +166,8 @@ function PilihWali({ akunWali, awal, hubunganAwal }: { akunWali: Wali[]; awal: s
                   aria-pressed={d.hubungan === h}
                   onClick={() => setDipilih((s) => s.map((x, j) => (j === i ? { ...x, hubungan: h } : x)))}
                   className={cn(
-                    "h-12 rounded-lg text-base font-medium text-[#444444]",
-                    d.hubungan === h && "bg-card font-semibold text-primary shadow-sm",
+                    "h-10 rounded-lg text-base font-medium text-muted-foreground",
+                    d.hubungan === h && "bg-card font-semibold text-primary shadow-[0_1px_3px_rgba(20,22,22,0.12)]",
                   )}
                 >
                   {h}
@@ -193,7 +193,7 @@ function PilihWali({ akunWali, awal, hubunganAwal }: { akunWali: Wali[]; awal: s
         </Button>
       ) : (
         <div className="flex flex-col gap-2 rounded-2xl bg-secondary p-3">
-          <label className="flex h-12 items-center gap-2 rounded-xl border-[1.5px] border-input bg-card px-3">
+          <label className="flex h-10 items-center gap-2 rounded-lg border border-input bg-card px-3">
             <Search aria-hidden className="size-5 text-muted-foreground" />
             <span className="sr-only">Cari wali</span>
             <input
@@ -214,7 +214,7 @@ function PilihWali({ akunWali, awal, hubunganAwal }: { akunWali: Wali[]; awal: s
                     setDipilih((s) => [...s, { id: w.id, hubungan: "Wali" }]);
                     setCari(null);
                   }}
-                  className="flex min-h-14 w-full items-center justify-between gap-2 rounded-xl bg-card px-3 text-left hover:bg-mint"
+                  className="flex min-h-12 w-full items-center justify-between gap-2 rounded-xl bg-card px-3 text-left hover:bg-mint"
                 >
                   <span className="text-lg font-medium">{w.nama}</span>
                   <span className="text-muted-foreground">{formatNoHp(w.no_hp)}</span>

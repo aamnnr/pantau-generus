@@ -73,8 +73,8 @@ export function MateriEditor({ kitab, surat, awal, rundownAwal, opsiItem, itemAw
 
       <PilihMateriItem opsi={opsiItem} dipilih={items} onChange={setItems} />
 
-      <details className="group rounded-2xl border-[1.5px] border-input bg-card" open={rundown.length > 0 || undefined}>
-        <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between px-4 text-lg font-semibold">
+      <details className="group rounded-2xl border border-input bg-card" open={rundown.length > 0 || undefined}>
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-4 text-lg font-semibold">
           <span>
             Rundown <span className="font-normal text-muted-foreground">(opsional)</span>
           </span>

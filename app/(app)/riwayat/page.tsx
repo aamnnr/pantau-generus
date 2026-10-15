@@ -29,7 +29,7 @@ async function Daftar() {
       {tanggal.map((t) => (
         <section key={t} className="flex flex-col gap-2.5">
           <JudulKelompok>{formatTanggal(t)}</JudulKelompok>
-          <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2">
             {kegiatan
               .filter((k) => k.tanggal === t)
               .map((k) => (
@@ -51,7 +51,7 @@ export default function RiwayatPage() {
         title="Riwayat"
         subtitle={`Kegiatan ${HARI} hari terakhir`}
         actions={
-          <Button asChild size="lg" variant="outline" className="border-brand-foreground/60 bg-transparent text-brand-foreground lg:border-input lg:bg-card lg:text-foreground">
+          <Button asChild size="lg" variant="outline">
             <Link href="/lembar-presensi">
               <ClipboardList aria-hidden />
               Lembar presensi

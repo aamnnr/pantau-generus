@@ -29,9 +29,9 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <header className="flex flex-col gap-2 border-b bg-card px-2 pt-3 pb-4 lg:border-0 lg:bg-transparent lg:p-0">
-        <BackLink href="/target" label="Target" className="text-primary" />
-        <div className="flex flex-wrap items-start justify-between gap-3 px-2 lg:px-0">
+      <header className="flex flex-col gap-2 px-4 pt-4 lg:p-0">
+        <BackLink href="/target" label="Target" />
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold">{t.judul}</h1>
             <p className="text-muted-foreground">
@@ -49,7 +49,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
             </Button>
           )}
         </div>
-        {t.catatan && <p className="mx-2 rounded-xl bg-mint px-4 py-3 whitespace-pre-line text-mint-foreground lg:mx-0">{t.catatan}</p>}
+        {t.catatan && <p className="rounded-xl border border-primary/20 bg-mint px-3.5 py-2.5 whitespace-pre-line text-mint-foreground">{t.catatan}</p>}
       </header>
 
       <div className="px-4 lg:px-0">
@@ -92,7 +92,7 @@ function IsiTargetBaca({ t, adaCaberawit }: { t: NonNullable<Awaited<ReturnType<
         const kitabBaris = a === "alim" ? [...baris("bacaan"), ...baris("makna")] : [];
         return (
           <Kartu key={a} className="flex flex-col gap-3">
-            <h2 className="text-xl font-bold text-primary">{LABEL_ASPEK[a]}</h2>
+            <h2 className="text-lg font-semibold text-primary">{LABEL_ASPEK[a]}</h2>
             {kitabBaris.map((x) => (
               <p key={x.id} className="rounded-xl bg-mint px-4 py-2.5 text-mint-foreground">
                 <span className="font-semibold">{x.jenis === "bacaan" ? "Bacaan" : `Makna ${x.kitab_nama}`}:</span> {x.teks}
@@ -113,7 +113,7 @@ function IsiTargetBaca({ t, adaCaberawit }: { t: NonNullable<Awaited<ReturnType<
       })}
       {adaCaberawit && (
         <Kartu className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold text-primary">Tilawati</h2>
+          <h2 className="text-lg font-semibold text-primary">Tilawati</h2>
           <p>{t.tilawati ? `Jilid ${t.tilawati.jilid} sampai hal. ${t.tilawati.halaman}` : "Tidak ada target."}</p>
         </Kartu>
       )}

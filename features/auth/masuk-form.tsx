@@ -1,6 +1,7 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { FormError } from "@/components/form";
 import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,7 @@ export function MasukForm() {
   const [lihatPin, setLihatPin] = useState(false);
 
   return (
-    <form action={formAction} className="flex flex-col gap-6">
+    <form action={formAction} className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <Label htmlFor="noHp">No. HP</Label>
         <Input
@@ -34,10 +35,11 @@ export function MasukForm() {
           <Button
             type="button"
             variant="ghost"
+            size="sm"
             onClick={() => setLihatPin((v) => !v)}
             aria-pressed={lihatPin}
             aria-controls="pin"
-            className="-mr-2 h-12 text-primary"
+            className="-mr-2 text-primary"
           >
             {lihatPin ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
             {lihatPin ? "Sembunyikan" : "Tampilkan"}
@@ -60,17 +62,20 @@ export function MasukForm() {
         </InputOTP>
       </div>
 
-      {state.error && (
-        <p role="alert" className="rounded-lg bg-destructive/10 px-4 py-3 text-destructive">
-          {state.error}
-        </p>
-      )}
+      <FormError error={state.error} />
 
-      <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Memeriksa…" : "Masuk"}
+      <Button type="submit" size="lg" className="w-full" disabled={pending} aria-busy={pending}>
+        {pending ? (
+          <>
+            <Loader2 aria-hidden className="animate-spin" />
+            Memeriksa…
+          </>
+        ) : (
+          "Masuk"
+        )}
       </Button>
 
-      <p className="text-center text-muted-foreground">Lupa PIN? Hubungi admin kelompok.</p>
+      <p className="text-center text-sm text-muted-foreground">Lupa PIN? Hubungi admin kelompok.</p>
     </form>
   );
 }

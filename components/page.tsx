@@ -1,12 +1,16 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Inbox, type LucideIcon } from "lucide-react";
 import Link from "next/link";
-import { Motif } from "@/components/motif";
 import { cn } from "@/lib/utils";
 
-/** Wadah halaman. `form` = maks 768px (DESIGN §4), `lebar` = maks 1200px untuk tabel/rekap. */
+/** Wadah halaman. `form` = maks 720px (DESIGN §4), `lebar` = maks 1200px untuk tabel/rekap. Isi muncul halus. */
 export function Halaman({ children, lebar = "lebar" }: { children: React.ReactNode; lebar?: "form" | "lebar" }) {
   return (
-    <main className={cn("mx-auto flex w-full flex-col gap-5 lg:px-10 lg:py-8 print:max-w-none print:p-0", lebar === "form" ? "max-w-3xl" : "max-w-6xl")}>
+    <main
+      className={cn(
+        "mx-auto flex w-full animate-muncul flex-col gap-4 lg:gap-5 lg:px-8 lg:py-7 print:max-w-none print:animate-none print:p-0",
+        lebar === "form" ? "max-w-3xl" : "max-w-6xl",
+      )}
+    >
       {children}
     </main>
   );
@@ -20,37 +24,29 @@ type HeaderProps = {
   children?: React.ReactNode;
 };
 
-/**
- * HP: blok hijau bermotif (mockup "Generus — daftar"). Desktop: judul polos, karena sidebar sudah hijau.
- * Halaman formulir memakai <FormHeader> yang lebih tenang.
- */
+/** Judul halaman polos di atas latar abu (referensi DESIGN §5): tenang, tanpa blok warna. */
 export function PageHeader({ title, subtitle, back, actions, children }: HeaderProps) {
   return (
-    <header className="relative overflow-hidden rounded-b-[28px] bg-brand px-4 pt-6 pb-5 text-brand-foreground lg:rounded-none lg:bg-transparent lg:p-0 lg:text-foreground">
-      <Motif className="-top-14 -right-14 size-52 lg:hidden" />
-      <div className="relative flex flex-col gap-4">
-        {back && <BackLink {...back} className="text-brand-foreground lg:text-primary" />}
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold">{title}</h1>
-            {subtitle && <p className="mt-0.5 text-base lg:text-muted-foreground">{subtitle}</p>}
-          </div>
-          {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+    <header className="flex flex-col gap-3 px-4 pt-5 lg:px-0 lg:pt-0">
+      {back && <BackLink {...back} />}
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold">{title}</h1>
+          {subtitle && <p className="mt-0.5 text-base text-muted-foreground">{subtitle}</p>}
         </div>
-        {children}
+        {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
       </div>
+      {children}
     </header>
   );
 }
 
 export function FormHeader({ title, subtitle, back }: Omit<HeaderProps, "actions" | "children">) {
   return (
-    <header className="flex flex-col gap-2 border-b bg-card px-2 pt-3 pb-4 lg:border-0 lg:bg-transparent lg:p-0">
-      {back && <BackLink {...back} className="text-primary" />}
-      <div className="px-2 lg:px-0">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        {subtitle && <p className="mt-0.5 text-muted-foreground">{subtitle}</p>}
-      </div>
+    <header className="flex flex-col gap-1 px-4 pt-4 lg:px-0 lg:pt-0">
+      {back && <BackLink {...back} />}
+      <h1 className="text-2xl font-bold">{title}</h1>
+      {subtitle && <p className="text-base text-muted-foreground">{subtitle}</p>}
     </header>
   );
 }
@@ -59,9 +55,12 @@ export function BackLink({ href, label = "Kembali", className }: { href: string;
   return (
     <Link
       href={href}
-      className={cn("inline-flex h-12 w-fit items-center gap-1 rounded-xl px-2 text-lg font-semibold -ml-2", className)}
+      className={cn(
+        "-ml-1.5 inline-flex h-10 w-fit items-center gap-0.5 rounded-lg pr-2.5 pl-1 text-base font-semibold text-primary transition-colors hover:bg-mint",
+        className,
+      )}
     >
-      <ChevronLeft aria-hidden className="size-6" />
+      <ChevronLeft aria-hidden className="size-5" />
       {label}
     </Link>
   );
@@ -73,16 +72,41 @@ export function Konten({ children, className }: { children: React.ReactNode; cla
 }
 
 export function Kartu({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(18,20,19,0.06)] lg:p-6", className)}>{children}</div>;
+  return <div className={cn("rounded-2xl border bg-card p-4 lg:p-5", className)}>{children}</div>;
 }
 
-export function Kosong({ judul, keterangan, aksi }: { judul: string; keterangan?: string; aksi?: React.ReactNode }) {
+/** Judul kartu + aksi kecil di kanan (pola referensi: "Activity · This week"). */
+export function JudulKartu({ children, aksi, className }: { children: React.ReactNode; aksi?: React.ReactNode; className?: string }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-input bg-card px-6 py-10 text-center">
-      <p className="text-lg font-semibold">{judul}</p>
-      {keterangan && <p className="max-w-md text-muted-foreground">{keterangan}</p>}
+    <div className={cn("flex flex-wrap items-center justify-between gap-2", className)}>
+      <h2 className="text-lg font-semibold">{children}</h2>
       {aksi}
     </div>
+  );
+}
+
+export function Kosong({ judul, keterangan, aksi, ikon: Ikon = Inbox }: { judul: string; keterangan?: string; aksi?: React.ReactNode; ikon?: LucideIcon }) {
+  return (
+    <div className="flex animate-muncul flex-col items-center gap-2 rounded-2xl border border-dashed border-input bg-card px-6 py-10 text-center">
+      <span className="mb-1 flex size-10 items-center justify-center rounded-full bg-mint text-primary">
+        <Ikon aria-hidden className="size-6" />
+      </span>
+      <p className="text-lg font-semibold">{judul}</p>
+      {keterangan && <p className="max-w-md text-base text-muted-foreground">{keterangan}</p>}
+      {aksi && <div className="mt-2">{aksi}</div>}
+    </div>
+  );
+}
+
+/** Kerangka memuat dengan kilau berjalan (bukan spinner kosong, DESIGN §6). */
+export function Kerangka({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "animate-kilau rounded-2xl bg-[linear-gradient(90deg,var(--secondary)_25%,#f8fafa_50%,var(--secondary)_75%)] bg-size-[200%_100%]",
+        className,
+      )}
+    />
   );
 }
 
@@ -90,7 +114,7 @@ export function SkeletonDaftar({ baris = 5 }: { baris?: number }) {
   return (
     <div className="flex flex-col gap-2.5 px-4 lg:px-0" aria-busy="true" aria-label="Memuat">
       {Array.from({ length: baris }, (_, i) => (
-        <div key={i} className="h-19 animate-pulse rounded-2xl bg-card" />
+        <Kerangka key={i} className="h-16" />
       ))}
     </div>
   );
@@ -98,5 +122,5 @@ export function SkeletonDaftar({ baris = 5 }: { baris?: number }) {
 
 /** Judul kelompok dalam daftar, mis. per jenjang. */
 export function JudulKelompok({ children }: { children: React.ReactNode }) {
-  return <h2 className="pt-2 text-lg font-semibold text-muted-foreground">{children}</h2>;
+  return <h2 className="pt-1 text-base font-semibold text-teks-2">{children}</h2>;
 }

@@ -61,7 +61,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
   return (
     <div className="flex flex-col gap-4 px-4 lg:px-0">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <label className="flex h-14 flex-1 items-center gap-2.5 rounded-2xl border-[1.5px] border-input bg-card px-4 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
+        <label className="flex h-11 flex-1 items-center gap-2.5 rounded-2xl border border-input bg-card px-4 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
           <Search aria-hidden className="size-5 shrink-0 text-muted-foreground" />
           <span className="sr-only">Cari nama</span>
           <input
@@ -73,7 +73,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
           />
         </label>
         {jenjangAda.length > 1 && (
-          <div role="group" aria-label="Saring jenjang" className="flex gap-1 overflow-x-auto rounded-2xl bg-secondary p-1">
+          <div role="group" aria-label="Saring jenjang" className="flex gap-1 overflow-x-auto rounded-xl bg-secondary p-1">
             {(["semua", ...jenjangAda] as Filter[]).map((j) => (
               <button
                 key={j}
@@ -81,8 +81,8 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
                 aria-pressed={jenjang === j}
                 onClick={() => setJenjang(j)}
                 className={cn(
-                  "h-12 shrink-0 rounded-xl px-4 text-base font-medium text-[#444444]",
-                  jenjang === j && "bg-card font-semibold text-primary shadow-sm",
+                  "h-10 shrink-0 rounded-xl px-4 text-base font-medium text-muted-foreground",
+                  jenjang === j && "bg-card font-semibold text-primary shadow-[0_1px_3px_rgba(20,22,22,0.12)]",
                 )}
               >
                 {j === "semua" ? "Semua" : LABEL_JENJANG[j]}
@@ -105,7 +105,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
           )}
         </p>
         {bisaUbah && !pilihMode && data.length > 0 && (
-          <Button type="button" variant="secondary" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85" onClick={() => setPilihMode(true)}>
+          <Button type="button" variant="outline" onClick={() => setPilihMode(true)}>
             <ArrowUp aria-hidden />
             Naik kelas
           </Button>
@@ -113,7 +113,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
       </div>
 
       {pilihMode && (
-        <div className="sticky top-2 z-20 flex flex-wrap items-center gap-2 rounded-2xl border-[1.5px] border-[#ffd199] bg-[#fff1de] p-3">
+        <div className="sticky top-2 z-20 flex flex-wrap items-center gap-2 rounded-2xl border border-warn-line bg-warn-soft p-3">
           <p className="flex-1 text-lg font-semibold">{dipilih.size} anak dipilih</p>
           <Button
             type="button"
@@ -128,7 +128,6 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
           </Button>
           <Button
             type="button"
-            className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85"
             disabled={dipilih.size === 0}
             onClick={() => setDialog(true)}
           >
@@ -145,7 +144,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
       ) : (
         <>
           {/* HP & tablet: kartu */}
-          <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:hidden">
+          <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:hidden">
             {tampil.map((g) => (
               <li key={g.id}>
                 <KartuGenerus g={g} pilihMode={pilihMode} dipilih={dipilih.has(g.id)} onToggle={() => toggle(g.id)} />
@@ -154,7 +153,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
           </ul>
 
           {/* Desktop: tabel */}
-          <div className="hidden overflow-x-auto rounded-2xl bg-card shadow-[0_1px_2px_rgba(18,20,19,0.06)] lg:block">
+          <div className="hidden overflow-x-auto rounded-2xl bg-card border lg:block">
             <table className="w-full min-w-[720px] border-collapse text-left text-lg">
               <thead>
                 <tr className="bg-mint text-base text-mint-foreground">
@@ -180,7 +179,7 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
                 {tampil.map((g) => {
                   const chip = CHIP_STATUS_GENERUS[g.status];
                   return (
-                    <tr key={g.id} className={cn("border-t border-border", dipilih.has(g.id) && "bg-[#fffaf2]")}>
+                    <tr key={g.id} className={cn("border-t border-border", dipilih.has(g.id) && "bg-warn-soft/50")}>
                       {pilihMode && (
                         <td className="px-4 py-3">
                           <input
@@ -197,8 +196,8 @@ export function DaftarGenerus({ data, kelas, bisaUbah, naikKelas }: {
                           {g.nama}
                         </Link>
                       </td>
-                      <td className="px-2 py-3 text-[#444444]">{g.kelas ? labelKelas(g.kelas) : "—"}</td>
-                      <td className="px-2 py-3 text-[#444444]">{g.wali.join(", ") || "—"}</td>
+                      <td className="px-2 py-3 text-muted-foreground">{g.kelas ? labelKelas(g.kelas) : "—"}</td>
+                      <td className="px-2 py-3 text-muted-foreground">{g.wali.join(", ") || "—"}</td>
                       <td className="px-2 py-3">
                         <StatusChip nada={chip.nada} simbol={chip.simbol}>
                           {LABEL_STATUS_GENERUS[g.status]}
@@ -242,7 +241,7 @@ function KartuGenerus({ g, pilihMode, dipilih, onToggle }: {
     <>
       <span
         className={cn(
-          "flex size-12 shrink-0 items-center justify-center rounded-xl text-lg font-bold",
+          "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors",
           pilihMode && dipilih ? "bg-primary text-primary-foreground" : "bg-mint text-mint-foreground",
         )}
       >
@@ -261,7 +260,7 @@ function KartuGenerus({ g, pilihMode, dipilih, onToggle }: {
     </>
   );
   const kelasKartu = cn(
-    "flex min-h-19 w-full items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 text-left shadow-[0_1px_2px_rgba(18,20,19,0.06)]",
+    "flex min-h-16 w-full items-center gap-3.5 rounded-2xl border bg-card px-3.5 py-3 text-left transition-[border-color,background-color,transform] duration-150 active:scale-[0.99]",
     dipilih && "ring-2 ring-primary",
   );
 
@@ -274,7 +273,7 @@ function KartuGenerus({ g, pilihMode, dipilih, onToggle }: {
     );
   }
   return (
-    <Link href={`/generus/${g.id}`} className={cn(kelasKartu, "hover:bg-mint/60")}>
+    <Link href={`/generus/${g.id}`} className={cn(kelasKartu, "transition-colors hover:border-primary/40 hover:bg-mint/40")}>
       {isi}
     </Link>
   );
@@ -310,7 +309,7 @@ function DialogNaikKelas({ open, onOpenChange, dipilih, kelas, action }: {
             );
           })}
           <FormError error={state.error} />
-          <SubmitButton pendingLabel="Memindahkan…" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85">
+          <SubmitButton pendingLabel="Memindahkan…">
             Pindahkan {dipilih.length} anak
           </SubmitButton>
         </form>

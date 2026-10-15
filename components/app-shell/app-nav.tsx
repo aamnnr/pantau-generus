@@ -9,7 +9,6 @@ import {
   History,
   House,
   KeyRound,
-  LayoutGrid,
   ListChecks,
   Menu,
   School,
@@ -18,12 +17,12 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { Logo } from "@/components/logo";
 import { inisial, LABEL_PERAN, type Peran } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import type { NavIcon, NavItem } from "./nav-config";
-import { Motif } from "@/components/motif";
 
 const IKON: Record<NavIcon, LucideIcon> = {
   kalender: CalendarDays,
@@ -46,6 +45,12 @@ function aktif(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/** Ikon menu yang berdenyut selama halaman tujuan dimuat — umpan balik di HP lambat. */
+function IkonMenu({ ikon: Ikon, className }: { ikon: LucideIcon; className?: string }) {
+  const { pending } = useLinkStatus();
+  return <Ikon aria-hidden className={cn(className, pending && "animate-pulse opacity-60")} />;
+}
+
 type Props = {
   utama: NavItem[];
   kelola: NavItem[];
@@ -55,8 +60,7 @@ type Props = {
 
 export function Sidebar({ utama, kelola, nama, mode }: Props) {
   const pathname = usePathname();
-  const tautan = (item: NavItem, besar: boolean) => {
-    const Ikon = IKON[item.icon];
+  const tautan = (item: NavItem) => {
     const on = aktif(pathname, item.href);
     return (
       <Link
@@ -64,51 +68,41 @@ export function Sidebar({ utama, kelola, nama, mode }: Props) {
         href={item.href}
         aria-current={on ? "page" : undefined}
         className={cn(
-          "flex items-center gap-3 rounded-xl px-3.5 text-lg transition-colors",
-          besar ? "h-13" : "h-12",
-          on ? "bg-card font-semibold text-mint-foreground" : "text-brand-foreground hover:bg-white/12",
+          "group flex h-10 items-center gap-3 rounded-lg px-3 text-base transition-colors duration-150",
+          on ? "bg-mint font-semibold text-mint-foreground" : "font-medium text-teks-2 hover:bg-muted hover:text-foreground",
         )}
       >
-        <Ikon aria-hidden className="size-5 shrink-0" />
+        <IkonMenu ikon={IKON[item.icon]} className={cn("size-[18px] shrink-0", on ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
         {item.label}
       </Link>
     );
   };
 
   return (
-    <nav
-      aria-label="Navigasi utama"
-      className="relative hidden w-72 shrink-0 flex-col gap-1 overflow-hidden bg-brand px-4 py-7 text-brand-foreground lg:flex"
-    >
-      <Motif className="-bottom-20 -left-20 size-60" />
-      <Link href="/beranda" className="relative mb-6 flex items-center gap-3 px-2">
-        <span className="flex size-11 items-center justify-center rounded-xl bg-white/18">
-          <LayoutGrid aria-hidden className="size-6" />
-        </span>
-        <span className="text-xl leading-tight font-bold">
-          Pantau
-          <br />
-          Generus
-        </span>
+    <nav aria-label="Navigasi utama" className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col gap-1 border-r bg-card px-4 py-6 lg:flex">
+      <Link href="/beranda" className="mb-7 px-1">
+        <Logo />
       </Link>
-      <div className="relative flex flex-col gap-1">{utama.filter((i) => i.href !== "/lainnya").map((i) => tautan(i, true))}</div>
+      <p className="px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Menu</p>
+      <div className="flex flex-col gap-0.5">{utama.filter((i) => i.href !== "/lainnya").map(tautan)}</div>
       {kelola.length > 0 && (
-        <div className="relative mt-4 flex flex-col gap-1">
-          <p className="px-3.5 pb-1 text-base font-semibold text-white/85">Kelola</p>
-          {kelola.map((i) => tautan(i, false))}
-        </div>
+        <>
+          <p className="mt-5 px-3 pb-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Kelola</p>
+          <div className="flex flex-col gap-0.5">{kelola.map(tautan)}</div>
+        </>
       )}
       <div className="flex-1" />
       <Link
         href="/lainnya"
-        className="relative flex items-center gap-3 rounded-2xl bg-black/14 p-3 hover:bg-black/20"
+        aria-current={aktif(pathname, "/lainnya") ? "page" : undefined}
+        className="flex items-center gap-3 rounded-xl border p-2.5 transition-colors hover:bg-muted aria-[current=page]:border-primary/30 aria-[current=page]:bg-mint"
       >
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-kunyit font-bold text-kunyit-foreground">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-mint text-sm font-bold text-mint-foreground">
           {inisial(nama)}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-base font-semibold">{nama}</span>
-          <span className="block text-base text-white/85">{LABEL_PERAN[mode]} · Akun</span>
+          <span className="block text-sm text-muted-foreground">{LABEL_PERAN[mode]} · Akun & pengaturan</span>
         </span>
       </Link>
     </nav>
@@ -120,11 +114,10 @@ export function BottomNav({ utama }: Pick<Props, "utama">) {
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed inset-x-0 bottom-0 z-40 grid h-19 border-t bg-card pb-[env(safe-area-inset-bottom)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid border-t bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
       style={{ gridTemplateColumns: `repeat(${utama.length}, minmax(0, 1fr))` }}
     >
       {utama.map((item) => {
-        const Ikon = IKON[item.icon];
         const on = aktif(pathname, item.href) || (item.href === "/lainnya" && pathname.startsWith("/kelola"));
         return (
           <Link
@@ -132,13 +125,18 @@ export function BottomNav({ utama }: Pick<Props, "utama">) {
             href={item.href}
             aria-current={on ? "page" : undefined}
             className={cn(
-              "flex flex-col items-center justify-center gap-1 text-base",
-              on ? "font-bold text-primary" : "font-medium text-muted-foreground",
+              "relative flex h-16 flex-col items-center justify-center gap-1 text-sm transition-colors",
+              on ? "font-semibold text-primary" : "font-medium text-muted-foreground",
             )}
           >
-            <span className={cn("flex h-8 w-14 items-center justify-center rounded-full", on && "bg-mint")}>
-              <Ikon aria-hidden className="size-6" />
-            </span>
+            <span
+              aria-hidden
+              className={cn(
+                "absolute top-0 h-[3px] w-8 rounded-b-full bg-primary transition-transform duration-200 ease-(--ease-halus)",
+                on ? "scale-x-100" : "scale-x-0",
+              )}
+            />
+            <IkonMenu ikon={IKON[item.icon]} className="size-[22px]" />
             {item.label}
           </Link>
         );

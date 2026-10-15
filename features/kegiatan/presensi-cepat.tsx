@@ -8,7 +8,8 @@ import { CHIP_PRESENSI, StatusChip } from "@/components/status-chip";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { LABEL_PRESENSI, URUTAN_PRESENSI, type StatusPresensi } from "@/lib/format";
+import { inisial, LABEL_PRESENSI, URUTAN_PRESENSI, type StatusPresensi } from "@/lib/format";
+import { getar } from "@/lib/getar";
 import { cn } from "@/lib/utils";
 import type { SimpanState } from "./actions";
 import type { KelasRingkas, Peserta } from "./queries";
@@ -16,11 +17,11 @@ import type { KelasRingkas, Peserta } from "./queries";
 type Isian = { status: StatusPresensi; keterangan: string };
 
 const WARNA_TOMBOL: Record<StatusPresensi, string> = {
-  hadir: "border-[#0b5f31] bg-[#e3f4e9] text-[#0b5f31]",
-  terlambat: "border-[#8a4b00] bg-[#fff1de] text-[#8a4b00]",
-  izin: "border-[#1f4e8c] bg-[#e4eefb] text-[#1f4e8c]",
-  sakit: "border-[#5e2a86] bg-[#f0e7f8] text-[#5e2a86]",
-  alpa: "border-[#a61b1b] bg-[#fdecec] text-[#a61b1b]",
+  hadir: "border-ok bg-ok-soft text-ok",
+  terlambat: "border-warn bg-warn-soft text-warn",
+  izin: "border-info bg-info-soft text-info",
+  sakit: "border-ungu bg-ungu-soft text-ungu",
+  alpa: "border-bahaya bg-bahaya-soft text-bahaya",
 };
 
 export function PresensiCepat({ peserta, kelas, action, bisaUbah }: {
@@ -39,6 +40,11 @@ export function PresensiCepat({ peserta, kelas, action, bisaUbah }: {
   useEffect(() => {
     if (state.ok) toast.success(state.ok);
   }, [state]);
+
+  // Jumlah perubahan yang belum disimpan dibanding data dari server.
+  const berubah = peserta.filter(
+    (p) => isian[p.id].status !== (p.status ?? "hadir") || (isian[p.id].keterangan || "") !== (p.keterangan ?? ""),
+  ).length;
 
   const jumlah = useMemo(() => {
     const j = Object.fromEntries(URUTAN_PRESENSI.map((s) => [s, 0])) as Record<StatusPresensi, number>;
@@ -65,47 +71,58 @@ export function PresensiCepat({ peserta, kelas, action, bisaUbah }: {
       <input type="hidden" name="presensi" value={json} />
 
       {!sudahDisimpan && bisaUbah && (
-        <p className="rounded-2xl bg-mint px-4 py-3 text-mint-foreground">
+        <p className="rounded-xl border border-primary/20 bg-mint px-3.5 py-2.5 text-base text-mint-foreground">
           Semua ditandai <strong>Hadir</strong>. Ketuk nama anak yang tidak hadir.
         </p>
       )}
 
-      <p className="flex flex-wrap gap-x-3 gap-y-1 text-base font-medium" aria-live="polite">
+      <ul className="flex flex-wrap gap-1.5" aria-live="polite" aria-label="Ringkasan kehadiran">
         {URUTAN_PRESENSI.map((s) => (
-          <span key={s}>
-            {LABEL_PRESENSI[s]} <strong className="tabular-nums">{jumlah[s]}</strong>
-          </span>
+          <li key={s}>
+            <StatusChip nada={jumlah[s] ? CHIP_PRESENSI[s].nada : "abu"} simbol={CHIP_PRESENSI[s].simbol} className={cn(!jumlah[s] && "opacity-60")}>
+              {LABEL_PRESENSI[s]} <span key={jumlah[s]} className="inline-block animate-pop tabular-nums">{jumlah[s]}</span>
+            </StatusChip>
+          </li>
         ))}
-      </p>
+      </ul>
 
       {kelompok
         .filter((g) => g.isi.length)
         .map((g) => (
           <section key={g.judul} className="flex flex-col gap-2">
-            {g.judul && <h3 className="pt-1 text-lg font-semibold text-muted-foreground">{g.judul}</h3>}
+            {g.judul && <h3 className="pt-1 text-base font-semibold text-teks-2">{g.judul}</h3>}
             <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
               {g.isi.map((p) => {
                 const st = isian[p.id].status;
                 const chip = CHIP_PRESENSI[st];
                 const isi = (
                   <>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-lg font-medium">{p.nama}</span>
-                      {isian[p.id].keterangan && <span className="block truncate text-muted-foreground">{isian[p.id].keterangan}</span>}
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "flex size-9 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors duration-200",
+                        st === "hadir" ? "bg-mint text-mint-foreground" : "bg-secondary text-teks-2",
+                      )}
+                    >
+                      {inisial(p.nama)}
                     </span>
-                    <StatusChip nada={chip.nada} simbol={chip.simbol}>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-base font-medium">{p.nama}</span>
+                      {isian[p.id].keterangan && <span className="block truncate text-sm text-muted-foreground">{isian[p.id].keterangan}</span>}
+                    </span>
+                    <StatusChip key={st} nada={chip.nada} simbol={chip.simbol} className="animate-pop">
                       {LABEL_PRESENSI[st]}
                     </StatusChip>
                   </>
                 );
                 const kelasBaris = cn(
-                  "flex min-h-16 w-full items-center gap-3 rounded-2xl bg-card px-4 py-2 text-left shadow-[0_1px_2px_rgba(18,20,19,0.06)]",
-                  st !== "hadir" && "ring-1 ring-inset ring-input",
+                  "flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-3 py-2 text-left",
+                  st !== "hadir" && "border-l-[3px] border-l-kunyit",
                 );
                 return (
                   <li key={p.id}>
                     {bisaUbah ? (
-                      <button type="button" onClick={() => setAktif(p)} className={cn(kelasBaris, "hover:bg-mint/60")}>
+                      <button type="button" onClick={() => setAktif(p)} className={cn(kelasBaris, "transition-[background-color,border-color,transform] duration-150 hover:bg-muted active:scale-[0.99]")}>
                         {isi}
                       </button>
                     ) : (
@@ -122,6 +139,11 @@ export function PresensiCepat({ peserta, kelas, action, bisaUbah }: {
         <>
           <FormError error={state.error} />
           <AksiBawah>
+            {berubah > 0 && sudahDisimpan && (
+              <p className="animate-muncul text-center text-sm font-medium text-warn lg:mr-auto lg:self-center">
+                {berubah} perubahan belum disimpan
+              </p>
+            )}
             <SubmitButton>Simpan Kehadiran</SubmitButton>
           </AksiBawah>
         </>
@@ -143,12 +165,13 @@ export function PresensiCepat({ peserta, kelas, action, bisaUbah }: {
                     type="button"
                     aria-pressed={dipilih}
                     onClick={() => {
+                      getar();
                       setIsian((x) => ({ ...x, [aktif.id]: { ...x[aktif.id], status: s } }));
                       // Hadir tidak butuh keterangan → langsung tutup agar cepat.
                       if (s === "hadir") setAktif(null);
                     }}
                     className={cn(
-                      "flex min-h-16 items-center justify-center gap-2 rounded-2xl border-2 text-lg font-semibold",
+                      "flex min-h-12 items-center justify-center gap-2 rounded-xl border text-base font-semibold transition-[background-color,border-color,transform] duration-150 active:scale-[0.97]",
                       s === "hadir" && "col-span-2",
                       dipilih ? WARNA_TOMBOL[s] : "border-input bg-card text-foreground",
                     )}

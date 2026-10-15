@@ -141,7 +141,7 @@ function DaftarButir({ opsi, href, kosong = "Belum ada materi item untuk jenjang
       {target.length > 0 && (
         <section className="flex flex-col gap-2.5">
           <JudulKelompok>Target periode ini</JudulKelompok>
-          <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+          <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2">
             {target.map((o) => (
               <li key={o.id}>
                 <TautanKartu href={href(o.id)} judul={o.nama} sub={`${LABEL_ASPEK[o.aspek]} · ${o.mapel}`} target />
@@ -156,7 +156,7 @@ function DaftarButir({ opsi, href, kosong = "Belum ada materi item untuk jenjang
         return (
           <section key={a} className="flex flex-col gap-2.5">
             <JudulKelompok>{LABEL_ASPEK[a]}</JudulKelompok>
-            <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+            <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2">
               {isi.map((o) => (
                 <li key={o.id}>
                   <TautanKartu href={href(o.id)} judul={o.nama} sub={o.mapel} />
@@ -174,7 +174,7 @@ function TautanKartu({ href, judul, sub, target }: { href: string; judul: string
   return (
     <Link
       href={href}
-      className="flex min-h-16 items-center gap-3 rounded-2xl bg-card px-4 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint/60"
+      className="flex min-h-14 items-center gap-3 rounded-2xl bg-card px-4 py-3 border transition-colors hover:border-primary/40 hover:bg-mint/40"
     >
       <span className="min-w-0 flex-1">
         <span className="block text-lg font-medium">{judul}</span>

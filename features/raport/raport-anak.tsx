@@ -47,7 +47,7 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
   return (
     <article
       className={cn(
-        "raport mx-auto flex w-full max-w-[210mm] flex-col gap-5 rounded-2xl bg-card p-5 text-base shadow-[0_1px_2px_rgba(18,20,19,0.06)] lg:p-8",
+        "raport mx-auto flex w-full max-w-[210mm] flex-col gap-5 rounded-2xl bg-card p-5 text-base border lg:p-8",
         "print:max-w-none print:gap-3 print:rounded-none print:p-0 print:text-[11pt] print:shadow-none",
         className,
       )}
@@ -191,7 +191,7 @@ export function RaportAnak({ d, periode, kelompok, catatan, children, className 
             </p>
           ))
         ) : (
-          <p className="hidden min-h-16 print:block" />
+          <p className="hidden min-h-14 print:block" />
         )}
         {children}
       </Bagian>

@@ -194,9 +194,9 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <header className="flex flex-col gap-2 border-b bg-card px-2 pt-3 pb-4 lg:border-0 lg:bg-transparent lg:p-0">
-        <BackLink href={`/hari-ini?tanggal=${k.tanggal}`} label="Pengajian" className="text-primary" />
-        <div className="flex flex-wrap items-start justify-between gap-3 px-2 lg:px-0">
+      <header className="flex flex-col gap-2 px-4 pt-4 lg:p-0">
+        <BackLink href={`/hari-ini?tanggal=${k.tanggal}`} label="Pengajian" />
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-2xl font-bold">{labelKelasKegiatan(r.kelas)}</h1>
             {k.judul && <p className="text-lg">{k.judul}</p>}
@@ -222,7 +222,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
           </div>
         </div>
         {k.status === "batal" && (
-          <p className="mx-2 rounded-xl bg-muted px-4 py-3 lg:mx-0">Kegiatan ini ditandai <strong>libur</strong>. Materi dan kehadiran tidak bisa diisi.</p>
+          <p className="rounded-xl border bg-muted px-3.5 py-2.5">Kegiatan ini ditandai <strong>libur</strong>. Materi dan kehadiran tidak bisa diisi.</p>
         )}
       </header>
 

@@ -69,11 +69,11 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
       <Style />
       <Kartu className="flex flex-col gap-4 print:hidden">
         <div className="flex items-center gap-2">
-          <Link href={tautan(periode.sebelum)} aria-label="Bulan sebelumnya" className="flex size-12 items-center justify-center rounded-xl bg-secondary text-primary">
+          <Link href={tautan(periode.sebelum)} aria-label="Bulan sebelumnya" className="flex size-10 items-center justify-center rounded-xl bg-secondary text-primary">
             <ChevronLeft aria-hidden className="size-6" />
           </Link>
           <p className="flex-1 text-center text-lg font-semibold">{periode.label}</p>
-          <Link href={tautan(periode.sesudah)} aria-label="Bulan sesudahnya" className="flex size-12 items-center justify-center rounded-xl bg-secondary text-primary">
+          <Link href={tautan(periode.sesudah)} aria-label="Bulan sesudahnya" className="flex size-10 items-center justify-center rounded-xl bg-secondary text-primary">
             <ChevronRight aria-hidden className="size-6" />
           </Link>
         </div>
@@ -84,8 +84,8 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
               href={hrefDengan("/lembar-presensi", { kelas: x.id }, { bulan: periode.param.bulan })}
               aria-current={x.id === k.id ? "page" : undefined}
               className={cn(
-                "flex h-12 shrink-0 items-center rounded-xl border-[1.5px] px-4 text-base font-semibold whitespace-nowrap",
-                x.id === k.id ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card",
+                "flex h-10 shrink-0 items-center rounded-lg border px-4 text-base font-semibold whitespace-nowrap",
+                x.id === k.id ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
               )}
             >
               {labelKelas(x)}
@@ -98,7 +98,7 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
         </p>
       </Kartu>
 
-      <article className="flex flex-col gap-3 overflow-x-auto rounded-2xl bg-card p-4 shadow-[0_1px_2px_rgba(18,20,19,0.06)] print:overflow-visible print:rounded-none print:p-0 print:text-[10pt] print:shadow-none">
+      <article className="flex flex-col gap-3 overflow-x-auto rounded-2xl bg-card p-4 border print:overflow-visible print:rounded-none print:p-0 print:text-[10pt] print:shadow-none">
         <header className="text-center">
           <p className="font-bold uppercase">{kelompok}</p>
           <h2 className="text-xl font-bold print:text-[14pt]">Lembar Presensi {labelKelas(k)}</h2>

@@ -19,7 +19,7 @@ async function Isi() {
   return (
     <Konten>
       <Kartu className="flex items-center gap-4">
-        <span className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-kunyit text-xl font-bold text-kunyit-foreground">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-mint text-sm font-bold text-mint-foreground">
           {inisial(s.nama)}
         </span>
         <div className="min-w-0">
@@ -38,7 +38,7 @@ async function Isi() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-16 items-center justify-between rounded-2xl bg-card px-4 text-lg font-medium shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint"
+                className="flex min-h-14 items-center justify-between rounded-2xl bg-card px-4 text-lg font-medium border hover:bg-mint"
               >
                 {item.label}
                 <ChevronRight aria-hidden className="size-6 text-muted-foreground" />
@@ -56,7 +56,7 @@ async function Isi() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-16 items-center justify-between rounded-2xl bg-card px-4 text-lg font-medium shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint"
+                className="flex min-h-14 items-center justify-between rounded-2xl bg-card px-4 text-lg font-medium border hover:bg-mint"
               >
                 {item.label}
                 <ChevronRight aria-hidden className="size-6 text-muted-foreground" />

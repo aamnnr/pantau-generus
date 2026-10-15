@@ -39,7 +39,7 @@ function DialogOverlay({
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/40 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/30 duration-200 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -61,7 +61,7 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed z-50 grid max-h-[90dvh] w-full gap-5 overflow-y-auto bg-popover p-5 text-base text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none max-lg:inset-x-0 max-lg:bottom-0 max-lg:rounded-t-3xl max-lg:pb-8 lg:top-1/2 lg:left-1/2 lg:max-w-lg lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-2xl data-open:animate-in data-open:fade-in-0 max-lg:data-open:slide-in-from-bottom lg:data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0",
+          "fixed z-50 grid max-h-[90dvh] w-full gap-5 overflow-y-auto bg-popover p-5 text-base text-popover-foreground ring-1 ring-foreground/5 shadow-xl duration-200 ease-(--ease-halus) outline-none max-lg:inset-x-0 max-lg:bottom-0 max-lg:rounded-t-3xl max-lg:pb-8 max-lg:before:-mt-2 max-lg:before:mx-auto max-lg:before:block max-lg:before:h-1 max-lg:before:w-10 max-lg:before:rounded-full max-lg:before:bg-input max-lg:before:content-[''] lg:top-1/2 lg:left-1/2 lg:max-w-lg lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-2xl data-open:animate-in data-open:fade-in-0 max-lg:data-open:slide-in-from-bottom lg:data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0",
           className
         )}
         {...props}
@@ -130,7 +130,7 @@ function DialogTitle({
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "font-heading pr-12 text-xl leading-snug font-semibold",
+        "font-heading pr-12 text-lg leading-snug font-semibold",
         className
       )}
       {...props}

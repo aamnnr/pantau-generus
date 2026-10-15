@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 
 const NADA = {
-  hijau: "bg-[#e3f4e9] text-[#0b5f31]",
-  kunyit: "bg-[#fff1de] text-[#8a4b00]",
-  biru: "bg-[#e4eefb] text-[#1f4e8c]",
-  ungu: "bg-[#f0e7f8] text-[#5e2a86]",
-  merah: "bg-[#fdecec] text-[#a61b1b]",
-  abu: "bg-muted text-[#444444]",
+  hijau: "bg-ok-soft text-ok",
+  kunyit: "bg-warn-soft text-warn",
+  biru: "bg-info-soft text-info",
+  ungu: "bg-ungu-soft text-ungu",
+  merah: "bg-bahaya-soft text-bahaya",
+  abu: "bg-secondary text-teks-2",
 } as const;
 
 export type Nada = keyof typeof NADA;
@@ -19,7 +19,7 @@ export function StatusChip({ nada, simbol, children, className }: {
   className?: string;
 }) {
   return (
-    <span className={cn("inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-base font-semibold", NADA[nada], className)}>
+    <span className={cn("inline-flex h-7 shrink-0 items-center gap-1 rounded-full px-2.5 text-sm font-semibold whitespace-nowrap", NADA[nada], className)}>
       {simbol && <span aria-hidden>{simbol}</span>}
       {children}
     </span>

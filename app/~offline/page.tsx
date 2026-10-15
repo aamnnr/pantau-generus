@@ -12,7 +12,7 @@ export default function OfflinePage() {
         Aplikasi ini membutuhkan internet untuk menampilkan dan menyimpan data. Periksa sinyal atau Wi-Fi, lalu coba lagi.
       </p>
       {/* Tautan biasa (bukan tombol skrip) agar tetap berfungsi di halaman statis. */}
-      <a href="/beranda" className="mx-auto flex h-14 items-center rounded-xl bg-primary px-8 text-lg font-semibold text-primary-foreground">
+      <a href="/beranda" className="mx-auto flex h-11 items-center rounded-xl bg-primary px-8 text-lg font-semibold text-primary-foreground">
         Coba lagi
       </a>
     </main>

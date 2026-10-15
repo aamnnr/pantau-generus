@@ -27,11 +27,11 @@ async function Daftar() {
 
   return (
     <Konten>
-      <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
         {guru.map((g) => {
           const isi = (
             <>
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-mint text-lg font-bold text-mint-foreground">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-mint text-sm font-bold text-mint-foreground">
                 {inisial(g.nama)}
               </span>
               <span className="min-w-0 flex-1">
@@ -52,11 +52,11 @@ async function Daftar() {
               {admin && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
             </>
           );
-          const kartu = "flex min-h-19 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)]";
+          const kartu = "flex min-h-16 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 border";
           return (
             <li key={g.id}>
               {admin ? (
-                <Link href={`/kelola/guru/${g.id}`} className={cn(kartu, "hover:bg-mint/60")}>
+                <Link href={`/kelola/guru/${g.id}`} className={cn(kartu, "transition-colors hover:border-primary/40 hover:bg-mint/40")}>
                   {isi}
                 </Link>
               ) : (
@@ -74,7 +74,7 @@ async function TombolTambah() {
   const { peran } = await requirePeran("admin", "pengurus");
   if (!peran.includes("admin")) return null;
   return (
-    <Button asChild size="lg" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85">
+    <Button asChild size="lg">
       <Link href="/kelola/guru/baru">
         <Plus aria-hidden />
         Tambah Guru

@@ -27,7 +27,7 @@ export function PilihMateriItem({ opsi, dipilih, onChange }: {
   const hasil = opsi.filter((o) => !o.target && (!kata || `${o.nama} ${o.mapel}`.toLowerCase().includes(kata)));
 
   return (
-    <section className="flex flex-col gap-3 rounded-2xl border-[1.5px] border-input bg-card p-3.5">
+    <section className="flex flex-col gap-3 rounded-2xl border border-input bg-card p-3.5">
       <div>
         <h3 className="text-lg font-semibold">Materi lain yang disampaikan</h3>
         <p className="text-muted-foreground">Hafalan, Faqih, Akhlaq, Mandiri. Anak yang hadir tercatat sudah menerima materi ini.</p>
@@ -60,7 +60,7 @@ export function PilihMateriItem({ opsi, dipilih, onChange }: {
         <ul className="flex flex-wrap gap-2" aria-label="Materi lain terpilih">
           {lainDipilih.map((o) => (
             <li key={o.id}>
-              <span className="inline-flex min-h-11 items-center gap-1 rounded-full border-[1.5px] border-primary bg-mint py-1 pr-1 pl-4 font-medium text-mint-foreground">
+              <span className="inline-flex min-h-11 items-center gap-1 rounded-full border border-primary bg-mint py-1 pr-1 pl-4 font-medium text-mint-foreground">
                 {o.nama}
                 <button type="button" aria-label={`Lepas ${o.nama}`} onClick={() => toggle(o.id)} className="flex size-9 items-center justify-center rounded-full hover:bg-card">
                   <X aria-hidden className="size-5" />
@@ -90,7 +90,7 @@ export function PilihMateriItem({ opsi, dipilih, onChange }: {
             <DialogTitle>Pilih materi</DialogTitle>
             <DialogDescription>Centang materi yang disampaikan pada kegiatan ini.</DialogDescription>
           </DialogHeader>
-          <label className="flex h-12 items-center gap-2 rounded-xl border-[1.5px] border-input bg-card px-3">
+          <label className="flex h-10 items-center gap-2 rounded-lg border border-input bg-card px-3">
             <Search aria-hidden className="size-5 text-muted-foreground" />
             <span className="sr-only">Cari materi</span>
             <input
@@ -133,8 +133,8 @@ export function KartuItem({ o, aktif, onToggle }: { o: OpsiMateriItem; aktif: bo
       aria-checked={aktif}
       onClick={onToggle}
       className={cn(
-        "flex min-h-14 w-full items-center gap-3 rounded-xl border-[1.5px] px-3 py-2 text-left",
-        aktif ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card hover:bg-mint/50",
+        "flex min-h-12 w-full items-center gap-3 rounded-lg border px-3 py-2 text-left",
+        aktif ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card hover:bg-mint/50",
       )}
     >
       <span

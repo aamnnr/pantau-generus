@@ -36,11 +36,11 @@ async function Daftar() {
         return (
           <section key={j} className="flex flex-col gap-2.5">
             <JudulKelompok>{LABEL_JENJANG[j]}</JudulKelompok>
-            <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+            <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
               {isi.map((k) => {
                 const isiKartu = (
                   <>
-                    <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-mint text-lg font-bold text-mint-foreground">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-mint text-sm font-bold text-mint-foreground">
                       {k.nama.slice(0, 2)}
                     </span>
                     <span className="min-w-0 flex-1">
@@ -51,11 +51,11 @@ async function Daftar() {
                     {admin && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
                   </>
                 );
-                const kelasKartu = "flex min-h-19 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)]";
+                const kelasKartu = "flex min-h-16 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 border";
                 return (
                   <li key={k.id}>
                     {admin ? (
-                      <Link href={`/kelola/kelas/${k.id}`} className={`${kelasKartu} hover:bg-mint/60`}>
+                      <Link href={`/kelola/kelas/${k.id}`} className={`${kelasKartu} transition-colors hover:border-primary/40 hover:bg-mint/40`}>
                         {isiKartu}
                       </Link>
                     ) : (
@@ -76,7 +76,7 @@ async function TombolTambah() {
   const { peran } = await requirePeran("admin", "pengurus");
   if (!peran.includes("admin")) return null;
   return (
-    <Button asChild variant="secondary" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85" size="lg">
+    <Button asChild variant="secondary" size="lg">
       <Link href="/kelola/kelas/baru">
         <Plus aria-hidden />
         Tambah Kelas

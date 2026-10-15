@@ -45,7 +45,7 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
             {akun.generus_wali.map((w) =>
               w.generus ? (
                 <li key={w.generus.id}>
-                  <Link href={`/generus/${w.generus.id}/ubah`} className="flex min-h-12 items-center justify-between rounded-xl bg-mint px-4 font-medium text-mint-foreground">
+                  <Link href={`/generus/${w.generus.id}/ubah`} className="flex min-h-10 items-center justify-between rounded-xl bg-mint px-4 font-medium text-mint-foreground">
                     {w.generus.nama}
                     <span className="text-base font-normal">{w.hubungan ?? "Wali"}</span>
                   </Link>

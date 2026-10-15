@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { AksiBawah, FormError, SubmitButton } from "@/components/form";
 import { CHIP_PENILAIAN, StatusChip } from "@/components/status-chip";
 import { LABEL_ASPEK, labelPenilaian, URUTAN_ASPEK, type StatusPenilaian } from "@/lib/format";
+import { getar } from "@/lib/getar";
 import { cn } from "@/lib/utils";
 import type { SimpanState } from "./actions";
 import type { BarisPenilaian } from "./queries";
@@ -12,9 +13,9 @@ import type { BarisPenilaian } from "./queries";
 const URUTAN: StatusPenilaian[] = ["belum", "proses", "lancar"];
 
 const WARNA: Record<StatusPenilaian, string> = {
-  belum: "bg-card text-[#444444] shadow-sm ring-2 ring-[#9a9a9a]",
-  proses: "bg-[#fff1de] text-[#8a4b00] shadow-sm ring-2 ring-[#8a4b00]",
-  lancar: "bg-[#e3f4e9] text-[#0b5f31] shadow-sm ring-2 ring-[#0b5f31]",
+  belum: "bg-card text-muted-foreground shadow-sm ring-2 ring-muted-foreground/50",
+  proses: "bg-warn-soft text-warn shadow-sm ring-2 ring-warn",
+  lancar: "bg-ok-soft text-ok shadow-sm ring-2 ring-ok",
 };
 
 const kunci = (b: BarisPenilaian) => `${b.generus_id}:${b.materi_item_id}`;
@@ -58,7 +59,7 @@ export function DaftarPenilaian({ baris, action, bisa, perAspek }: {
               key={k}
               className={cn(
                 "flex flex-col gap-3 rounded-2xl bg-muted/60 p-3.5 @2xl:flex-row @2xl:items-center",
-                diubah && "bg-[#fffaf2] ring-2 ring-kunyit",
+                diubah && "bg-warn-soft/50 ring-1 ring-warn-line",
               )}
             >
               <div className="min-w-0 flex-1">
@@ -66,20 +67,23 @@ export function DaftarPenilaian({ baris, action, bisa, perAspek }: {
                 <p className="text-base text-muted-foreground">
                   {b.keterangan}
                   {b.target && " · Target periode ini"}
-                  {diubah && <span className="font-semibold text-[#8a4b00]"> · belum disimpan</span>}
+                  {diubah && <span className="font-semibold text-warn"> · belum disimpan</span>}
                 </p>
               </div>
               {bisa ? (
-                <div role="radiogroup" aria-label={`Penilaian ${b.judul}`} className="grid grid-cols-3 gap-1.5 rounded-2xl bg-secondary p-1 @2xl:w-[400px] @2xl:shrink-0">
+                <div role="radiogroup" aria-label={`Penilaian ${b.judul}`} className="grid grid-cols-3 gap-1.5 rounded-xl bg-secondary p-1 @2xl:w-[400px] @2xl:shrink-0">
                   {URUTAN.map((s) => (
                     <button
                       key={s}
                       type="button"
                       role="radio"
                       aria-checked={sekarang === s}
-                      onClick={() => setPilihan((p) => ({ ...p, [k]: s }))}
+                      onClick={() => {
+                        getar();
+                        setPilihan((p) => ({ ...p, [k]: s }));
+                      }}
                       className={cn(
-                        "flex min-h-12 items-center justify-center gap-1.5 rounded-xl px-1 text-base font-medium text-[#444444]",
+                        "flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-1 text-base font-medium text-muted-foreground",
                         sekarang === s && cn("font-semibold", WARNA[s]),
                       )}
                     >

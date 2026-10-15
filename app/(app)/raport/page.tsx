@@ -65,8 +65,8 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
               href={hrefDengan("/raport", { kelas: k.id }, periode.param)}
               aria-current={dipilih?.id === k.id ? "page" : undefined}
               className={cn(
-                "flex h-12 shrink-0 items-center rounded-xl border-[1.5px] px-4 text-base font-semibold whitespace-nowrap",
-                dipilih?.id === k.id ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card",
+                "flex h-10 shrink-0 items-center rounded-lg border px-4 text-base font-semibold whitespace-nowrap",
+                dipilih?.id === k.id ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
               )}
             >
               {labelKelas(k)}
@@ -96,14 +96,14 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
 
 function DaftarAnak({ anak, periode }: { anak: { id: string; nama: string; sub: string }[]; periode: Periode }) {
   return (
-    <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3">
+    <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3">
       {anak.map((a) => (
         <li key={a.id}>
           <Link
             href={hrefDengan(`/raport/${a.id}`, periode.param)}
-            className="flex min-h-19 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint/60"
+            className="flex min-h-16 items-center gap-3.5 rounded-2xl border bg-card px-3.5 py-3 transition-[border-color,background-color,transform] duration-150 hover:border-primary/30 hover:bg-mint/40 active:scale-[0.99]"
           >
-            <span aria-hidden className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-mint text-lg font-bold text-mint-foreground">
+            <span aria-hidden className="flex size-10 shrink-0 items-center justify-center rounded-full bg-mint text-sm font-bold text-mint-foreground">
               {inisial(a.nama)}
             </span>
             <span className="min-w-0 flex-1">

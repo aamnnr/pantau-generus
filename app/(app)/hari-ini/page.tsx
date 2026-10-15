@@ -1,14 +1,16 @@
-import { CalendarDays, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { CalendarCheck2, CircleAlert, CircleCheck, Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { Halaman, Kosong, Konten, PageHeader, SkeletonDaftar } from "@/components/page";
+import { Halaman, Kerangka, Kosong, Konten, PageHeader, SkeletonDaftar } from "@/components/page";
+import { KotakAngka } from "@/components/stat";
 import { Button } from "@/components/ui/button";
-import { KartuKegiatan } from "@/features/kegiatan/kartu-kegiatan";
+import { KartuKegiatan, statusKegiatan } from "@/features/kegiatan/kartu-kegiatan";
+import { PilihTanggal } from "@/features/kegiatan/pilih-tanggal";
 import { kegiatanTanggal } from "@/features/kegiatan/queries";
 import { getSession, requirePeran } from "@/lib/auth/session";
-import { formatTanggal, geserTanggal, hariIni } from "@/lib/format";
+import { formatTanggal, hariIni } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Pengajian Hari Ini · Pantau Generus" };
 
@@ -21,58 +23,21 @@ async function pilihTanggal(searchParams: SP) {
   return tanggal && /^\d{4}-\d{2}-\d{2}$/.test(tanggal) ? tanggal : hariIni();
 }
 
-async function Judul({ searchParams }: { searchParams: SP }) {
-  const tanggal = await pilihTanggal(searchParams);
-  return <>{formatTanggal(tanggal)}</>;
+async function Sapaan() {
+  const { nama } = await getSession();
+  return <>Assalamu&apos;alaikum, {nama.split(" ")[0]}</>;
 }
 
-async function Sapaan({ searchParams }: { searchParams: SP }) {
-  const [{ nama }, tanggal] = await Promise.all([getSession(), pilihTanggal(searchParams)]);
+async function Keterangan({ searchParams }: { searchParams: SP }) {
+  const tanggal = await pilihTanggal(searchParams);
   const hari = hariIni();
-  const keterangan = tanggal === hari ? "Pengajian hari ini" : tanggal < hari ? "Pengajian yang lalu" : "Pengajian mendatang";
-  return (
-    <>
-      Assalamu&apos;alaikum, {nama} · {keterangan}
-    </>
-  );
+  if (tanggal === hari) return <>Berikut pengajian hari ini. Semoga lancar dan berkah.</>;
+  return <>{tanggal < hari ? "Pengajian yang sudah lewat" : "Pengajian mendatang"}</>;
 }
 
 async function NavigasiTanggal({ searchParams }: { searchParams: SP }) {
   const tanggal = await pilihTanggal(searchParams);
-  const hari = hariIni();
-  const tautan = "inline-flex h-12 items-center gap-1 rounded-xl bg-white/15 px-3 text-base font-semibold text-brand-foreground hover:bg-white/25 lg:bg-card lg:text-foreground lg:shadow-sm lg:hover:bg-mint";
-  return (
-    <div className="flex flex-wrap items-center gap-2">
-      <Link href={`/hari-ini?tanggal=${geserTanggal(tanggal, -1)}`} className={tautan}>
-        <ChevronLeft aria-hidden className="size-5" />
-        {tanggal === hari ? "Kemarin" : "Sebelumnya"}
-      </Link>
-      {tanggal !== hari && (
-        <Link href="/hari-ini" className={tautan}>
-          Hari ini
-        </Link>
-      )}
-      <Link href={`/hari-ini?tanggal=${geserTanggal(tanggal, 1)}`} className={tautan}>
-        Berikutnya
-        <ChevronRight aria-hidden className="size-5" />
-      </Link>
-      <form action="/hari-ini" className="flex items-center gap-2">
-        <label className={`${tautan} cursor-pointer`}>
-          <CalendarDays aria-hidden className="size-5" />
-          <span className="sr-only">Pilih tanggal</span>
-          <input
-            type="date"
-            name="tanggal"
-            defaultValue={tanggal}
-            className="w-36 bg-transparent text-base outline-none [color-scheme:light]"
-          />
-        </label>
-        <Button type="submit" variant="secondary" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85">
-          Buka
-        </Button>
-      </form>
-    </div>
-  );
+  return <PilihTanggal tanggal={tanggal} hari={hariIni()} label={formatTanggal(tanggal)} />;
 }
 
 async function Daftar({ searchParams }: { searchParams: SP }) {
@@ -81,10 +46,11 @@ async function Daftar({ searchParams }: { searchParams: SP }) {
   const kegiatan = await kegiatanTanggal(tanggal);
   const bisaTambah = session.peran.includes("admin") || session.peran.includes("guru");
 
-  return (
-    <Konten>
-      {kegiatan.length === 0 ? (
+  if (kegiatan.length === 0) {
+    return (
+      <Konten>
         <Kosong
+          ikon={CalendarCheck2}
           judul="Belum ada kegiatan pada tanggal ini"
           keterangan={
             session.peran.includes("admin")
@@ -94,11 +60,14 @@ async function Daftar({ searchParams }: { searchParams: SP }) {
           aksi={
             bisaTambah && (
               <div className="flex flex-wrap justify-center gap-2">
-                <Button asChild size="lg">
-                  <Link href={`/kegiatan/baru?tanggal=${tanggal}`}>Tambah Kegiatan</Link>
+                <Button asChild>
+                  <Link href={`/kegiatan/baru?tanggal=${tanggal}`}>
+                    <Plus aria-hidden />
+                    Tambah Kegiatan
+                  </Link>
                 </Button>
                 {session.peran.includes("admin") && (
-                  <Button asChild size="lg" variant="outline">
+                  <Button asChild variant="outline">
                     <Link href="/kelola/jadwal">Atur Jadwal Rutin</Link>
                   </Button>
                 )}
@@ -106,23 +75,38 @@ async function Daftar({ searchParams }: { searchParams: SP }) {
             )
           }
         />
-      ) : (
-        <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-          {kegiatan.map((k) => (
-            <li key={k.id}>
-              <KartuKegiatan k={k} />
-            </li>
-          ))}
-        </ul>
-      )}
-      {bisaTambah && kegiatan.length > 0 && (
-        <Button asChild variant="outline" size="lg" className="w-full lg:w-fit">
-          <Link href={`/kegiatan/baru?tanggal=${tanggal}`}>
-            <Plus aria-hidden />
-            Kegiatan Lain
-          </Link>
-        </Button>
-      )}
+      </Konten>
+    );
+  }
+
+  const aktif = kegiatan.filter((k) => k.status !== "batal");
+  const belum = aktif.filter((k) => statusKegiatan(k).label === "Belum diisi").length;
+
+  return (
+    <Konten>
+      <div className="grid grid-cols-3 gap-2.5 lg:gap-3">
+        <KotakAngka ikon={CalendarCheck2} nilai={aktif.length} label="Kegiatan" />
+        <KotakAngka ikon={CircleCheck} nilai={aktif.length - belum} label="Sudah diisi" nada="biru" />
+        <KotakAngka ikon={CircleAlert} nilai={belum} label="Belum diisi" nada={belum ? "oranye" : "abu"} />
+      </div>
+      <div className="flex items-center justify-between gap-2 pt-1">
+        <h2 className="text-lg font-semibold">Daftar pengajian</h2>
+        {bisaTambah && (
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/kegiatan/baru?tanggal=${tanggal}`}>
+              <Plus aria-hidden />
+              Kegiatan lain
+            </Link>
+          </Button>
+        )}
+      </div>
+      <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2">
+        {kegiatan.map((k) => (
+          <li key={k.id}>
+            <KartuKegiatan k={k} />
+          </li>
+        ))}
+      </ul>
     </Konten>
   );
 }
@@ -133,17 +117,17 @@ export default function HariIniPage({ searchParams }: PageProps<"/hari-ini">) {
     <Halaman>
       <PageHeader
         title={
-          <Suspense fallback="Pengajian Hari Ini">
-            <Judul searchParams={sp} />
+          <Suspense fallback="Assalamu'alaikum">
+            <Sapaan />
           </Suspense>
         }
         subtitle={
           <Suspense fallback={<span className="opacity-0">.</span>}>
-            <Sapaan searchParams={sp} />
+            <Keterangan searchParams={sp} />
           </Suspense>
         }
       >
-        <Suspense fallback={<div className="h-12" />}>
+        <Suspense fallback={<Kerangka className="h-11 w-72 rounded-xl" />}>
           <NavigasiTanggal searchParams={sp} />
         </Suspense>
       </PageHeader>

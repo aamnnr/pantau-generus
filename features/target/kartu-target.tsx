@@ -13,7 +13,7 @@ export function KartuTarget({ t }: { t: TargetRingkas }) {
   return (
     <Link
       href={`/target/${t.id}`}
-      className="flex min-h-24 items-center gap-3.5 rounded-2xl bg-card px-4 py-3.5 shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint/60"
+      className="flex min-h-24 items-center gap-3.5 rounded-2xl bg-card px-4 py-3.5 border transition-colors hover:border-primary/40 hover:bg-mint/40"
     >
       <span className="min-w-0 flex-1">
         <span className="block text-lg leading-snug font-semibold">{t.judul}</span>

@@ -1,10 +1,10 @@
 # DESIGN — Sistem Pemantauan Target Generus
 
-> Status: Draft v0.1 · 13 Okt 2026. Pengguna utama berusia **30–50 tahun**, banyak yang tidak terbiasa dengan aplikasi. Setiap keputusan desain mengutamakan **mudah dibaca, sulit salah tekan, dan sedikit langkah**.
+> Status: v0.2 · 15 Okt 2026 (gaya baru mengikuti referensi Zenius). Pengguna utama berusia **30–50 tahun**, banyak yang tidak terbiasa dengan aplikasi. Setiap keputusan desain mengutamakan **mudah dibaca, sulit salah tekan, dan sedikit langkah**.
 
 ## 1. Prinsip
 
-1. **Satu layar, satu tugas.** Setiap halaman punya satu aksi utama yang jelas (tombol besar di bawah).
+1. **Satu layar, satu tugas.** Setiap halaman punya satu aksi utama yang jelas (tombol utama menempel di bawah pada HP).
 2. **Teks dulu, ikon pendukung.** Ikon selalu disertai label. Tidak ada tombol ikon tanpa teks, kecuali tombol tutup/kembali.
 3. **Bahasa sehari-hari.** "Simpan Kehadiran", bukan "Submit Presensi". Lihat §8.
 4. **Default yang benar.** Isi otomatis apa yang bisa ditebak (tanggal hari ini, semua hadir, guru dari jadwal, salin bulan lalu).
@@ -16,45 +16,41 @@
 
 | Token | Ukuran | Pemakaian |
 |---|---|---|
-| `text-base` | **18px** / line-height 1.6 | Teks dasar (lebih besar dari default 16px) |
-| `text-sm` | 16px | Teks sekunder — **ukuran minimum** |
-| `text-lg` | 20px | Label penting, nama anak di daftar presensi |
-| `text-xl` | 24px | Judul bagian |
-| `text-2xl` | 30px | Judul halaman, angka utama di kartu |
+| `text-sm` / `text-xs` | **13px** | Keterangan, chip, label kecil — **ukuran minimum** |
+| `text-base` | **15px** / line-height 1.55 | Teks dasar |
+| `text-lg` | 16px | Nama di daftar, judul kartu |
+| `text-xl` | 18px | Angka di kotak ringkas |
+| `text-2xl` | 22px | Judul halaman |
+| `text-3xl`–`text-4xl` | 26–32px | Angka besar (jarang) |
 
-- Font: **Poppins** 400/500/600/700 (fallback `system-ui`). Angka memakai `tabular-nums`.
-- Tidak ada teks di bawah 16px. Tidak ada teks abu-abu muda di atas latar putih.
+- Font: **Plus Jakarta Sans** (variabel, Google Fonts lewat `next/font`, fallback `system-ui`). Angka memakai `tabular-nums`. Judul sedikit dirapatkan (`letter-spacing: -0.01em`).
+- Diputuskan 15 Okt 2026 (referensi *Online education dashboard*, Dribbble): lebih ringkas dari sebelumnya (18px) atas permintaan pengguna; ukuran minimum 13px dan kontras tetap ≥ 4.5:1.
 
 ## 3. Warna
 
-Arah visual (disetujui 14 Okt 2026, mockup: https://claude.ai/artifact/UbNjQaWTnBzpUnNM6UsoCS) diadaptasi dari referensi *Islamic Platform* (Dribbble): **hijau tenang + aksen kunyit**, blok hijau dengan motif geometris tipis, latar mint, kartu putih bersudut 14–20px dengan bayangan sangat tipis.
-
-Token didefinisikan sebagai CSS variable (shadcn/ui).
+Arah visual (15 Okt 2026) mengikuti referensi *Zenius — Online education dashboard*: **latar abu sangat muda, kartu putih bergaris tipis, teal sebagai warna utama, oranye hanya aksen**. Tanpa blok warna besar dan tanpa ornamen, agar tenang & profesional.
 
 | Token | Nilai | Pemakaian |
 |---|---|---|
-| `--brand` | Hijau merek `#019147` | Latar besar: header halaman HP, sidebar desktop. Teks putih di atasnya ≥ 24px atau tebal ≥ 19px |
-| `--primary` | Hijau aksi `#017A3C` | Tombol utama, tautan, item aktif (kontras teks putih 5,5:1) |
-| `--primary-foreground` | `#ffffff` | Teks di atas primary |
-| `--kunyit` | `#FF9822` | Aksen & aksi sekunder penting (mis. Naik kelas). **Selalu dengan teks gelap** |
-| `--background` | `#F4F6F5` | Latar halaman |
-| `--card` | `#ffffff` | Kartu, form |
-| `--mint` | `#E7F5EC` | Latar bagian, kepala tabel, item terpilih |
-| `--foreground` | `#121413` | Teks utama |
-| `--muted-foreground` | `#575757` | Teks sekunder (kontras 7,2:1) |
-| `--destructive` | `#A61B1B` | Hapus, alpa |
-| `--border` / `--input` | `#E3E6E8` / `#CFD6D2` | Garis / tepi isian |
+| `--primary` / `--brand` | Teal `#0D807C` | Tombol utama, tautan, item aktif, bar progres (kontras teks putih 4,9:1) |
+| `--ring` | `#17BDB7` | Cincin fokus |
+| `--mint` | `#E6FAF9` (teks `#0B6B68`) | Item aktif di menu, avatar, badge "sudah", kotak jam |
+| `--kunyit` | Oranye `#BA5722` | Aksen jarang: penanda perubahan/terlewat, garis pembanding kelas |
+| `--background` | `#F3F5F5` | Latar halaman |
+| `--card` | `#FFFFFF` + garis `#E9EAEA` | Kartu, form, sidebar, navigasi bawah |
+| `--foreground` / `--teks-2` | `#141616` / `#3D4343` | Teks utama / sekunder |
+| `--muted-foreground` | `#646B6B` | Keterangan (kontras 5,3:1) |
+| `--secondary` | `#EEF1F1` | Latar tombol segmen, bar kosong |
+| `--destructive` | `#B42318` | Hapus, alpa, galat |
 
-Hijau referensi `#019147` tidak dipakai untuk teks putih kecil (kontras 4,1:1) — karena itu tombol memakai `--primary`.
-
-Kontras minimum **WCAG AA (4.5:1)** untuk semua teks; target AAA (7:1) untuk teks dasar.
+Warna status (chip, peringatan) memakai pasangan lembut `ok`/`warn`/`info`/`ungu`/`bahaya` (latar `*-soft`, teks gelap) dan **selalu** disertai simbol + kata. Kontras minimum **WCAG AA (4.5:1)** untuk semua teks.
 
 ### Warna Status Presensi
 
 | Status | Warna | Label & ikon |
 |---|---|---|
-| Hadir | hijau | ✓ Hadir |
-| Terlambat | kuning tua | ⏱ Terlambat |
+| Hadir | teal | ✓ Hadir |
+| Terlambat | oranye | ⏱ Terlambat |
 | Izin | biru | ✉ Izin |
 | Sakit | ungu | ✚ Sakit |
 | Alpa | merah | ✕ Alpa |
@@ -66,15 +62,15 @@ Tiga tingkat yang sama di database (`belum`/`proses`/`lancar`); **label mengikut
 | Status | Alim (Hafalan) | Faqih | Akhlaqul Karimah & Mandiri | Warna |
 |---|---|---|---|---|
 | `belum` | ○ Belum | ○ Belum | ○ Belum | abu-abu |
-| `proses` | ◐ Proses | ◐ Proses | ◐ Proses | kuning |
-| `lancar` | ● Lancar | ● Paham | ● Terbiasa | hijau |
+| `proses` | ◐ Proses | ◐ Proses | ◐ Proses | oranye |
+| `lancar` | ● Lancar | ● Paham | ● Terbiasa | teal |
 
 ## 4. Ukuran & Jarak
 
-- **Target sentuh minimum 48×48px**; tombol utama tinggi **56px**, lebar penuh di mobile.
-- Jarak antar elemen yang bisa diketuk ≥ 8px.
-- Padding halaman 16px (mobile), 24px (≥ md).
-- Radius: `--radius: 0.875rem` (14px; kartu 16–20px, chip penuh).
+- **Tombol utama tinggi 44px** (lebar penuh di HP), tombol biasa 40px, kecil 36px; isian 44px. Target sentuh tetap ≥ 40px, jarak antar elemen yang bisa diketuk ≥ 8px.
+- Padding halaman 16px (HP), 32px (desktop).
+- Radius `--radius: 0.625rem` (10px): tombol & isian 10px, kartu 16px, chip & avatar bulat penuh.
+- Kartu: putih, garis 1px, **tanpa bayangan**; bayangan halus hanya saat kartu yang bisa diketuk di-hover.
 - Lebar konten maksimum 768px untuk halaman isian; 1200px untuk rekap/tabel.
 
 ## 5. Navigasi
@@ -238,6 +234,22 @@ Tiga langkah berurutan dengan indikator ✓:
 - Nama pendek di layar utama: maksimal 12 karakter.
 - Petunjuk pasang ("Tambahkan ke layar utama") ditampilkan sekali setelah login, bisa ditutup.
   - Android/Chrome: kartu "Pasang Pantau Generus" dengan tombol **Pasang** (dialog bawaan) dan **Nanti saja**. iPhone: langkah "Bagikan → Tambahkan ke Layar Utama". Tidak muncul lagi setelah ditutup atau bila sudah terpasang.
-- Ikon: bintang delapan putih bertitik kunyit di atas hijau PPG (motif yang sama dengan blok hijau).
+- Ikon: bintang delapan putih di atas gradasi teal (sama dengan tanda logo di sidebar & halaman Masuk).
 - Tanpa internet: halaman "Tidak ada koneksi internet" + tombol **Coba lagi** (mode offline penuh bukan tujuan versi pertama).
 - Halaman Masuk: PIN tampil sebagai titik; tombol **Tampilkan / Sembunyikan** di samping label PIN.
+
+## 11. Gerak & Umpan Balik
+
+Gerak halus, singkat (150–320ms, kurva `--ease-halus`), dan **dimatikan** bila pengguna memilih *kurangi gerak* (`prefers-reduced-motion`).
+
+| Situasi | Perilaku |
+|---|---|
+| Membuka halaman | Isi muncul pelan (fade + naik 6px); daftar kartu muncul berurutan (`berurutan`, maks. 180ms) |
+| Pindah menu | Ikon menu yang diketuk berdenyut selama halaman dimuat (`useLinkStatus`) |
+| Menekan tombol / kartu | Mengecil sedikit (`scale 0.97–0.99`); kartu yang bisa diketuk terangkat 2px saat hover |
+| Menyimpan | Tombol menampilkan putaran + "Menyimpan…" dan terkunci; hasilnya toast kartu terang (ikon ✓ teal / galat merah) di atas navigasi bawah |
+| Mengubah status (presensi, penilaian, tilawati) | Chip "pop", getar 8ms di Android, ringkasan angka ikut "pop"; jumlah perubahan yang **belum disimpan** ditampilkan di samping tombol simpan |
+| Progres | Bar & cincin terisi dari 0 saat tampil |
+| Memuat data | Kerangka berkilau (bukan spinner kosong) |
+| Galat isian | Pesan merah dengan ikon muncul di bawah isian; galat formulir di kotak merah lembut |
+| Lembar bawah / dialog | Naik dari bawah (HP) dengan pegangan, atau membesar halus (desktop) |

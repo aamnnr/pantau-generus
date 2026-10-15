@@ -58,7 +58,7 @@ pnpm akun:buat --nama "…" --hp 08… --pin 123456 --peran admin [--kelompok "�
 
 ## Aturan UI
 
-- Ikuti DESIGN.md: teks dasar 18px, minimum 16px; target sentuh ≥ 48px; tombol utama 56px; status tidak hanya dengan warna.
+- Ikuti DESIGN.md: teks dasar 15px, minimum 13px; tombol utama 44px, target sentuh ≥ 40px; kartu putih bergaris tipis tanpa blok warna; status tidak hanya dengan warna; gerak halus & umpan balik sesuai §11 (hormati `prefers-reduced-motion`).
 - Pilihan ≤ 5 opsi → tombol segmen, bukan dropdown.
 - Responsif penuh (DESIGN.md §5.1): uji setiap layar di lebar **360px, 768px, dan 1280px**. Mobile = kartu + bottom nav; desktop = sidebar + tabel.
 

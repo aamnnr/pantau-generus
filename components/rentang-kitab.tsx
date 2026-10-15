@@ -106,7 +106,7 @@ export function BarisRentang({ judul, b, kitab, surat, ubah, hapus, jenisTetap }
   const quran = k?.jenis === "quran";
 
   return (
-    <fieldset className="flex flex-col gap-4 rounded-2xl border-[1.5px] border-input bg-card p-3.5">
+    <fieldset className="flex flex-col gap-4 rounded-2xl border border-input bg-card p-3.5">
       <div className="flex items-center justify-between">
         <legend className="text-lg font-semibold">{judul}</legend>
         {hapus && (
@@ -125,8 +125,8 @@ export function BarisRentang({ judul, b, kitab, surat, ubah, hapus, jenisTetap }
               aria-pressed={b.kitab_id === x.id}
               onClick={() => ubah({ kitab_id: x.id, jenis: jenisTetap ?? (x.jenis === "quran" ? b.jenis : "makna") })}
               className={cn(
-                "min-h-12 rounded-xl border-[1.5px] px-4 text-base font-semibold",
-                b.kitab_id === x.id ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card",
+                "min-h-10 rounded-lg border px-4 text-base font-semibold",
+                b.kitab_id === x.id ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
               )}
             >
               {x.nama}
@@ -143,7 +143,7 @@ export function BarisRentang({ judul, b, kitab, surat, ubah, hapus, jenisTetap }
               type="button"
               aria-pressed={b.jenis === j}
               onClick={() => ubah({ jenis: j })}
-              className={cn("h-12 rounded-lg text-base font-medium text-[#444444]", b.jenis === j && "bg-card font-semibold text-primary shadow-sm")}
+              className={cn("h-10 rounded-lg text-base font-medium text-muted-foreground", b.jenis === j && "bg-card font-semibold text-primary shadow-[0_1px_3px_rgba(20,22,22,0.12)]")}
             >
               {j === "makna" ? "Makna" : "Bacaan"}
             </button>
@@ -198,7 +198,7 @@ function AngkaBesar({ label, value, onChange, max }: { label: string; value: str
         value={value}
         onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
         aria-invalid={lebih || undefined}
-        className="h-14 text-center text-xl font-semibold tabular-nums"
+        className="h-11 text-center text-xl font-semibold tabular-nums"
       />
       {lebih && <span className="font-medium text-destructive">Melebihi {max}.</span>}
     </label>
@@ -228,7 +228,7 @@ function PosisiAyat({ label, surat, nomorSurat, ayat, onSurat, onAyat }: {
             value={ayat}
             onChange={(e) => onAyat(e.target.value.replace(/\D/g, ""))}
             aria-invalid={lebih || undefined}
-            className="h-14 text-center text-xl font-semibold tabular-nums"
+            className="h-11 text-center text-xl font-semibold tabular-nums"
           />
         </label>
       </div>
@@ -254,7 +254,7 @@ function PilihSurat({ surat, nomor, onPilih }: { surat: Surat[]; nomor: number |
       <button
         type="button"
         onClick={() => setBuka(true)}
-        className="flex h-14 min-w-0 flex-1 items-center justify-between gap-2 rounded-lg border border-input bg-card px-3 text-left text-lg"
+        className="flex h-11 min-w-0 flex-1 items-center justify-between gap-2 rounded-lg border border-input bg-card px-3 text-left text-lg"
       >
         <span className={cn("truncate", !dipilih && "text-muted-foreground")}>
           {dipilih ? `${dipilih.nomor} · ${dipilih.nama_latin}` : "Pilih surat"}
@@ -277,7 +277,7 @@ function PilihSurat({ surat, nomor, onPilih }: { surat: Surat[]; nomor: number |
           <DialogHeader>
             <DialogTitle>Pilih surat</DialogTitle>
           </DialogHeader>
-          <label className="flex h-12 items-center gap-2 rounded-xl border-[1.5px] border-input bg-card px-3">
+          <label className="flex h-10 items-center gap-2 rounded-lg border border-input bg-card px-3">
             <Search aria-hidden className="size-5 text-muted-foreground" />
             <span className="sr-only">Cari surat</span>
             <input
@@ -300,7 +300,7 @@ function PilihSurat({ surat, nomor, onPilih }: { surat: Surat[]; nomor: number |
                     setCari("");
                   }}
                   className={cn(
-                    "flex min-h-13 w-full items-center justify-between gap-2 rounded-xl px-3 text-left hover:bg-mint",
+                    "flex min-h-11 w-full items-center justify-between gap-2 rounded-xl px-3 text-left hover:bg-mint",
                     s.nomor === nomor && "bg-mint font-semibold text-mint-foreground",
                   )}
                 >

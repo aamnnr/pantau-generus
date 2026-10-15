@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 export const metadata: Metadata = { title: "Kitab · Pantau Generus" };
 
 const angka = new Intl.NumberFormat("id-ID");
-const kartu = "flex min-h-19 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)]";
+const kartu = "flex min-h-16 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 border";
 
 async function Daftar() {
   const { peran } = await requirePeran("admin", "pengurus");
@@ -26,7 +26,7 @@ async function Daftar() {
       <JudulKelompok>Al-Qur&apos;an</JudulKelompok>
       {quran.map((k) => (
         <div key={k.id} className={cn(kartu, "bg-mint")}>
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand text-brand-foreground">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
             <BookOpenText aria-hidden className="size-6" />
           </span>
           <span className="min-w-0 flex-1">
@@ -40,11 +40,11 @@ async function Daftar() {
       {hadist.length === 0 ? (
         <Kosong judul="Belum ada kitab Al-Hadist" keterangan="Tambahkan kitab yang dimaknai beserta jumlah halamannya." />
       ) : (
-        <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
           {hadist.map((k) => {
             const isi = (
               <>
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-mint text-mint-foreground">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mint text-mint-foreground">
                   <BookOpenText aria-hidden className="size-6" />
                 </span>
                 <span className="min-w-0 flex-1">
@@ -62,7 +62,7 @@ async function Daftar() {
             return (
               <li key={k.id}>
                 {admin ? (
-                  <Link href={`/kelola/kitab/${k.id}`} className={cn(kartu, "hover:bg-mint/60")}>
+                  <Link href={`/kelola/kitab/${k.id}`} className={cn(kartu, "transition-colors hover:border-primary/40 hover:bg-mint/40")}>
                     {isi}
                   </Link>
                 ) : (
@@ -81,7 +81,7 @@ async function TombolTambah() {
   const { peran } = await requirePeran("admin", "pengurus");
   if (!peran.includes("admin")) return null;
   return (
-    <Button asChild size="lg" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85">
+    <Button asChild size="lg">
       <Link href="/kelola/kitab/baru">
         <Plus aria-hidden />
         Tambah Kitab

@@ -49,7 +49,7 @@ async function Daftar() {
         .map((g) => (
           <section key={g.judul} className="flex flex-col gap-2.5">
             <JudulKelompok>{g.judul}</JudulKelompok>
-            <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+            <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2">
               {g.isi.map((t) => (
                 <li key={t.id}>
                   <KartuTarget t={t} />
@@ -66,7 +66,7 @@ async function TombolBuat() {
   const { peran } = await getSession();
   if (!peran.includes("admin") && !peran.includes("guru")) return null;
   return (
-    <Button asChild size="lg" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85">
+    <Button asChild size="lg">
       <Link href="/target/baru">
         <Plus aria-hidden />
         Buat Target

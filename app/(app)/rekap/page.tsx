@@ -42,8 +42,8 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
               href={hrefDengan("/rekap", { kelas: k.id }, periode.param)}
               aria-current={dipilih?.id === k.id ? "page" : undefined}
               className={cn(
-                "flex h-12 shrink-0 items-center rounded-xl border-[1.5px] px-4 text-base font-semibold whitespace-nowrap",
-                dipilih?.id === k.id ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card",
+                "flex h-10 shrink-0 items-center rounded-lg border px-4 text-base font-semibold whitespace-nowrap",
+                dipilih?.id === k.id ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
               )}
             >
               {k.label}
@@ -55,7 +55,7 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
       {data.length === 0 && <Kosong judul="Belum ada anak aktif" keterangan="Tambahkan generus ke kelas melalui menu Generus." />}
 
       {perhatian.length > 0 && (
-        <Kartu className="flex flex-col gap-3 border-2 border-[#f3c5c5]">
+        <Kartu className="flex flex-col gap-3 border-2 border-bahaya-line">
           <h2 className="flex items-center gap-2 text-xl font-bold">
             <StatusChip nada="merah" simbol="!">
               {perhatian.length}
@@ -68,7 +68,7 @@ async function Isi({ searchParams }: { searchParams: Promise<Cari> }) {
               <li key={a.generus_id}>
                 <Link
                   href={hrefDengan(`/generus/${a.generus_id}`, periode.param)}
-                  className="flex min-h-14 items-center gap-3 rounded-xl bg-[#fdecec] px-4 py-2 text-[#5c1010] hover:bg-[#fbdcdc]"
+                  className="flex min-h-12 items-center gap-3 rounded-xl bg-bahaya-soft px-4 py-2 text-bahaya hover:bg-bahaya-line/60"
                 >
                   <span className="min-w-0 flex-1">
                     <span className="block font-semibold">{a.nama}</span>
@@ -143,7 +143,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
           <li key={a.generus_id}>
             <Link
               href={hrefDengan(`/generus/${a.generus_id}`, periode.param)}
-              className="flex flex-col gap-2 rounded-2xl bg-card px-4 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint/60"
+              className="flex flex-col gap-2 rounded-2xl bg-card px-4 py-3 border transition-colors hover:border-primary/40 hover:bg-mint/40"
             >
               <span className="flex items-center gap-2">
                 <span className="min-w-0 flex-1 truncate text-lg font-medium">{a.nama}</span>
@@ -166,7 +166,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
       </ul>
 
       {/* Desktop: tabel */}
-      <div className="hidden overflow-x-auto rounded-2xl bg-card shadow-[0_1px_2px_rgba(18,20,19,0.06)] lg:block">
+      <div className="hidden overflow-x-auto rounded-2xl bg-card border lg:block">
         <table className="w-full min-w-[760px] border-collapse text-left text-lg">
           <thead>
             <tr className="bg-mint text-base text-mint-foreground">
@@ -179,7 +179,7 @@ function RekapSatuKelas({ kelas, anak, ringkas, periode }: {
           </thead>
           <tbody>
             {anak.map((a) => (
-              <tr key={a.generus_id} className={cn("border-t border-border", a.perlu_perhatian && "bg-[#fff6f6]")}>
+              <tr key={a.generus_id} className={cn("border-t border-border", a.perlu_perhatian && "bg-bahaya-soft/50")}>
                 <td className="px-4 py-3">
                   <Link href={hrefDengan(`/generus/${a.generus_id}`, periode.param)} className="font-medium text-primary underline-offset-4 hover:underline">
                     {a.nama}

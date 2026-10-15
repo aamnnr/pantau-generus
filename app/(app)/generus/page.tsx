@@ -28,7 +28,7 @@ async function TombolTambah() {
   return (
     <>
       {(peran.includes("admin") || peran.includes("guru")) && (
-        <Button asChild size="lg" variant="outline" className="border-brand-foreground/60 bg-transparent text-brand-foreground lg:border-input lg:bg-card lg:text-foreground">
+        <Button asChild size="lg" variant="outline">
           <Link href="/penilaian">
             <ClipboardCheck aria-hidden />
             Penilaian
@@ -36,7 +36,7 @@ async function TombolTambah() {
         </Button>
       )}
       {peran.includes("admin") && (
-        <Button asChild size="lg" className="bg-kunyit text-kunyit-foreground hover:bg-kunyit/85 lg:bg-primary lg:text-primary-foreground lg:hover:bg-primary/85">
+        <Button asChild size="lg">
           <Link href="/generus/baru">
             <Plus aria-hidden />
             Tambah Generus

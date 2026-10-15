@@ -17,7 +17,7 @@ export function DaftarAkun({ data, bisaUbah }: { data: AkunRow[]; bisaUbah: bool
 
   return (
     <div className="flex flex-col gap-4 px-4 lg:px-0">
-      <div role="group" aria-label="Saring peran" className="flex gap-1 overflow-x-auto rounded-2xl bg-secondary p-1 lg:w-fit">
+      <div role="group" aria-label="Saring peran" className="flex gap-1 overflow-x-auto rounded-xl bg-secondary p-1 lg:w-fit">
         {FILTER.map((f) => (
           <button
             key={f}
@@ -25,8 +25,8 @@ export function DaftarAkun({ data, bisaUbah }: { data: AkunRow[]; bisaUbah: bool
             aria-pressed={filter === f}
             onClick={() => setFilter(f)}
             className={cn(
-              "h-12 shrink-0 rounded-xl px-4 text-base font-medium text-[#444444]",
-              filter === f && "bg-card font-semibold text-primary shadow-sm",
+              "h-10 shrink-0 rounded-xl px-4 text-base font-medium text-muted-foreground",
+              filter === f && "bg-card font-semibold text-primary shadow-[0_1px_3px_rgba(20,22,22,0.12)]",
             )}
           >
             {f === "semua" ? "Semua" : LABEL_PERAN[f]}
@@ -38,11 +38,11 @@ export function DaftarAkun({ data, bisaUbah }: { data: AkunRow[]; bisaUbah: bool
       {tampil.length === 0 ? (
         <Kosong judul="Belum ada akun dengan peran ini" />
       ) : (
-        <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
           {tampil.map((a) => {
             const isi = (
               <>
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#fff1de] text-lg font-bold text-[#8a4b00]">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-warn-soft text-sm font-bold text-warn">
                   {inisial(a.nama)}
                 </span>
                 <span className="min-w-0 flex-1">
@@ -56,11 +56,11 @@ export function DaftarAkun({ data, bisaUbah }: { data: AkunRow[]; bisaUbah: bool
                 {bisaUbah && <ChevronRight aria-hidden className="size-6 shrink-0 text-muted-foreground" />}
               </>
             );
-            const kelas = "flex min-h-19 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)]";
+            const kelas = "flex min-h-16 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 border";
             return (
               <li key={a.id}>
                 {bisaUbah ? (
-                  <Link href={`/kelola/akun/${a.id}`} className={cn(kelas, "hover:bg-mint/60")}>
+                  <Link href={`/kelola/akun/${a.id}`} className={cn(kelas, "transition-colors hover:border-primary/40 hover:bg-mint/40")}>
                     {isi}
                   </Link>
                 ) : (

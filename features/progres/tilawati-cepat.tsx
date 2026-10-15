@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { teksPosisiTilawati as teksPosisi } from "@/lib/format";
+import { getar } from "@/lib/getar";
 import { cn } from "@/lib/utils";
 import { aturPosisiTilawati, tambahTilawati, type HasilTilawati } from "./actions";
 import type { BarisTilawati } from "./queries";
@@ -57,6 +58,7 @@ export function TilawatiCepat({ baris, jilid, kegiatanId = null, bisa, polos }: 
   }
 
   function tambah(b: BarisTilawati, n: number) {
+    getar();
     const sebelum = posisi[b.generus_id];
     jalankan(
       b,
@@ -79,20 +81,21 @@ export function TilawatiCepat({ baris, jilid, kegiatanId = null, bisa, polos }: 
           const p = posisi[b.generus_id];
           const tunggu = sibuk === b.generus_id;
           return (
-            <li key={b.generus_id} className={cn("flex flex-col gap-3", !polos && "rounded-2xl bg-card p-3.5 shadow-[0_1px_2px_rgba(18,20,19,0.06)]")}>
+            <li key={b.generus_id} className={cn("flex flex-col gap-3", !polos && "rounded-2xl bg-card p-3.5 border")}>
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                <span className="text-lg font-medium">{b.nama}</span>
+                <span className="text-base font-medium">{b.nama}</span>
                 {bisa && p ? (
                   <button
                     type="button"
                     onClick={() => setKoreksi(b)}
-                    className="min-h-12 rounded-xl px-2 text-lg font-semibold text-primary underline decoration-dotted underline-offset-4"
+                    key={teksPosisi(p)}
+                    className="h-8 animate-pop rounded-lg bg-mint px-2.5 text-sm font-semibold text-mint-foreground underline decoration-dotted underline-offset-4 transition-colors hover:bg-primary/15"
                     aria-label={`${teksPosisi(p)}. Ketuk untuk mengoreksi posisi ${b.nama}`}
                   >
                     {teksPosisi(p)}
                   </button>
                 ) : (
-                  <span className={cn("text-lg font-semibold", p ? "text-primary" : "text-muted-foreground")} aria-live="polite">
+                  <span className={cn("text-sm font-semibold", p ? "text-primary" : "text-muted-foreground")} aria-live="polite">
                     {teksPosisi(p)}
                   </span>
                 )}
@@ -101,11 +104,11 @@ export function TilawatiCepat({ baris, jilid, kegiatanId = null, bisa, polos }: 
                 (p ? (
                   <div className="grid grid-cols-4 gap-2" aria-busy={tunggu}>
                     {[1, 2, 3].map((n) => (
-                      <Button key={n} type="button" variant="outline" size="lg" disabled={tunggu} onClick={() => tambah(b, n)} className="h-14 text-xl font-bold">
+                      <Button key={n} type="button" variant="outline" size="lg" disabled={tunggu} onClick={() => tambah(b, n)} className="h-11 text-lg font-bold tabular-nums">
                         +{n}
                       </Button>
                     ))}
-                    <Button type="button" variant="outline" size="lg" disabled={tunggu} onClick={() => setLain(b)} className="h-14 text-xl font-bold" aria-label="Tambah halaman lain">
+                    <Button type="button" variant="outline" size="lg" disabled={tunggu} onClick={() => setLain(b)} className="h-11 text-lg font-bold tabular-nums" aria-label="Tambah halaman lain">
                       +…
                     </Button>
                   </div>
@@ -229,8 +232,8 @@ function IsiPosisi({ b, posisi, jilid, onSimpan }: {
                   aria-pressed={j === x.jilid}
                   onClick={() => setJ(x.jilid)}
                   className={cn(
-                    "h-13 rounded-xl border-[1.5px] text-lg font-semibold",
-                    j === x.jilid ? "border-2 border-primary bg-mint text-mint-foreground" : "border-input bg-card",
+                    "h-11 rounded-lg border text-lg font-semibold",
+                    j === x.jilid ? "border-primary bg-mint text-mint-foreground" : "border-input bg-card",
                   )}
                 >
                   {x.jilid}
@@ -240,7 +243,7 @@ function IsiPosisi({ b, posisi, jilid, onSimpan }: {
           </fieldset>
           <label className="flex flex-col gap-2">
             <span className="font-semibold">Halaman</span>
-            <Input inputMode="numeric" value={h} onChange={(e) => setH(e.target.value.replace(/\D/g, ""))} className="h-14 text-2xl font-semibold tabular-nums" autoFocus />
+            <Input inputMode="numeric" value={h} onChange={(e) => setH(e.target.value.replace(/\D/g, ""))} className="h-11 text-2xl font-semibold tabular-nums" autoFocus />
             {total != null && <span className="text-muted-foreground">Jilid {j} ada {total} halaman. Isi 0 bila baru mulai.</span>}
           </label>
           <Button type="submit" size="lg" disabled={j == null || salah}>
@@ -280,7 +283,7 @@ function DialogAngka({ b, onClose, onSimpan }: { b: BarisTilawati | null; onClos
             onSimpan(nilai);
           }}
         >
-          <Input inputMode="numeric" value={n} onChange={(e) => setN(e.target.value.replace(/\D/g, ""))} aria-label="Jumlah halaman" className="h-14 text-2xl font-semibold tabular-nums" autoFocus />
+          <Input inputMode="numeric" value={n} onChange={(e) => setN(e.target.value.replace(/\D/g, ""))} aria-label="Jumlah halaman" className="h-11 text-2xl font-semibold tabular-nums" autoFocus />
           <Button type="submit" size="lg" disabled={!valid}>
             Tambahkan
           </Button>

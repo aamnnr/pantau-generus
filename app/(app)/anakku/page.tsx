@@ -25,14 +25,14 @@ async function Daftar() {
   }
   return (
     <Konten>
-      <ul className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+      <ul className="berurutan grid grid-cols-1 gap-2.5 md:grid-cols-2">
         {anak.map((g) => (
           <li key={g.id}>
             <Link
               href={`/generus/${g.id}`}
-              className="flex min-h-19 items-center gap-3.5 rounded-2xl bg-card px-3.5 py-3 shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint/60"
+              className="flex min-h-16 items-center gap-3.5 rounded-2xl border bg-card px-3.5 py-3 transition-[border-color,background-color,transform] duration-150 hover:border-primary/30 hover:bg-mint/40 active:scale-[0.99]"
             >
-              <span aria-hidden className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-mint text-lg font-bold text-mint-foreground">
+              <span aria-hidden className="flex size-10 shrink-0 items-center justify-center rounded-full bg-mint text-sm font-bold text-mint-foreground">
                 {inisial(g.nama)}
               </span>
               <span className="min-w-0 flex-1">

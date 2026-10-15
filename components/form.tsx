@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -17,15 +17,16 @@ export function Field({ label, htmlFor, error, hint, children, className }: {
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div className={cn("flex flex-col gap-1.5", className)}>
       {/* block: label berisi teks + keterangan "(opsional)" harus mengalir sebagai satu kalimat */}
       <Label htmlFor={htmlFor} className="block">
         {label}
       </Label>
       {children}
-      {hint && !error?.length && <p className="text-muted-foreground">{hint}</p>}
+      {hint && !error?.length && <p className="text-sm text-muted-foreground">{hint}</p>}
       {error?.map((e) => (
-        <p key={e} className="font-medium text-destructive">
+        <p key={e} className="flex animate-muncul items-center gap-1.5 text-sm font-medium text-destructive">
+          <AlertCircle aria-hidden className="size-4 shrink-0" />
           {e}
         </p>
       ))}
@@ -48,9 +49,9 @@ export function Segmen({ name, legend, options, defaultValue, error }: {
 }) {
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-2 text-base font-semibold">{legend}</legend>
+      <legend className="mb-1.5 text-base font-semibold">{legend}</legend>
       <div
-        className="grid gap-1 rounded-2xl bg-secondary p-1"
+        className="grid gap-1 rounded-xl bg-secondary p-1"
         style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
       >
         {options.map((o) => (
@@ -62,7 +63,7 @@ export function Segmen({ name, legend, options, defaultValue, error }: {
               defaultChecked={defaultValue === o.value}
               className="peer sr-only"
             />
-            <span className="flex min-h-12 items-center justify-center rounded-xl px-2 text-center text-base leading-tight font-medium text-[#444444] peer-checked:bg-card peer-checked:font-semibold peer-checked:text-primary peer-checked:shadow-sm peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50">
+            <span className="flex min-h-10 items-center justify-center rounded-lg px-2 text-center text-base leading-tight font-medium text-muted-foreground transition-[background-color,color,box-shadow] duration-200 hover:text-foreground peer-checked:bg-card peer-checked:font-semibold peer-checked:text-primary peer-checked:shadow-[0_1px_3px_rgba(20,22,22,0.12)] peer-focus-visible:ring-3 peer-focus-visible:ring-ring/40">
               {o.label}
             </span>
           </label>
@@ -107,11 +108,11 @@ export function PilihanKartu({ name, type = "radio", options, defaultValue = [],
             defaultChecked={defaultValue.includes(o.value)}
             className="peer sr-only"
           />
-          <span className="flex min-h-13 items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-input bg-card px-2 py-2 text-center text-base leading-tight font-semibold peer-checked:border-2 peer-checked:border-primary peer-checked:bg-mint peer-checked:text-mint-foreground peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 [&>svg]:hidden peer-checked:[&>svg]:block">
-            <Check aria-hidden className="size-5 shrink-0" />
+          <span className="flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-input bg-card px-2 py-2 text-center text-base leading-tight font-medium transition-[background-color,border-color,color] duration-150 hover:border-primary/40 peer-checked:border-primary peer-checked:bg-mint peer-checked:font-semibold peer-checked:text-mint-foreground peer-focus-visible:ring-3 peer-focus-visible:ring-ring/40 [&>svg]:hidden peer-checked:[&>svg]:block peer-checked:[&>svg]:animate-pop">
+            <Check aria-hidden className="size-4 shrink-0" />
             <span className="flex flex-col">
               {o.label}
-              {o.sub && <span className="text-base font-normal text-muted-foreground">{o.sub}</span>}
+              {o.sub && <span className="text-sm font-normal text-muted-foreground">{o.sub}</span>}
             </span>
           </span>
         </label>
@@ -135,8 +136,15 @@ export function SubmitButton({ children, pendingLabel = "Menyimpan…", classNam
   // dan memicu galat cookies Next.js, juga membuang state form.
   const siap = useSyncExternalStore(berlangganan, () => true, () => false);
   return (
-    <Button type="submit" size="lg" disabled={pending || !siap || disabled} className={cn("w-full lg:w-auto lg:min-w-48", className)} {...props}>
-      {pending ? pendingLabel : children}
+    <Button type="submit" size="lg" disabled={pending || !siap || disabled} aria-busy={pending} className={cn("w-full lg:w-auto lg:min-w-40", className)} {...props}>
+      {pending ? (
+        <>
+          <Loader2 aria-hidden className="animate-spin" />
+          {pendingLabel}
+        </>
+      ) : (
+        children
+      )}
     </Button>
   );
 }
@@ -144,7 +152,8 @@ export function SubmitButton({ children, pendingLabel = "Menyimpan…", classNam
 export function FormError({ error }: { error?: string }) {
   if (!error) return null;
   return (
-    <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-3 font-medium text-destructive">
+    <p role="alert" className="flex animate-muncul items-start gap-2 rounded-xl border border-bahaya-line bg-bahaya-soft px-3.5 py-3 text-base font-medium text-bahaya">
+      <AlertCircle aria-hidden className="mt-0.5 size-[18px] shrink-0" />
       {error}
     </p>
   );
@@ -153,7 +162,7 @@ export function FormError({ error }: { error?: string }) {
 /** Tombol simpan menempel di bawah layar di HP (di atas bottom nav), biasa di desktop (DESIGN §5.1). */
 export function AksiBawah({ children }: { children: React.ReactNode }) {
   return (
-    <div className="sticky bottom-19 z-30 -mx-4 flex flex-col gap-2 border-t bg-card px-4 py-3 lg:static lg:mx-0 lg:flex-row lg:justify-end lg:border-0 lg:bg-transparent lg:p-0">
+    <div className="sticky bottom-16 z-30 -mx-4 flex flex-col gap-2 border-t bg-card/95 px-4 py-3 backdrop-blur-md lg:static lg:mx-0 lg:flex-row lg:justify-end lg:border-0 lg:bg-transparent lg:p-0">
       {children}
     </div>
   );

@@ -61,12 +61,12 @@ export function PetunjukPasang() {
     <div
       role="region"
       aria-label="Pasang aplikasi"
-      className="fixed inset-x-3 bottom-22 z-40 flex flex-col gap-3 rounded-2xl border bg-card p-4 shadow-lg print:hidden lg:inset-x-auto lg:right-6 lg:bottom-6 lg:w-96"
+      className="fixed inset-x-3 bottom-20 z-40 flex animate-muncul flex-col gap-3 rounded-2xl border bg-card p-4 shadow-[0_8px_24px_rgba(20,22,22,0.10)] print:hidden lg:inset-x-auto lg:right-6 lg:bottom-6 lg:w-96"
     >
       <div className="flex items-start gap-3">
         <div className="flex-1">
-          <p className="text-lg font-semibold">Pasang Pantau Generus</p>
-          <p className="text-muted-foreground">
+          <p className="text-base font-semibold">Pasang Pantau Generus</p>
+          <p className="text-sm text-muted-foreground">
             {acara
               ? "Tambahkan ke layar utama agar bisa dibuka seperti aplikasi biasa."
               : "Ketuk tombol Bagikan di Safari, lalu pilih “Tambahkan ke Layar Utama”."}
