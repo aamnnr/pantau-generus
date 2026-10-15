@@ -1,4 +1,4 @@
-import { ClipboardCheck, Pencil, Plus } from "lucide-react";
+import { ClipboardCheck, Pencil, Plus, Printer } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,12 +10,16 @@ import { TombolHapus } from "@/components/tombol-hapus";
 import { Button } from "@/components/ui/button";
 import { hapusSusulan, simpanPenilaian } from "@/features/progres/actions";
 import { DaftarPenilaian } from "@/features/progres/daftar-penilaian";
-import { ambilProgresAnak, type ProgresAnak } from "@/features/progres/queries";
+import { ambilProgresAnak, daftarAnakku, type ProgresAnak } from "@/features/progres/queries";
 import { TilawatiCepat } from "@/features/progres/tilawati-cepat";
+import { PilihPeriode } from "@/components/pilih-periode";
+import { daftarTargetPeriode } from "@/features/rekap/queries";
 import { daftarJilid } from "@/features/target/queries";
+import { bacaPeriode, hrefDengan, type CariPeriode } from "@/lib/periode";
 import { requirePeran } from "@/lib/auth/session";
 import {
   formatTanggalPendek,
+  hariIni,
   inisial,
   LABEL_PRESENSI,
   labelKelas,
@@ -27,19 +31,26 @@ export const metadata: Metadata = { title: "Progres Anak · Pantau Generus" };
 
 const satuanDari = (kitabJenis: string | null) => (kitabJenis === "quran" ? "ayat" : "hal.");
 
-async function Isi({ params }: { params: Promise<{ id: string }> }) {
+async function Isi({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<CariPeriode> }) {
   const session = await requirePeran("admin", "guru", "pengurus", "wali");
-  const { id } = await params;
-  const d = await ambilProgresAnak(id);
+  const [{ id }, cari, target] = await Promise.all([params, searchParams, daftarTargetPeriode()]);
+  const periode = bacaPeriode(cari, hariIni(), target, "semua");
+  const d = await ambilProgresAnak(id, periode);
   if (!d) notFound();
   const caberawit = d.anak.kelas?.jenjang === "caberawit";
   const jilid = caberawit ? await daftarJilid() : [];
-  const kembali = session.mode === "wali" ? { href: "/anakku", label: "Anakku" } : { href: "/generus", label: "Generus" };
+  // Wali dengan satu anak masuk langsung ke sini dari Anakku, jadi tanpa tombol kembali.
+  const kembali =
+    session.mode !== "wali"
+      ? { href: "/generus", label: "Generus" }
+      : (await daftarAnakku(session.userId)).length > 1
+        ? { href: "/anakku", label: "Anakku" }
+        : null;
 
   return (
     <>
       <header className="flex flex-col gap-2 border-b bg-card px-2 pt-3 pb-4 lg:border-0 lg:bg-transparent lg:p-0">
-        <BackLink {...kembali} className="text-primary" />
+        {kembali && <BackLink {...kembali} className="text-primary" />}
         <div className="flex flex-wrap items-center justify-between gap-3 px-2 lg:px-0">
           <div className="flex min-w-0 items-center gap-3.5">
             <span aria-hidden className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-mint text-xl font-bold text-mint-foreground">
@@ -50,22 +61,34 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
               <p className="text-lg text-muted-foreground">{d.anak.kelas ? labelKelas(d.anak.kelas) : "Tanpa kelas"}</p>
             </div>
           </div>
-          {session.peran.includes("admin") && (
+          <div className="flex flex-wrap gap-2">
             <Button asChild variant="outline">
-              <Link href={`/generus/${id}/ubah`}>
-                <Pencil aria-hidden />
-                Ubah data
+              <Link href={hrefDengan(`/raport/${id}`, periode.param)}>
+                <Printer aria-hidden />
+                Raport
               </Link>
             </Button>
-          )}
+            {session.peran.includes("admin") && (
+              <Button asChild variant="outline">
+                <Link href={`/generus/${id}/ubah`}>
+                  <Pencil aria-hidden />
+                  Ubah data
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
+      <div className="px-4 lg:max-w-2xl lg:px-0">
+        <PilihPeriode base={`/generus/${id}`} periode={periode} />
+      </div>
+
       <div className="grid grid-cols-1 gap-4 px-4 lg:grid-cols-2 lg:items-start lg:px-0">
         <div className="flex flex-col gap-4">
-          <KartuKehadiran k={d.kehadiran} />
+          <KartuKehadiran k={d.kehadiran} label={periode.label} keseluruhan={periode.jenis === "semua"} />
           {d.target && <KartuTarget d={d} />}
-          <KartuMakna d={d} />
+          <KartuMakna d={d} label={periode.label} />
         </div>
         <div className="flex flex-col gap-4">
           <Kartu className="flex flex-col gap-3">
@@ -93,13 +116,15 @@ async function Isi({ params }: { params: Promise<{ id: string }> }) {
   );
 }
 
-function KartuKehadiran({ k }: { k: ProgresAnak["kehadiran"] }) {
-  const b = k.bulanIni;
+function KartuKehadiran({ k, label, keseluruhan }: { k: ProgresAnak["kehadiran"]; label: string; keseluruhan: boolean }) {
+  const b = k.periode;
   const perhatian = b?.persen != null && b.persen < k.ambang;
   return (
     <Kartu className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-bold">Kehadiran bulan ini</h2>
+        <h2 className="text-xl font-bold">
+          Kehadiran <span className="font-medium text-muted-foreground">· {label}</span>
+        </h2>
         {perhatian && (
           <StatusChip nada="merah" simbol="!">
             Perlu perhatian
@@ -123,9 +148,9 @@ function KartuKehadiran({ k }: { k: ProgresAnak["kehadiran"] }) {
           </ul>
         </>
       ) : (
-        <p className="text-muted-foreground">Belum ada kehadiran yang tercatat bulan ini.</p>
+        <p className="text-muted-foreground">Belum ada kehadiran yang tercatat pada periode ini.</p>
       )}
-      {k.semua && k.semua.total > 0 && (
+      {!keseluruhan && k.semua && k.semua.total > 0 && (
         <p className="border-t pt-3 text-muted-foreground">
           Sejak awal: <strong className="text-foreground">{k.semua.persen}%</strong> dari {k.semua.total} pengajian
         </p>
@@ -181,12 +206,14 @@ function KartuTarget({ d }: { d: ProgresAnak }) {
   );
 }
 
-function KartuMakna({ d }: { d: ProgresAnak }) {
+function KartuMakna({ d, label }: { d: ProgresAnak; label: string }) {
   const id = d.anak.id;
   return (
     <Kartu className="flex flex-col gap-5">
-      <h2 className="text-xl font-bold">Bacaan & makna</h2>
-      {d.kitab.length === 0 && <p className="text-muted-foreground">Belum ada materi bacaan atau makna yang tercatat untuk kelas ini.</p>}
+      <h2 className="text-xl font-bold">
+        Bacaan & makna <span className="font-medium text-muted-foreground">· {label}</span>
+      </h2>
+      {d.kitab.length === 0 && <p className="text-muted-foreground">Belum ada materi bacaan atau makna yang tercatat pada periode ini.</p>}
       {d.kitab.map((k) => {
         const satuan = satuanDari(k.kitab_jenis);
         const surat = k.kitab_jenis === "quran" ? (d.perSurat[k.jenis!] ?? []) : [];
@@ -285,11 +312,11 @@ function KartuSusulan({ d, id }: { d: ProgresAnak; id: string }) {
   );
 }
 
-export default function ProgresAnakPage({ params }: PageProps<"/generus/[id]">) {
+export default function ProgresAnakPage({ params, searchParams }: PageProps<"/generus/[id]">) {
   return (
     <Halaman>
       <Suspense fallback={<SkeletonDaftar baris={4} />}>
-        <Isi params={params} />
+        <Isi params={params} searchParams={searchParams as Promise<CariPeriode>} />
       </Suspense>
     </Halaman>
   );

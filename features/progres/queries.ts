@@ -29,10 +29,31 @@ async function targetBerjalan(kelasId: string, hari: string) {
 }
 
 /**
+ * Target yang ditampilkan untuk sebuah periode: target yang dipilih (bila berlaku untuk kelas anak);
+ * selain itu target kelas yang beririsan dengan periode — utamakan yang sedang berjalan, lalu yang terbaru.
+ */
+async function targetUntuk(kelasId: string, hari: string, periode: { dari: string; sampai: string; targetId?: string }) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("target_bulanan_kelas")
+    .select("target:target_bulanan_id (id, judul, mulai, selesai)")
+    .eq("kelas_id", kelasId);
+  if (error) throw error;
+  const semua = data.map((x) => x.target).filter((t): t is NonNullable<typeof t> => !!t);
+  if (periode.targetId) return semua.find((t) => t.id === periode.targetId) ?? null;
+  const irisan = semua.filter((t) => t.mulai <= periode.sampai && t.selesai >= periode.dari);
+  return (
+    irisan.find((t) => t.mulai <= hari && t.selesai >= hari) ??
+    irisan.filter((t) => t.mulai <= hari).sort((x, y) => y.mulai.localeCompare(x.mulai))[0] ??
+    null
+  );
+}
+
+/**
  * Semua data layar Progres Anak (DESIGN §7.5). Angka progres dihitung di SQL (ARCHITECTURE §5);
  * di sini hanya digabung untuk ditampilkan.
  */
-export async function ambilProgresAnak(id: string) {
+export async function ambilProgresAnak(id: string, periode: { dari: string; sampai: string; targetId?: string }) {
   const supabase = await createClient();
   const { data: anak, error } = await supabase
     .from("generus")
@@ -43,20 +64,20 @@ export async function ambilProgresAnak(id: string) {
   if (!anak) return null;
 
   const hari = hariIni();
-  const awalBulan = `${hari.slice(0, 8)}01`;
-  const [progres, bulanIni, semua, pengaturan, target, penilaian, diterima, posisi, susulan, boleh] = await Promise.all([
-    supabase.rpc("fn_progres_anak", { p_generus_id: id }),
-    supabase.rpc("fn_rekap_presensi", { p_generus_id: id, p_dari: awalBulan, p_sampai: hari }).single(),
+  const { dari, sampai } = periode;
+  const [progres, dalamPeriode, semua, pengaturan, target, penilaian, diterima, posisi, susulan, boleh] = await Promise.all([
+    supabase.rpc("fn_progres_anak", { p_generus_id: id, p_dari: dari, p_sampai: sampai }),
+    supabase.rpc("fn_rekap_presensi", { p_generus_id: id, p_dari: dari, p_sampai: sampai }).single(),
     supabase.rpc("fn_rekap_presensi", { p_generus_id: id, p_dari: "2000-01-01", p_sampai: hari }).single(),
     supabase.from("pengaturan").select("ambang_kehadiran").maybeSingle(),
-    anak.kelas ? targetBerjalan(anak.kelas.id, hari) : Promise.resolve(null),
+    anak.kelas ? targetUntuk(anak.kelas.id, hari, periode) : Promise.resolve(null),
     supabase.from("v_penilaian_terakhir").select("materi_item_id, status").eq("generus_id", id),
     supabase.from("v_materi_item_diterima").select("materi_item_id").eq("generus_id", id),
     supabase.from("v_posisi_tilawati").select("jilid, halaman, total_halaman").eq("generus_id", id).maybeSingle(),
     supabase.from("v_susulan").select("id, kitab_nama, jenis, teks, tanggal, guru_nama").eq("generus_id", id).order("tanggal", { ascending: false }),
     supabase.rpc("boleh_nilai_generus", { p_generus_id: id }),
   ]);
-  for (const r of [progres, bulanIni, semua, penilaian, diterima, posisi, susulan]) if (r.error) throw r.error;
+  for (const r of [progres, dalamPeriode, semua, penilaian, diterima, posisi, susulan]) if (r.error) throw r.error;
 
   const kitab = (progres.data ?? []).map((p) => ({ ...p, terlewat: (p.terlewat ?? []) as Rentang[] }));
   const jenisQuran = [...new Set(kitab.filter((k) => k.kitab_jenis === "quran").map((k) => k.jenis))];
@@ -64,7 +85,7 @@ export async function ambilProgresAnak(id: string) {
   const [perSurat, capaianTarget, targetMateri, targetTilawati] = await Promise.all([
     Promise.all(
       jenisQuran.map(async (jenis) => {
-        const { data, error: e } = await supabase.rpc("fn_progres_quran_per_surat", { p_generus_id: id, p_jenis: jenis });
+        const { data, error: e } = await supabase.rpc("fn_progres_quran_per_surat", { p_generus_id: id, p_jenis: jenis, p_dari: dari, p_sampai: sampai });
         if (e) throw e;
         return [jenis, data] as const;
       }),
@@ -102,7 +123,7 @@ export async function ambilProgresAnak(id: string) {
     anak,
     kitab,
     perSurat: Object.fromEntries(perSurat) as Partial<Record<"makna" | "bacaan", NonNullable<(typeof perSurat)[number][1]>>>,
-    kehadiran: { bulanIni: bulanIni.data, semua: semua.data, ambang: pengaturan.data?.ambang_kehadiran ?? 60 },
+    kehadiran: { periode: dalamPeriode.data, semua: semua.data, ambang: pengaturan.data?.ambang_kehadiran ?? 60 },
     target: target && {
       ...target,
       kitab: capaianTarget?.data ?? [],

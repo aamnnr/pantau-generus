@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /** Wadah halaman. `form` = maks 768px (DESIGN §4), `lebar` = maks 1200px untuk tabel/rekap. */
 export function Halaman({ children, lebar = "lebar" }: { children: React.ReactNode; lebar?: "form" | "lebar" }) {
   return (
-    <main className={cn("mx-auto flex w-full flex-col gap-5 lg:px-10 lg:py-8", lebar === "form" ? "max-w-3xl" : "max-w-6xl")}>
+    <main className={cn("mx-auto flex w-full flex-col gap-5 lg:px-10 lg:py-8 print:max-w-none print:p-0", lebar === "form" ? "max-w-3xl" : "max-w-6xl")}>
       {children}
     </main>
   );

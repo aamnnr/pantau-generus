@@ -1,6 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Halaman, Konten, Kosong, PageHeader, SkeletonDaftar } from "@/components/page";
 import { CHIP_STATUS_GENERUS, StatusChip } from "@/components/status-chip";
@@ -13,6 +14,8 @@ export const metadata: Metadata = { title: "Anakku · Pantau Generus" };
 async function Daftar() {
   const session = await requirePeran("wali");
   const anak = await daftarAnakku(session.userId);
+  // Satu anak → langsung ke halaman anak (DESIGN §5).
+  if (anak.length === 1) redirect(`/generus/${anak[0].id}`);
   if (anak.length === 0) {
     return (
       <Konten>

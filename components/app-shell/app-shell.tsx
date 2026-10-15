@@ -9,10 +9,11 @@ async function Navigasi() {
   const kelola = NAV_KELOLA[session.mode];
   const desktop = [...utama, ...(NAV_TAMBAHAN_DESKTOP[session.mode] ?? [])];
   return (
-    <>
+    // Navigasi tidak ikut tercetak (raport, lembar presensi — DESIGN §7.7).
+    <div className="contents print:hidden">
       <Sidebar utama={desktop} kelola={kelola} nama={session.nama} mode={session.mode} />
       <BottomNav utama={utama} />
-    </>
+    </div>
   );
 }
 
@@ -23,7 +24,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Suspense fallback={<div className="hidden w-72 shrink-0 bg-brand lg:block" />}>
         <Navigasi />
       </Suspense>
-      <div className="min-w-0 flex-1 pb-24 lg:pb-0">{children}</div>
+      <div className="min-w-0 flex-1 pb-24 lg:pb-0 print:pb-0">{children}</div>
     </div>
   );
 }

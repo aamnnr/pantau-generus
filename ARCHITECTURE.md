@@ -200,6 +200,8 @@ Dibungkus menjadi:
 
 **Terimplementasi (Tahap 5):** `v_satuan_disampaikan`, `v_satuan_diikuti`, `fn_progres_anak(generus_id)` (per kitab & jenis: total, diikuti, kelas, `terlewat` jsonb rentang via `fn_ringkas_rentang`), `fn_progres_quran_per_surat(generus_id, jenis)`, `fn_capaian_target_kitab(generus_id, target_id)` (satuan dalam rentang target), `fn_rekap_presensi` (persen = hadir+terlambat ÷ presensi terisi, kegiatan libur tidak dihitung), `v_penilaian_terakhir`, `v_materi_item_diterima`, `v_posisi_tilawati`, `v_susulan`. Penulisan: `simpan_susulan`, `tambah_tilawati` (berhenti di akhir jilid, mengembalikan `sisa` → UI menawarkan naik jilid), `atur_posisi_tilawati` (koreksi/naik jilid, divalidasi jumlah halaman jilid); semuanya memanggil `cek_boleh_nilai` (admin atau guru kelas anak) lalu RLS. Penilaian ditulis langsung ke tabel `penilaian` (hanya baris yang berubah). Kelas pembanding progres = kelas anak **saat ini**.
 
+**Per periode & rekap (Tahap 6):** semua periode (bulan, periode target, semester tetap Jul–Des/Jan–Jun, keseluruhan) diterjemahkan ke rentang tanggal di `lib/periode.ts`. `fn_satuan_diikuti(generus, dari, sampai)` & `fn_satuan_disampaikan(kelas, dari, sampai)` menjadi dasar `fn_progres_anak(generus, dari, sampai)` dan `fn_progres_quran_per_surat(generus, jenis, dari, sampai)` (argumen tanggal ber-default = keseluruhan). Materi terlewat = disampaikan di periode yang **belum pernah** diikuti (kapan pun). `fn_rekap_kelas(kelas, dari, sampai)` → per anak aktif: kehadiran, `perlu_perhatian` (persen < `pengaturan.ambang_kehadiran`), satuan kelas vs diikuti, butir target periode yang beririsan & yang tuntas, posisi tilawati; `fn_rekap_kelas_ringkas` → rata-rata kelas. Raport memakai data Progres Anak pada periode yang sama; `catatan_raport` per bulan (raport bulanan/periode target menulis ke bulan awal periodenya).
+
 View dibuat `security_invoker = true` agar RLS tabel sumber tetap berlaku.
 
 Volume diperkirakan kecil (±30 rb baris presensi/tahun), sehingga perhitungan langsung tanpa tabel ringkasan sudah cukup. Materialisasi baru dipertimbangkan bila terbukti lambat.
@@ -246,7 +248,9 @@ Pola kebijakan:
 │   │   ├── penilaian/                # satu butir untuk banyak anak: ?kelas=&item= atau ?kegiatan=&item= (anak yang hadir)
 │   │   ├── anakku/                   # daftar anak untuk wali → progres anak
 │   │   ├── target/                   # daftar (berjalan/akan datang/lewat), baru/ (+salin isi), [id]/ (isi per aspek), [id]/ubah/
-│   │   ├── raport/                   # raport anak & rekap
+│   │   ├── rekap/                    # rekap per kelas & periode (admin, pengurus) + daftar perlu perhatian
+│   │   ├── raport/                   # pilih kelas/anak; [id]/ raport anak (cetak A4 + catatan); kelas/[id]/ semua raport sekelas
+│   │   ├── lembar-presensi/          # lembar presensi cetak per kelas per bulan (A4 mendatar)
 │   │   ├── lainnya/                 # profil, ganti mode, keluar, menu kelola
 │   │   └── kelola/                   # master data: jadwal rutin, kelas, guru, akun (& wali), kitab, materi, tilawati — admin ubah, pengurus lihat
 │   ├── manifest.ts

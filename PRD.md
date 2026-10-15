@@ -58,7 +58,7 @@ Pengguna utama berusia **30–50 tahun**, sebagian besar memakai HP Android kela
 | Input target bulanan | ✅ semua kelas | ✅ kelasnya | lihat | – |
 | Lihat progres | semua | kelasnya | semua | anaknya |
 | Raport bulanan per anak | lihat | lihat kelasnya | ✅ buat/cetak | lihat anaknya |
-| Rekap kelas/jenjang | lihat | – | ✅ | – |
+| Rekap kelas/jenjang | ✅ lihat | – | ✅ | – |
 
 ## 5. Struktur Jenjang & Kelas
 
@@ -170,10 +170,13 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 
 **Raport semester**: agregasi 6 bulan.
 
+**Pilihan periode** (Rekap, Progres Anak, Raport): **Bulan** · **Periode target** · **Semester** · **Keseluruhan**. Semester memakai rentang tetap: **Semester 1 = Juli–Desember**, **Semester 2 = Januari–Juni** (tahun ajaran Juli–Juni; menunggu konfirmasi pengurus — §9).
+
 **Rekap kelas/jenjang:**
 - Rata-rata kehadiran & capaian target
 - Daftar **anak yang perlu perhatian**: kehadiran < ambang pada periode yang dilihat (bulan/semester). Ambang dapat diatur pengurus, default **60%**.
 - Tidak ada peringkat.
+- Dibuka admin dan pengurus (menu **Rekap**); ketuk nama anak → Progres Anak dengan periode yang sama.
 
 ### F8. PWA
 - Dapat dipasang ke layar utama (installable), ikon & splash screen.
@@ -200,8 +203,8 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 | 2 | Master data (kelas, generus, guru, wali, kitab, materi item) | ✅ |
 | 3 | Jadwal rutin, kegiatan, presensi cepat | ✅ |
 | 4 | Target bulanan | ✅ |
-| 5 | Progres, susulan, penilaian hafalan/praktik/tilawati | ⏳ |
-| 6 | Raport & rekap, cetak PDF (termasuk lembar presensi) | – |
+| 5 | Progres, susulan, penilaian hafalan/praktik/tilawati | ✅ |
+| 6 | Raport & rekap, cetak PDF (termasuk lembar presensi) | ⏳ |
 | 7 | PWA, deploy, backup | – |
 | Nanti | Mode offline, multi-kelompok, notifikasi, impor target dari foto/PDF dokumen PPG (ambil poin otomatis) | – |
 
@@ -210,6 +213,7 @@ Aturan **tilawati**: dicatat **per anak** (jilid + halaman terakhir) karena posi
 1. ~~Rincian kelas Caberawit~~ → TK, 1A, 1B, 2A, 2B, 3A, 3B; anak ditempatkan sesuai kelas sekolahnya. Tetap data master yang dikelola admin.
 2. ~~Tilawati~~ → diputuskan: per anak, input +N halaman (lihat F6).
 3. Apakah raport perlu format/kop khusus dari lembaga atas?
+7. Rentang semester: sementara tetap Juli–Desember / Januari–Juni; konfirmasi ke pengurus.
 4. ~~Ambang "perlu perhatian"~~ → diputuskan: hanya kehadiran < 60% (dapat diatur); kriteria "materi terlewat" tidak dipakai, cukup lewat daftar susulan.
 5. ~~Satuan makna Al-Qur'an~~ → diputuskan: per surat & ayat.
 6. ~~Nilai angka~~ → diputuskan: hafalan/praktik cukup status `belum/proses/lancar` untuk sementara.

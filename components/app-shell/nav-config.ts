@@ -36,7 +36,7 @@ export const NAV_UTAMA: Record<Peran, NavItem[]> = {
     { href: "/lainnya", label: "Lainnya", icon: "menu" },
   ],
   pengurus: [
-    { href: "/beranda", label: "Beranda", icon: "beranda" },
+    { href: "/rekap", label: "Rekap", icon: "rekap" },
     { href: "/generus", label: "Generus", icon: "anak" },
     { href: "/raport", label: "Raport", icon: "raport" },
     { href: "/lainnya", label: "Lainnya", icon: "menu" },
@@ -69,7 +69,12 @@ export const NAV_KELOLA: Record<Peran, NavItem[]> = {
   wali: [],
 };
 
-/** Pengurus melihat rekap dari sidebar desktop (di HP lewat Beranda). */
-export const NAV_TAMBAHAN_DESKTOP: Partial<Record<Peran, NavItem[]>> = {
-  pengurus: [{ href: "/rekap", label: "Rekap", icon: "rekap" }],
+/** Laporan per peran: admin melihat Rekap & Raport dari sidebar desktop, di HP lewat menu Lainnya. */
+export const NAV_LAPORAN: Partial<Record<Peran, NavItem[]>> = {
+  admin: [
+    { href: "/rekap", label: "Rekap", icon: "rekap" },
+    { href: "/raport", label: "Raport", icon: "raport" },
+  ],
 };
+
+export const NAV_TAMBAHAN_DESKTOP: Partial<Record<Peran, NavItem[]>> = NAV_LAPORAN;

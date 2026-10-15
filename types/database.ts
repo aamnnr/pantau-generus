@@ -2086,7 +2086,7 @@ export type Database = {
         Returns: string
       }
       fn_progres_anak: {
-        Args: { p_generus_id: string }
+        Args: { p_dari?: string; p_generus_id: string; p_sampai?: string }
         Returns: {
           diikuti: number
           jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
@@ -2100,8 +2100,10 @@ export type Database = {
       }
       fn_progres_quran_per_surat: {
         Args: {
+          p_dari?: string
           p_generus_id: string
           p_jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
+          p_sampai?: string
         }
         Returns: {
           diikuti: number
@@ -2109,6 +2111,33 @@ export type Database = {
           kelas: number
           nama: string
           surat: number
+        }[]
+      }
+      fn_rekap_kelas: {
+        Args: { p_dari: string; p_kelas_id: string; p_sampai: string }
+        Returns: {
+          butir_target: number
+          butir_tuntas: number
+          generus_id: string
+          hadir: number
+          nama: string
+          perlu_perhatian: boolean
+          persen: number
+          satuan_diikuti: number
+          satuan_kelas: number
+          tilawati_halaman: number
+          tilawati_jilid: number
+          total: number
+        }[]
+      }
+      fn_rekap_kelas_ringkas: {
+        Args: { p_dari: string; p_kelas_id: string; p_sampai: string }
+        Returns: {
+          jumlah_anak: number
+          perlu_perhatian: number
+          rata_kehadiran: number
+          rata_ketuntasan: number
+          rata_target: number
         }[]
       }
       fn_rekap_presensi: {
@@ -2130,6 +2159,22 @@ export type Database = {
       fn_ringkas_rentang: {
         Args: { p_kitab_id: string; p_satuan: number[] }
         Returns: Json
+      }
+      fn_satuan_diikuti: {
+        Args: { p_dari: string; p_generus_id: string; p_sampai: string }
+        Returns: {
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
+          kitab_id: string
+          satuan: number
+        }[]
+      }
+      fn_satuan_disampaikan: {
+        Args: { p_dari: string; p_kelas_id: string; p_sampai: string }
+        Returns: {
+          jenis: Database["public"]["Enums"]["jenis_materi_kitab"]
+          kitab_id: string
+          satuan: number
+        }[]
       }
       fn_surat_ayat: {
         Args: { p_global: number }

@@ -2,7 +2,7 @@ import { ChevronRight, LogOut, Repeat } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { NAV_KELOLA } from "@/components/app-shell/nav-config";
+import { NAV_KELOLA, NAV_LAPORAN } from "@/components/app-shell/nav-config";
 import { Halaman, JudulKelompok, Kartu, Konten, PageHeader, SkeletonDaftar } from "@/components/page";
 import { Button } from "@/components/ui/button";
 import { gantiMode, keluar } from "@/features/auth/actions";
@@ -14,6 +14,7 @@ export const metadata: Metadata = { title: "Lainnya · Pantau Generus" };
 async function Isi() {
   const s = await getSession();
   const menuKelola = NAV_KELOLA[s.mode];
+  const menuLaporan = NAV_LAPORAN[s.mode] ?? [];
 
   return (
     <Konten>
@@ -28,6 +29,24 @@ async function Isi() {
           </p>
         </div>
       </Kartu>
+
+      {menuLaporan.length > 0 && (
+        <>
+          <JudulKelompok>Laporan</JudulKelompok>
+          <nav aria-label="Laporan" className="flex flex-col gap-2 lg:hidden">
+            {menuLaporan.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex min-h-16 items-center justify-between rounded-2xl bg-card px-4 text-lg font-medium shadow-[0_1px_2px_rgba(18,20,19,0.06)] hover:bg-mint"
+              >
+                {item.label}
+                <ChevronRight aria-hidden className="size-6 text-muted-foreground" />
+              </Link>
+            ))}
+          </nav>
+        </>
+      )}
 
       {menuKelola.length > 0 && (
         <>

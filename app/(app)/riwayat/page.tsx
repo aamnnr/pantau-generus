@@ -1,6 +1,9 @@
+import { ClipboardList } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { Halaman, JudulKelompok, Kosong, Konten, PageHeader, SkeletonDaftar } from "@/components/page";
+import { Button } from "@/components/ui/button";
 import { KartuKegiatan } from "@/features/kegiatan/kartu-kegiatan";
 import { riwayatKegiatan } from "@/features/kegiatan/queries";
 import { requirePeran } from "@/lib/auth/session";
@@ -44,7 +47,18 @@ async function Daftar() {
 export default function RiwayatPage() {
   return (
     <Halaman>
-      <PageHeader title="Riwayat" subtitle={`Kegiatan ${HARI} hari terakhir`} />
+      <PageHeader
+        title="Riwayat"
+        subtitle={`Kegiatan ${HARI} hari terakhir`}
+        actions={
+          <Button asChild size="lg" variant="outline" className="border-brand-foreground/60 bg-transparent text-brand-foreground lg:border-input lg:bg-card lg:text-foreground">
+            <Link href="/lembar-presensi">
+              <ClipboardList aria-hidden />
+              Lembar presensi
+            </Link>
+          </Button>
+        }
+      />
       <Suspense fallback={<SkeletonDaftar />}>
         <Daftar />
       </Suspense>

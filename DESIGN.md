@@ -83,9 +83,9 @@ Tiga tingkat yang sama di database (`belum`/`proses`/`lancar`); **label mengikut
 
 | Peran | Item navigasi |
 |---|---|
-| Admin | Hari Ini · Generus · Target · Lainnya |
+| Admin | Hari Ini · Generus · Target · Lainnya (Rekap & Raport: grup Laporan di Lainnya; sidebar desktop) |
 | Guru | Hari Ini · Kelasku · Riwayat · Lainnya |
-| Pengurus | Beranda · Generus · Raport · Lainnya (Rekap: kartu di Beranda & sidebar desktop) |
+| Pengurus | Rekap · Generus · Raport · Lainnya (Beranda pengurus = Rekap) |
 | Wali | Anakku · Raport · Lainnya |
 
 - **Lainnya** ada di semua peran: profil, Ganti Mode, Keluar, dan (admin/pengurus) menu Kelola data.
@@ -191,9 +191,19 @@ Tiga langkah berurutan dengan indikator ✓:
 - Daftar periode target (judul, tanggal mulai–selesai, kelas yang dicakup). Buat baru → tombol besar **"Salin dari periode sebelumnya"**.
 - Bagian mengikuti dokumen PPG: **Alim** (Bacaan, Makna, Hafalan), **Faqih**, **Akhlaqul Karimah**, **Mandiri** (+ Tilawati untuk Caberawit). Kelas dipilih dengan kartu bercentang (boleh lebih dari satu).
 
+### 7.6a Rekap (Admin, Pengurus)
+- Pilihan periode (tombol segmen): **Bulan · Target · Semester · Semua** + panah ‹ › untuk periode sebelum/sesudah; pilihan kelas berupa chip yang bisa digeser. Pilihan periode yang sama dipakai di Progres Anak dan Raport, dan ikut terbawa saat mengetuk nama anak.
+- Kartu **Perlu perhatian** di atas (kehadiran < ambang), lalu per kelas: tiga angka ringkas (rata-rata kehadiran, materi diikuti, butir target tuntas) dan daftar anak — kartu di HP, tabel di desktop. Urut nama, tanpa peringkat.
+- Tombol per kelas: **Lembar presensi** dan **Raport kelas**.
+
+### 7.6b Lembar Presensi (cetak)
+- Per kelas per bulan, A4 mendatar: No · Nama · kolom tanggal pengajian (jadwal rutin + kegiatan yang ada, minimal 8 kolom). Presensi yang sudah tercatat ikut tercetak (H/T/I/S/A).
+
 ### 7.7 Raport (cetak)
 - Ukuran A4 portrait, `@media print`: sembunyikan navigasi, tombol; font 12pt; hitam-putih tetap terbaca.
-- Kop: nama kelompok, judul "Raport Bulanan", bulan, nama, kelas.
+- Kop: nama kelompok, judul "Raport Bulanan/Semester/Periode Target/Keseluruhan", periode, nama, kelas, periode target.
+- Isi bertabel bergaris: Kehadiran · Bacaan & makna (capaian target + materi periode) · Butir materi per aspek (status + sudah menerima) · Tilawati (Caberawit) · Materi terlewat · Catatan · tanda tangan Orang tua/Wali & Pengajar/Pengurus.
+- Catatan diisi di layar (admin, pengurus, guru kelasnya) dan ikut tercetak. "Cetak raport kelas" mencetak semua anak, satu anak per halaman.
 
 ## 8. Gaya Bahasa (UI Copy)
 
